@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Sign Up</title>
 </head>
 <body>
     {% if messages %}
@@ -15,17 +15,26 @@
     <br>
     <form method="post">
         {% csrf_token %}
-        <div class="form-group">
+        {{ form.as_p }}
+        <!-- <div class="form-group">
             <label >UserName</label>
             <input type="text" name="username">
         </div>
         <br>
         <div >
-            <label >Password</label>
-            <input type="password", name="password">
+            <label >Email</label>
+            <input type="email", name="email">
         </div>
-        <br>
-        <button type="submit" >Submit</button>
+        <div >
+            <label >Password</label>
+            <input type="password", name="password1">
+        </div>
+        <div >
+            <label >confirmation Password</label>
+            <input type="password", name="password2">
+        </div>
+        <br> -->
+        <button type="submit" >Sign Up</button>
     </form>
 </body>
 </html>
