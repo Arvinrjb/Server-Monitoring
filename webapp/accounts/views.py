@@ -1,18 +1,25 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views import View
 from .forms import RegisterForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-# loguot(request)   /logout
+# @login_required(login_url='/login/')
+# def dashboard(request):
+#     return render(request, 'dashboard.html')
 
 
+class dashboard(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'dashboard.html')
 
 class login_user(View):
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('/admin/')
+            return redirect('/')
         return render(request, 'registration/login.html')
     def post(self, request):
         username = request.POST.get('username','').strip()
@@ -24,7 +31,7 @@ class login_user(View):
         if user is not None:
             login(request, user)
             messages.success(request, 'login Success')
-            return redirect('/admin/')
+            return redirect('/')
         else:
             messages.error(request, 'Error in login try again..')
             return render(request, 'registration/login.html')
@@ -33,7 +40,7 @@ class login_user(View):
 class sign_up(View):
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('/admin/')
+            return redirect('/')
         form = RegisterForm()
         return render(request, 'registration/sign_up.html', {'form':form})
     def post(self, request):
@@ -41,5 +48,5 @@ class sign_up(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('/admin/')
+            return redirect('/')
 

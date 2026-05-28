@@ -17,5 +17,5 @@ class SystemStatus(models.Model):
     lastupdate = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return self.server.ipaddress
+        return self.server.ipaddress + '\t' + self.server.hostname
     

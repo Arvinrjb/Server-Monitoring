@@ -16,24 +16,9 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <!-- <div class="form-group">
-            <label >UserName</label>
-            <input type="text" name="username">
-        </div>
+        <a href="/login">you have account? click here</a>
         <br>
-        <div >
-            <label >Email</label>
-            <input type="email", name="email">
-        </div>
-        <div >
-            <label >Password</label>
-            <input type="password", name="password1">
-        </div>
-        <div >
-            <label >confirmation Password</label>
-            <input type="password", name="password2">
-        </div>
-        <br> -->
+        <br>
         <button type="submit" >Sign Up</button>
     </form>
 </body>
