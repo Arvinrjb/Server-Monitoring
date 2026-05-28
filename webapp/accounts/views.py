@@ -19,6 +19,7 @@ class dashboard(LoginRequiredMixin, View):
 class login_user(View):
     def get(self, request):
         if request.user.is_authenticated:
+            print('login')
             return redirect('/')
         return render(request, 'registration/login.html')
     def post(self, request):

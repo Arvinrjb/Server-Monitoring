@@ -7,6 +7,12 @@ from .forms import InfServer
 from django.views import View
 
 
+
+
+class home(View):
+    def get(self, request):
+        return render(request, 'home.html')
+
 class ShowServer(LoginRequiredMixin, View):
     def get(self, request):
         form = InfServer()

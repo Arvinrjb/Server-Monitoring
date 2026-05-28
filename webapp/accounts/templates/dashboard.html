@@ -1,12 +1,148 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
-    <a href="/logout">logout</a>
-    <h1 style="text-align: center;"> Dashboard</h1>
+
+    <div class="sidebar">
+
+        <div class="logo">
+            Monitor API
+        </div>
+
+        <div class="menu">
+            <a href="/" >
+                Home
+            </a>
+
+
+            <a href="#" class="active">
+                Dashboard
+            </a>
+
+            <a href="#">
+                Servers
+            </a>
+
+            <a href="#">
+                Statistics
+            </a>
+
+            <a href="#">
+                Settings
+            </a>
+
+            <a href="/logout/">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome back, {{ request.user.username }}</p>
+            </div>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>CPU Usage</h3>
+
+                <div class="progress-bar">
+                    <div class="progress cpu-progress"></div>
+                </div>
+
+                <p>42%</p>
+            </div>
+
+            <div class="card">
+                <h3>RAM Usage</h3>
+
+                <div class="progress-bar">
+                    <div class="progress ram-progress"></div>
+                </div>
+
+                <p>68%</p>
+            </div>
+
+            <div class="card">
+                <h3>Disk Usage</h3>
+
+                <div class="progress-bar">
+                    <div class="progress disk-progress"></div>
+                </div>
+
+                <p>51%</p>
+            </div>
+
+            <div class="card">
+                <h3>Network Usage</h3>
+
+                <div class="progress-bar">
+                    <div class="progress network-progress"></div>
+                </div>
+
+                <p>23 Mbps</p>
+            </div>
+
+        </div>
+
+        <div class="server-section">
+
+            <div class="server-card">
+
+                <div class="server-header">
+                    <h2>Main Linux Server</h2>
+
+                    <span class="status online">
+                        Online
+                    </span>
+                </div>
+
+                <div class="server-info">
+
+                    <div class="info-box">
+                        <h4>IP Address</h4>
+                        <p>192.168.1.10</p>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Operating System</h4>
+                        <p>Ubuntu 24.04</p>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Uptime</h4>
+                        <p>14 Days</p>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Processes</h4>
+                        <p>124 Running</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </body>
 </html>

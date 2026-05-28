@@ -7,8 +7,9 @@ class cpu:
         return psutil.cpu_times(percpu=False)
 
     def get_cpu_percent(self):
-        return psutil.cpu_percent(interval=1, percpu=True)
+        return psutil.cpu_percent(interval=1, percpu=False)
     
+
     def get_cpu_count(self):
         self.logicalCore = psutil.cpu_count()
         self.physicalCore = psutil.cpu_count(logical=False)
@@ -59,7 +60,7 @@ def UpTime_Windows():
 
 
 if __name__ == "__main__":
-    net = network()
-    print(net.get_net_io_counters())
+    net = UpTime_Windows()
+    print(net)
 
 

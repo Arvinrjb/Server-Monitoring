@@ -1,0 +1,95 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Monitor API</title>
+
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            System Monitor API
+
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/dashboard/">dashboard</a>
+            <a href="/login/">Login</a>
+            <a href="/signup/">Sign Up</a>
+            <a href="/docs/">API Docs</a>
+            <a href="/logout/">Logout</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+
+            <h1>
+                Monitor Your Systems Easily
+            </h1>
+
+            <p>
+                A lightweight monitoring API for collecting server statistics,
+                CPU usage, RAM usage, disk information, and real-time system metrics.
+            </p>
+
+            <div class="buttons">
+                <a href="/signup/" class="btn btn-primary">
+                    Get Started
+                </a>
+
+                <a href="/docs/" class="btn btn-secondary">
+                    API Documentation
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="features">
+
+        <h2 class="features-title">
+            Features
+        </h2>
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+                <h3>Real-Time Metrics</h3>
+                <p>
+                    Track CPU, RAM, disk usage and network statistics.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3>REST API</h3>
+                <p>
+                    Secure API endpoints for monitoring infrastructure.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Authentication</h3>
+                <p>
+                    User authentication with login and session management.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Lightweight Agent</h3>
+                <p>
+                    Send metrics from Linux and Windows systems easily.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+</body>
+</html>
