@@ -12,10 +12,9 @@ class Server(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='user',
-        null=True,
-        blank=True
+        null=False,
+        blank=False
     )
-    # id = models.IntegerField(primary_key=True)
     hostname = models.CharField(max_length=100, blank=False, null=False)
     ipaddress = models.GenericIPAddressField(blank=False, null=False)
     os = models.CharField(max_length=20, blank=False, null=False)

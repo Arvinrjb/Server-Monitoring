@@ -4,17 +4,22 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views import View
 from .forms import RegisterForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from monitoring.models import SystemStatus
+from system.models import Server
+from django.contrib.auth.models import Group
 
 
-# @login_required(login_url='/login/')
-# def dashboard(request):
-#     return render(request, 'dashboard.html')
 
-
-class dashboard(LoginRequiredMixin, View):
+class dashboard(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'system.view_server'
     def get(self, request):
-        return render(request, 'dashboard.html')
+        if request.user.is_authenticated:
+            server = Server.objects.filter(user=request.user)
+            status = SystemStatus.objects.filter(server__user = request.user)
+            
+        return render(request, 'dashboard.html', )
+
 
 class login_user(View):
     def get(self, request):

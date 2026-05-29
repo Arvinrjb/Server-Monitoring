@@ -11,4 +11,3 @@ class ReceiveData(LoginRequiredMixin, View):
         print(form.is_valid)
         if form.is_valid:
             form.save()
-
