@@ -1,25 +1,72 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
+
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 </head>
 <body>
-    {% if messages %}
-        {% for message in messages %}
-            {{message}}
-        {% endfor %}
-    {% endif %}
-    <br>
-    <br>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <a href="/login">you have account? click here</a>
-        <br>
-        <br>
-        <button type="submit" >Sign Up</button>
-    </form>
+
+    <div class="signup-container">
+
+        <h1>Create Account</h1>
+        <p class="subtitle">
+            Create your System Monitor account
+        </p>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <div class="input-group">
+                <label>Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                {{ form.email }}
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                {{ form.password1 }}
+            </div>
+
+            <div class="input-group">
+                <label>Confirm Password</label>
+                {{ form.password2 }}
+            {% if form.errors %}
+                <div class="message">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+            <button type="submit" class="signup-btn">
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="bottom-text">
+            Already have an account?
+            <a href="/login/">Login</a>
+        </div>
+
+    </div>
+
 </body>
 </html>
