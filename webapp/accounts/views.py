@@ -13,12 +13,7 @@ from django.contrib.auth.models import Group
 
 class dashboard(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'system.view_server'
-    def get(self, request):
-        if request.user.is_authenticated:
-            # server = Server.objects.filter(user = request.user)
-            status = SystemStatus.objects.filter(server__user = request.user)
-            print(status)
-            
+    def get(self, request):    
         return render(request, 'dashboard.html', )
 
 
@@ -54,10 +49,10 @@ class sign_up(View):
         return render(request, 'registration/sign_up.html', {'form':form})
     def post(self, request):
         form = RegisterForm(request.POST)
-        group = Group.objects.get(name='client')
+        # group = Group.objects.get(name='client')
         if form.is_valid():
             user = form.save()
-            user.groups.add(group)
+            # user.groups.add(group)
             login(request, user)
             return redirect('/')
         else:
