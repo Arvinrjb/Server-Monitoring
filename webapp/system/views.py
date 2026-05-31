@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Server
 from django.http import HttpResponse, Http404
-import datetime
-from .forms import InfServer
 from django.views import View
+from system.models import Server
+from system.forms import InfServer
+
 
 
 

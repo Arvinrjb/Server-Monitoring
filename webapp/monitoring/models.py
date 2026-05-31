@@ -8,7 +8,7 @@ class SystemStatus(models.Model):
         on_delete=models.CASCADE,
         related_name="SystemStatus",
     )
-    s = models.FloatField(verbose_name="Cpu Usage", blank=True, null=True)
+    cpu_usage = models.FloatField(verbose_name="Cpu Usage", blank=True, null=True)
     ram_usage =models.FloatField(verbose_name="Ram Usage", blank=True, null=True)
     disk_usage = models.FloatField(verbose_name="Disk Usage", blank=True, null=True)
     network_in = models.CharField(max_length=20, blank=True, null=True)

@@ -1,13 +1,21 @@
-from django.shortcuts import render
-from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import MonitoringForm
+from rest_framework import views, status
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+from monitoring.models import SystemStatus
+from monitoring.serializers import MonitoringSerializer, ServerSerializer
 
 
 
-class ReceiveData(LoginRequiredMixin, View):
-    def post(self, request):
-        form = MonitoringForm(request.POST)
-        print(form.is_valid)
-        if form.is_valid:
-            form.save()
+class Monitoring(views.APIView):
+    authentication_classes = [
+        authentication.SessionAuthentication,
+    ]
+    permission_classes = [
+        permissions.IsAuthenticated,    
+    ]
+
+    def get(self, request, format=None):
+        status = SystemStatus.objects.filter(server__user = self.request.user)
+        serializer = MonitoringSerializer(status, many=True)
+        return Response(serializer.data)
+

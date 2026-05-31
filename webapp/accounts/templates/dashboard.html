@@ -50,6 +50,12 @@
     <div class="main-content">
 
         <div class="topbar">
+            <div class="server-selector">
+                <label>Select Server:</label>
+                <select id="serverSelect">
+                    <option value="">Loading...</option>
+                </select>
+            </div>
 
             <div>
                 <h1>Dashboard</h1>
@@ -67,7 +73,7 @@
                     <div class="progress cpu-progress"></div>
                 </div>
 
-                <p>43%</p>
+                <p>0%</p>
             </div>
 
             <div class="card">
@@ -77,7 +83,7 @@
                     <div class="progress ram-progress"></div>
                 </div>
 
-                <p>68%</p>
+                <p></p>
             </div>
 
             <div class="card">
@@ -97,7 +103,7 @@
                     <div class="progress network-progress"></div>
                 </div>
 
-                <p>23 Mbps</p>
+                <p>Mbps</p>
             </div>
 
         </div>
@@ -118,7 +124,7 @@
 
                     <div class="info-box">
                         <h4>IP Address</h4>
-                        <p>192.168.1.10</p>
+                        <p></p>
                     </div>
 
                     <div class="info-box">
@@ -128,7 +134,7 @@
 
                     <div class="info-box">
                         <h4>Uptime</h4>
-                        <p>14 Days</p>
+                        <p></p>
                     </div>
 
                     <div class="info-box">
@@ -144,5 +150,6 @@
 
     </div>
 
+    <script src="{% static 'js/dashboard.js' %}"></script>
 </body>
 </html>
