@@ -5,9 +5,6 @@ from django.contrib import messages
 from django.views import View
 from .forms import RegisterForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from monitoring.models import SystemStatus
-from system.models import Server
-from django.contrib.auth.models import Group
 
 
 
@@ -17,7 +14,10 @@ class dashboard(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, 'dashboard.html', )
 
 
-
+class Servers(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'system.view_server'
+    def get(self, request):
+        return render(request, 'servers.html')
 
 
 class login_user(View):

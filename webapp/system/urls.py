@@ -3,6 +3,6 @@ from system import views
 
 
 urlpatterns = [
-    path('', views.home.as_view()),
+    path('', views.Home.as_view()),
     # path('system/<int:pk>', views.get_system),
 ]

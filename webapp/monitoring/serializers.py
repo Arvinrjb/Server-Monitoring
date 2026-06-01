@@ -17,13 +17,21 @@ class MonitoringSerializer(serializers.ModelSerializer):
     server = ServerSerializer(
         read_only = True
     )
-    
+
     class Meta:
         model = SystemStatus
         fields = [
+            'id',
             'server',
             'cpu_usage',
             'ram_usage',
             'disk_usage',
             'uptime',
         ]
+
+
+
+
+
+
+

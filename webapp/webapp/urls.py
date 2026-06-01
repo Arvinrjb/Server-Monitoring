@@ -1,11 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
-from system.views import ShowServer
 from accounts.views import  login_user, sign_up
 
-
-router = routers.DefaultRouter()
 
 
 urlpatterns = [
@@ -15,5 +11,5 @@ urlpatterns = [
     path('dashboard/', include('accounts.urls')),
     path('login/', login_user.as_view()),
     path('signup/', sign_up.as_view()),
-    path('api/', include('monitoring.urls'))
+    path('api/', include('monitoring.urls')),
 ]

@@ -1,21 +1,41 @@
-from rest_framework import views, status
-from rest_framework.response import Response
 from rest_framework import authentication, permissions
+from rest_framework.viewsets import ModelViewSet
 from monitoring.models import SystemStatus
-from monitoring.serializers import MonitoringSerializer, ServerSerializer
+from monitoring.serializers import MonitoringSerializer
+from system.models import Server
+from system.serializers import ServerSerializer
 
 
-
-class Monitoring(views.APIView):
+class MonitoringViewSet(ModelViewSet):
+    serializer_class = MonitoringSerializer
     authentication_classes = [
         authentication.SessionAuthentication,
     ]
     permission_classes = [
-        permissions.IsAuthenticated,    
+        permissions.IsAuthenticated,
     ]
+    
+    def get_queryset(self):
+        return SystemStatus.objects.filter(
+            server__user = self.request.user
+            
+        )
 
-    def get(self, request, format=None):
-        status = SystemStatus.objects.filter(server__user = self.request.user)
-        serializer = MonitoringSerializer(status, many=True)
-        return Response(serializer.data)
+    
+class AddServerViewSet(ModelViewSet):
+    authentication_classes = [
+        authentication.SessionAuthentication,
+    ]
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+    serializer_class = ServerSerializer
 
+    def get_queryset(self):
+        return Server.objects.filter(
+            user = self.request.user
+        )
+    
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+    

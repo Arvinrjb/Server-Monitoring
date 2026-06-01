@@ -1,0 +1,114 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servers</title>
+
+    <link rel="stylesheet" href="{% static 'css/servers.css' %}">
+</head>
+<body>
+
+    <div class="sidebar">
+
+        <div class="logo">
+            Monitor API
+        </div>
+
+        <div class="menu">
+            <a href="/">Home</a>
+
+            <a href="/dashboard/">
+                Dashboard
+            </a>
+
+            <a href="#" class="active">
+                Servers
+            </a>
+
+            <a href="#">
+                Statistics
+            </a>
+
+            <a href="#">
+                Settings
+            </a>
+
+            <a href="/logout/">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="main-content">
+
+        <div class="page-header">
+
+            <div>
+                <h1>Servers</h1>
+                <p>Manage your monitored servers</p>
+            </div>
+
+            <button id="addServerBtn">
+                + Add Server
+            </button>
+
+        </div>
+
+        <div class="server-list">
+
+            <div class="server-row header">
+                <span>Hostname</span>
+                <span>IP Address</span>
+                <span>Status</span>
+                <span>Actions</span>
+            </div>
+
+            <div id="serverContainer"></div>
+
+        </div>
+
+    </div>
+
+    <!-- Modal -->
+
+    <div id="serverModal" class="modal">
+
+        <div class="modal-content">
+
+            <h2>Add New Server</h2>
+
+            <form id="serverForm">
+
+                <input
+                    type="text"
+                    id="hostname"
+                    placeholder="Hostname"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="ipaddress"
+                    placeholder="IP Address"
+                    required
+                >
+
+                <button type="submit">
+                    Add Server
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="{% static 'js/servers.js' %}"></script>
+
+</body>
+</html>

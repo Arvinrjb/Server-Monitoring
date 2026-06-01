@@ -1,7 +1,22 @@
 from django.urls import path
-from monitoring.views import Monitoring
+from rest_framework.routers import DefaultRouter
+from monitoring.views import MonitoringViewSet, AddServerViewSet
 
-urlpatterns = [
-    path('servers/', Monitoring.as_view()),
-    # path('servers/<str:pk>/', get_server.as_view()),
-]
+
+router = DefaultRouter()
+
+
+router.register(
+    r"servers",
+    MonitoringViewSet,
+    basename='MonitoringViewSet'
+)
+
+router.register(
+    r"addserver",
+    AddServerViewSet,
+    basename="servers",
+)
+
+urlpatterns = router.urls
+
