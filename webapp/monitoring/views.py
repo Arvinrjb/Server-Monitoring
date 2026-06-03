@@ -4,12 +4,15 @@ from monitoring.models import SystemStatus
 from monitoring.serializers import MonitoringSerializer
 from system.models import Server
 from system.serializers import ServerSerializer
+from rest_framework.authtoken.models import Token
+
 
 
 class MonitoringViewSet(ModelViewSet):
     serializer_class = MonitoringSerializer
     authentication_classes = [
         authentication.SessionAuthentication,
+        authentication.TokenAuthentication
     ]
     permission_classes = [
         permissions.IsAuthenticated,
@@ -21,6 +24,8 @@ class MonitoringViewSet(ModelViewSet):
             
         )
 
+    def perform_create(self, serializer):
+        return 
     
 class AddServerViewSet(ModelViewSet):
     authentication_classes = [

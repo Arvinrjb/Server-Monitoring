@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
 from .forms import RegisterForm
@@ -8,13 +7,21 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 
 
 
-class dashboard(LoginRequiredMixin, PermissionRequiredMixin, View):
+class dashboard(
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    View
+):
     permission_required = 'system.view_server'
     def get(self, request):    
         return render(request, 'dashboard.html', )
 
 
-class Servers(LoginRequiredMixin, PermissionRequiredMixin, View):
+class Servers(
+    LoginRequiredMixin, 
+    PermissionRequiredMixin, 
+    View
+):
     permission_required = 'system.view_server'
     def get(self, request):
         return render(request, 'servers.html')
