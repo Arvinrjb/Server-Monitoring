@@ -4,8 +4,6 @@ from monitoring.models import SystemStatus
 from monitoring.serializers import MonitoringSerializer
 from system.models import Server
 from system.serializers import ServerSerializer
-from rest_framework.authtoken.models import Token
-
 
 
 class MonitoringViewSet(ModelViewSet):
