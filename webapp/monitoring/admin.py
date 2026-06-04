@@ -1,5 +1,4 @@
 from django.contrib import admin
-from .models import SystemStatus
-# Register your models here.
+from .models import ServerStatus
 
-admin.site.register(SystemStatus)
+admin.site.register(ServerStatus)

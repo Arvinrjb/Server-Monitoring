@@ -2,7 +2,7 @@ from django.db import models
 from system.models import Server
 
 
-class SystemStatus(models.Model):
+class ServerStatus(models.Model):
     server = models.ForeignKey(
         Server,
         on_delete=models.CASCADE,

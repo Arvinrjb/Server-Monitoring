@@ -60,6 +60,7 @@ function updateUI(item) {
     document.querySelector(".server-header h2").innerText = server.hostname;
 
     document.querySelector(".info-box:nth-child(1) p").innerText = server.ipaddress;
+    document.querySelector(".info-box:nth-child(2) p").innerText = server.os;
 
     document.querySelector(".info-box:nth-child(3) p").innerText = item.uptime;
 }

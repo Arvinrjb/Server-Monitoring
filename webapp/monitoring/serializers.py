@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from monitoring.models import SystemStatus
+from monitoring.models import ServerStatus
 from system.models import Server
 
 
@@ -8,30 +8,37 @@ class ServerSerializer(serializers.ModelSerializer):
         model = Server
         fields = [
             'id',
-            'hostname',
             'ipaddress',
+            'hostname',
+            'os',
+            'status',
+            'lastseen',
         ]
 
 
 class MonitoringSerializer(serializers.ModelSerializer):
+    cpu_usage = serializers.FloatField(
+        min_value = 0,
+        max_value = 100
+    )
+    ram_usage = serializers.FloatField(
+        min_value = 0,
+        max_value = 100
+    )
+    disk_usage = serializers.FloatField(
+        min_value = 0,
+        max_value = 100
+    )
     server = ServerSerializer(
         read_only = True
     )
-
     class Meta:
-        model = SystemStatus
+        model = ServerStatus
         fields = [
-            'id',
             'server',
+            'id',
             'cpu_usage',
             'ram_usage',
             'disk_usage',
             'uptime',
         ]
-
-
-
-
-
-
-
