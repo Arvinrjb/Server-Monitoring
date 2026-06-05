@@ -1,17 +1,15 @@
 from rest_framework import authentication, permissions
 from rest_framework.viewsets import ModelViewSet
-from django_filters.rest_framework import DjangoFilterBackend, OrderingFilter
-from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
 from monitoring.models import ServerStatus
 from monitoring.serializers import MonitoringSerializer, ServerSerializer
 from system.models import Server
+from core.pagination import MyPagination, StatusPagination
 
-
-class MyPageNumberPagination(PageNumberPagination):
-    page_size = 10
 
 
 class MonitoringViewSet(ModelViewSet):
+    pagination_class = MyPagination
     serializer_class = MonitoringSerializer
     authentication_classes = [
         authentication.SessionAuthentication,
@@ -39,6 +37,7 @@ class MonitoringViewSet(ModelViewSet):
         )
 
 class AddServerViewSet(ModelViewSet):
+    pagination_class = MyPagination
     authentication_classes = [
         authentication.SessionAuthentication,
     ]
