@@ -28,7 +28,7 @@ async function loadServers() {
 
     container.innerHTML = "";
 
-    data.forEach(server => {
+    data.results.forEach(server => {
 
         container.innerHTML += `
             <div class="server-row">

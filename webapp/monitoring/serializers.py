@@ -29,9 +29,7 @@ class MonitoringSerializer(serializers.ModelSerializer):
         min_value = 0,
         max_value = 100
     )
-    server = ServerSerializer(
-        read_only = True
-    )
+
     class Meta:
         model = ServerStatus
         fields = [

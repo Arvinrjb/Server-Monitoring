@@ -1,11 +1,13 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from django.core.cache import cache
 from rest_framework import authentication, permissions
 from rest_framework.viewsets import ModelViewSet
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.exceptions import ValidationError
 from monitoring.models import ServerStatus
 from monitoring.serializers import MonitoringSerializer, ServerSerializer
 from system.models import Server
-from core.pagination import MyPagination, StatusPagination
-
+from core.pagination import MyPagination
 
 
 class MonitoringViewSet(ModelViewSet):
@@ -21,10 +23,23 @@ class MonitoringViewSet(ModelViewSet):
     
     filter_backends = [
         DjangoFilterBackend,
-        
+        SearchFilter, 
+        OrderingFilter,
     ]
-    filterset_fields = [
-        'server',
+    filterset_fields = {
+        'server':['exact'],
+        'cpu_usage':['gte', 'lte'],
+        'ram_usage':['gte', 'lte'],
+        'disk_usage':['gte', 'lte'],
+        'uptime':['gte', 'lte'],
+    }
+
+    search_fields = [
+        'server__hostname',
+        'server__ipaddress',
+    ]
+
+    ordering_fields = [
         'cpu_usage',
         'ram_usage',
         'disk_usage',
@@ -35,6 +50,15 @@ class MonitoringViewSet(ModelViewSet):
         return ServerStatus.objects.filter(
             server__user = self.request.user
         )
+    
+    def perform_create(self, serializer):
+        server = serializer.validated_data['server']
+        print(server)
+        if server.user != self.request.user:
+            raise ValidationError(
+                "You do not own this server."
+            )
+        serializer.save()
 
 class AddServerViewSet(ModelViewSet):
     pagination_class = MyPagination
@@ -48,8 +72,11 @@ class AddServerViewSet(ModelViewSet):
 
     def get_queryset(self): 
         return Server.objects.filter(
-            user = self.request.user
+            user=self.request.user
         )
+
     def perform_create(self, serializer):
-        return serializer.save(user=self.request.user)
+        return serializer.save(
+            user=self.request.user
+            )
     

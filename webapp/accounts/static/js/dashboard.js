@@ -14,9 +14,9 @@ async function loadData() {
 
         cachedData = await response.json();
 
-        setupServers(cachedData);
-        if (cachedData.length > 0) {
-            updateUI(cachedData[0]);
+        setupServers(cachedData.results);
+        if (cachedData.results.length > 0) {
+            updateUI(cachedData.results[0]);
         }
 
     } catch (err) {
@@ -25,6 +25,7 @@ async function loadData() {
 }
 
 function setupServers(data) {
+    console.log(data)
     serverSelect.innerHTML = "";
 
     data.forEach((item, index) => {
@@ -62,7 +63,7 @@ function updateUI(item) {
 
 serverSelect.addEventListener("change", (e) => {
     const index = e.target.value;
-    updateUI(cachedData[index]);
+    updateUI(cachedData.results[index]);
 });
 
 
