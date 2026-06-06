@@ -2,7 +2,7 @@ import requests
 from time import sleep
 from core import ServerMonitorCore
 
-url = 'http://127.0.0.1:8000/api/servers/'
+url = 'http://127.0.0.1:8000/api/agent/report/14/'
 Token = '5e602c08d54111e44bfe77422296b6dc094daed3'
 server_id = 9
 
@@ -32,6 +32,7 @@ def PayloadSender(server_id):
 
 while True: 
     data = PayloadSender(server_id)
+    print(data)
     request = requests.put(url, json=data, headers=headers)
     print(request.status_code, request.text)
     sleep(10)

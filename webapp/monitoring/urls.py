@@ -1,13 +1,12 @@
 from rest_framework.routers import DefaultRouter
-from monitoring.views import MonitoringViewSet, AddServerViewSet
+from monitoring.views import MonitoringViewSet, AddServerViewSet, DashboardViewSet
 
 
 router = DefaultRouter()
 
-
 router.register(
     r"servers",
-    MonitoringViewSet,
+    DashboardViewSet,
     basename='MonitoringViewSet'
 )
 
@@ -17,5 +16,10 @@ router.register(
     basename="servers",
 )
 
-urlpatterns = router.urls
+router.register(
+    r"agent/report",
+    MonitoringViewSet,
+    basename="agent"
+)
 
+urlpatterns = router.urls

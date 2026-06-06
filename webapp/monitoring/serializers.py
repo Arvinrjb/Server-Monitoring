@@ -16,6 +16,15 @@ class ServerSerializer(serializers.ModelSerializer):
         ]
 
 
+class DashboardSerializer(serializers.ModelSerializer):
+    server = ServerSerializer(
+        read_only = True
+    )
+    class Meta:
+        model = ServerStatus
+        fields = '__all__'
+
+
 class MonitoringSerializer(serializers.ModelSerializer):
     cpu_usage = serializers.FloatField(
         min_value = 0,
