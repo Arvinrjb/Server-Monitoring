@@ -5,41 +5,35 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.exceptions import ValidationError
 from monitoring.models import ServerStatus
-from monitoring.serializers import MonitoringSerializer, ServerSerializer, DashboardSerializer
+from monitoring.serializers import AddStatusSerializer, DashboardSerializer, ServerSerializer
 from system.models import Server
-from core.pagination import MyPagination
-
-
-class MonitoringViewSet(ModelViewSet):
-    pagination_class = MyPagination
-    serializer_class = MonitoringSerializer
-    authentication_classes = [
-        authentication.TokenAuthentication,
-        authentication.SessionAuthentication
-    ]
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
-    
-    def get_queryset(self):
-        return ServerStatus.objects.filter(
-            server__user = self.request.user
-        )
-    
-    def perform_create(self, serializer):
-        server = serializer.validated_data['server']
-        if server.user != self.request.user:
-            raise ValidationError(
-                "You do not own this server."
-            )
-        serializer.save()
+from core.pagination import MyPagination, StatusPagination
 
 
 class DashboardViewSet(ModelViewSet):
     serializer_class = DashboardSerializer
     pagination_class = MyPagination
+    authentication_classes = [
+        authentication.SessionAuthentication,
+    ]
     permission_classes = [
         permissions.IsAuthenticated
+    ]
+    def get_queryset(self):
+        return Server.objects.filter(
+            user = self.request.user
+        )
+
+
+class AddStatusViewSet(ModelViewSet):
+    pagination_class = StatusPagination
+    serializer_class = AddStatusSerializer
+    authentication_classes = [
+        authentication.TokenAuthentication,
+        # authentication.SessionAuthentication
+    ]
+    permission_classes = [
+        permissions.IsAuthenticated,
     ]
 
     filter_backends = [
@@ -71,6 +65,14 @@ class DashboardViewSet(ModelViewSet):
         return ServerStatus.objects.filter(
             server__user = self.request.user
         )
+    
+    def perform_create(self, serializer):
+        server = serializer.validated_data['server']
+        if server.user != self.request.user:
+            raise ValidationError(
+                "You do not own this server."
+            )
+        serializer.save()
 
 
 class AddServerViewSet(ModelViewSet):

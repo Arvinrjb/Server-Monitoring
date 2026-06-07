@@ -25,11 +25,10 @@ async function loadData() {
 }
 
 function setupServers(data) {
-    console.log(data)
     serverSelect.innerHTML = "";
 
     data.forEach((item, index) => {
-        const server = item.server;
+        const server = item
 
         const option = document.createElement("option");
         option.value = index; 
@@ -40,24 +39,22 @@ function setupServers(data) {
 }
 
 function updateUI(item) {
+    const server = item.latest_status;
 
-    const server = item.server;
+    document.querySelector(".cpu-progress").style.width = server.cpu_usage + "%";
+    document.querySelector(".ram-progress").style.width = server.ram_usage + "%";
+    document.querySelector(".disk-progress").style.width = server.disk_usage + "%";
 
+    document.querySelector(".cards .card:nth-child(1) p").innerText = server.cpu_usage + "%";
+    document.querySelector(".cards .card:nth-child(2) p").innerText = server.ram_usage + "%";
+    document.querySelector(".cards .card:nth-child(3) p").innerText = server.disk_usage + "%";
 
-    document.querySelector(".cpu-progress").style.width = item.cpu_usage + "%";
-    document.querySelector(".ram-progress").style.width = item.ram_usage + "%";
-    document.querySelector(".disk-progress").style.width = item.disk_usage + "%";
+    document.querySelector(".server-header h2").innerText = item.hostname;
 
-    document.querySelector(".cards .card:nth-child(1) p").innerText = item.cpu_usage + "%";
-    document.querySelector(".cards .card:nth-child(2) p").innerText = item.ram_usage + "%";
-    document.querySelector(".cards .card:nth-child(3) p").innerText = item.disk_usage + "%";
+    document.querySelector(".info-box:nth-child(1) p").innerText = item.ipaddress;
+    document.querySelector(".info-box:nth-child(2) p").innerText = item.os;
 
-    document.querySelector(".server-header h2").innerText = server.hostname;
-
-    document.querySelector(".info-box:nth-child(1) p").innerText = server.ipaddress;
-    document.querySelector(".info-box:nth-child(2) p").innerText = server.os;
-
-    document.querySelector(".info-box:nth-child(3) p").innerText = item.uptime;
+    document.querySelector(".info-box:nth-child(3) p").innerText = server.uptime;
 }
 
 

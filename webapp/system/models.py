@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-# from django.conf import settings
-# Create your models here.
 
 class Server(models.Model):
     stat =[
@@ -11,7 +9,7 @@ class Server(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='server',
+        related_name='servers',
         null=False,
         blank=False
     )
