@@ -1,6 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from django.core.cache import cache
-from rest_framework import authentication, permissions
+from rest_framework import authentication, permissions, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.exceptions import ValidationError
@@ -8,6 +10,8 @@ from monitoring.models import ServerStatus
 from monitoring.serializers import AddStatusSerializer, DashboardSerializer, ServerSerializer
 from system.models import Server
 from core.pagination import MyPagination, StatusPagination
+
+
 
 
 class DashboardViewSet(ModelViewSet):
@@ -23,6 +27,35 @@ class DashboardViewSet(ModelViewSet):
         return Server.objects.filter(
             user = self.request.user
         )
+
+
+class AddStatus(APIView):
+    authentication_classes = []
+    permission_classes = []
+    def post(self, request):
+        token = request.headers.get(
+            "X-Agent-Token"
+        )
+        server = Server.objects.get(
+            agent_token = token
+        )
+        if not server:
+            return Response(
+                {"error": "Invalid token"},
+                status=401
+            )
+        ServerStatus.objects.create(
+            server=server,
+            cpu_usage=request.data["cpu_usage"],
+            ram_usage=request.data["ram_usage"],
+            disk_usage=request.data["disk_usage"],
+            lastupdate= request.data["lastupdate"],
+        )
+        return Response(
+            {"status": "ok"},
+            status=201
+        )
+
 
 
 class AddStatusViewSet(ModelViewSet):
@@ -77,9 +110,13 @@ class AddStatusViewSet(ModelViewSet):
 
 class AddServerViewSet(ModelViewSet):
     pagination_class = MyPagination
+    authentication_classes = [
+        authentication.SessionAuthentication
+    ]
     permission_classes = [
         permissions.IsAuthenticated
     ]
+    
     serializer_class = ServerSerializer
 
     def get_queryset(self): 

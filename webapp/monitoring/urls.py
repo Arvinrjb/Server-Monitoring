@@ -1,5 +1,6 @@
+from django.urls import path
 from rest_framework.routers import DefaultRouter
-from monitoring.views import AddStatusViewSet, AddServerViewSet, DashboardViewSet
+from monitoring.views import AddStatusViewSet, AddServerViewSet, DashboardViewSet, AddStatus
 
 
 router = DefaultRouter()
@@ -16,10 +17,17 @@ router.register(
     basename="servers",
 )
 
-router.register(
-    r"agent/report",
-    AddStatusViewSet,
-    basename="agent"
-)
+# router.register(
+#     r"agent/report",
+#     AddStatusViewSet,
+#     basename="Agent"
+# )
 
 urlpatterns = router.urls
+urlpatterns += [
+    path(
+        'agent/report/',
+        AddStatus.as_view(),
+        name='Agent'
+    )
+]

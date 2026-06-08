@@ -37,7 +37,6 @@ class DashboardSerializer(serializers.ModelSerializer):
             'hostname',
             'os',
             'status',
-            'lastseen',
             'latest_status',
         ]
 

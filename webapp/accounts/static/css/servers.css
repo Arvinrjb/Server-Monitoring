@@ -114,6 +114,10 @@ body {
     font-weight: bold;
 }
 
+.offline{
+    color: #e82a2a;
+    font-weight: bold;
+}
 /* ===== ACTION BUTTONS ===== */
 
 .actions {
