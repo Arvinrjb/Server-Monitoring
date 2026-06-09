@@ -5,9 +5,11 @@ import datetime
 
 token_url = ''
 url = 'http://127.0.0.1:8000/api/agent/report/'
-Token = 'a21f3f3ee4fb31e75c5c59176783f178aa5b4ac5e81b24301fc99219cb2cb875'
+Token_1 = 'a21f3f3ee4fb31e75c5c59176783f178aa5b4ac5e81b24301fc99219cb2cb875'
+Token_2 = '576e1c7351dca666f8380f29b87181e2e3fd11033cab1b641d090e3f6d9d9da8'
+
 headers = {
-    "X-Agent-Token":Token,
+    "X-Agent-Token":Token_2,
     "Content-Type": "application/json"
 }
 

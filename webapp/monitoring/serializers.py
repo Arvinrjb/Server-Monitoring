@@ -3,6 +3,18 @@ from monitoring.models import ServerStatus
 from system.models import Server
 
 
+
+class AgentSerializer(serializers.ModelSerializer):
+    class Meta:
+        modle = ServerStatus
+        fields = [
+            'cpu_usage',
+            'ram_usage',
+            'disk_usage',
+            'lastupdate'
+        ]
+
+
 class ServerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Server

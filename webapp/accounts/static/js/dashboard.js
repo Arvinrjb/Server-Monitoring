@@ -40,7 +40,13 @@ function setupServers(data) {
 
 function updateUI(item) {
     const server = item.latest_status;
-
+    if (item.status == "online"){
+        document.querySelector(".status").innerText = "online" 
+        document.querySelector(".status").style.color = "#30d30f" 
+    }else{
+       document.querySelector(".status").innerText = "offline"
+       document.querySelector(".status").style.color = "#ed3232"
+    }
     document.querySelector(".cpu-progress").style.width = server.cpu_usage + "%";
     document.querySelector(".ram-progress").style.width = server.ram_usage + "%";
     document.querySelector(".disk-progress").style.width = server.disk_usage + "%";
