@@ -1,25 +1,25 @@
 flowchart TD
-    %% Server
-    user --> system
-
+    %% server
+    user --> server
+    server -->|API| AddServer
+    
+    
 
     %% Status
- system --> Monitoring
+ server --> Monitoring
     Monitoring --> Dashboard 
-    Monitoring --> Agent_Report 
-    Monitoring --> Add_Server 
+    Monitoring -->|API| Agent_Report 
 
 
     %% Logs
- system --> Logs
+ server --> Logs
 
 
     %% Alerts
- system --> Alerts
+ server --> Alerts
 
 
     %% Accounts
     user --> Accounts
- system --> Accounts
     Accounts --> Login  
     Accounts --> Sign_UP 

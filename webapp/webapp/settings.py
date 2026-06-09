@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'system',
     'monitoring',
     'alerts',
+    'logs',
 ]
 
 MIDDLEWARE = [

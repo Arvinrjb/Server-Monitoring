@@ -25,11 +25,6 @@ class Server(models.Model):
     lastseen = models.DateTimeField(auto_now=True)
     agent_token = models.CharField(max_length=64, unique=True, default=generate_token)
 
-    # def save(self, *args, **kwargs):
-    #     if not self.agent_token:
-    #         self.agent_token = token_hex(32)
-    #     return super().save(*args, **kwargs)
-    
 
     def __str__(self):
         return self.ipaddress

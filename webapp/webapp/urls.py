@@ -1,15 +1,16 @@
 from django.contrib import admin
 from django.urls import path, include
 from accounts.views import  login_user, sign_up
+from system.views import Home
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls, name="Admin"),
-    path('', include('system.urls'), name="Systems"),
     path('', include('django.contrib.auth.urls')),
+    path('', Home.as_view(), name="Home"),
     path('dashboard/', include('accounts.urls'), name="Dashboard"),
     path('login/', login_user.as_view(), name="Login"),
     path('signup/', sign_up.as_view(), name="SignUp"),
-    path('api/', include('monitoring.urls'), name="API"),
+    path('api/', include('core.api_urls'), name="API"),
 ]
