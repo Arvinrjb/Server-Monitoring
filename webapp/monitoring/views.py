@@ -33,9 +33,15 @@ class AddStatus(APIView):
     authentication_classes = []
     permission_classes = []
     def post(self, request):
-        token = request.headers.get(
-            "X-Agent-Token"
-        )
+        try:
+            token = request.headers.get(
+                "X-Agent-Token"
+            )
+        except:
+            return Response(
+                {"error":"Token not send"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         try:        
             server = Server.objects.get(
                 agent_token = token

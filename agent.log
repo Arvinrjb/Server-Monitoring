@@ -1,10 +1,5 @@
-2026-06-10 14:14:56,544 | INFO | Server Monitoring Started
-2026-06-10 14:14:57,562 | INFO | Server Status Send, Status Code: 201 
-2026-06-10 14:15:08,582 | INFO | Server Status Send, Status Code: 201 
-2026-06-10 14:15:19,606 | INFO | Server Status Send, Status Code: 201 
-2026-06-10 14:15:30,630 | INFO | Server Status Send, Status Code: 201 
-2026-06-10 14:15:41,657 | INFO | Server Status Send, Status Code: 201 
-2026-06-10 14:15:52,677 | INFO | Server Status Send, Status Code: 201 
-2026-06-10 14:16:03,700 | INFO | Server Status Send, Status Code: 201 
-2026-06-10 14:16:14,717 | INFO | Server Status Send, Status Code: 201 
-2026-06-10 14:16:24,523 | ERROR | Server Monitoring Error
+2026-06-10 19:21:59,443 | INFO | Test log sender
+2026-06-10 19:22:04,458 | INFO | Test log sender
+2026-06-10 19:22:09,467 | INFO | Test log sender
+2026-06-10 19:22:14,480 | INFO | Test log sender
+2026-06-10 19:22:19,494 | INFO | Test log sender

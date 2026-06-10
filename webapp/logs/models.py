@@ -12,7 +12,7 @@ class Logs(models.Model):
     server = models.ForeignKey(
         Server,
         on_delete=models.CASCADE,
-        related_name='Logs',
+        related_name='مogs',
     )
 
     level = models.CharField(
@@ -20,13 +20,18 @@ class Logs(models.Model):
         choices=LEVELS,
         blank=True,
         null=True,
+        default="INFO"
     )
     message = models.TextField(
         null=True,
         blank=True,
-        name="ServerLogs",
     )
 
     created_at = models.DateField(
         auto_now=True,
+        blank=True,
+        null=True
     )
+
+    def __str__(self):
+        return self.server.ipaddress
