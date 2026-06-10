@@ -16,7 +16,7 @@ router.register(
 urlpatterns = router.urls
 urlpatterns += [
     path(
-        'agent/report/',
+        'agent/status/report/',
         AddStatus.as_view(),
         name='Agent'
     )

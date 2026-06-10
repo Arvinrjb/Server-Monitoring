@@ -43,16 +43,21 @@ class AddStatus(APIView):
         except Server.DoesNotExist:
             return Response(
                 {"error": "Invalid token"},
-                status=401
+                status=status.HTTP_401_UNAUTHORIZED
             )
         serializer = AgentSerializer(
             data = request.data
         )
+
         serializer.is_valid(
             raise_exception=True
         )
         serializer.save(
             server = server
+        )
+        return Response(
+            {"status": "ok"},
+            status=status.HTTP_201_CREATED
         )
 
 

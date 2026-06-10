@@ -6,7 +6,7 @@ from system.models import Server
 
 class AgentSerializer(serializers.ModelSerializer):
     class Meta:
-        modle = ServerStatus
+        model = ServerStatus
         fields = [
             'cpu_usage',
             'ram_usage',

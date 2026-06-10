@@ -27,10 +27,3 @@ class Alerts(models.Model):
 
 
 
-class Logs(models.Model):
-    server = models.ForeignKey(
-        Server,
-        on_delete=models.CASCADE,
-        related_name='ServerLog'
-    )
-    log = models.TextField()

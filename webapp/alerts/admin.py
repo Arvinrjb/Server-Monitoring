@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Alerts, Logs
+from alerts.models import Alerts
 
 
 admin.site.register(Alerts)
-admin.site.register(Logs)
