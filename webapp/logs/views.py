@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from logs.serializers import LogSerializer
@@ -41,3 +42,8 @@ class AgentLog(APIView):
             {"status": "ok"},
             status=status.HTTP_201_CREATED
         )
+
+
+
+class LogsViewSet(ReadOnlyModelViewSet):
+    pass

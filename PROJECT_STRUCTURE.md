@@ -1,7 +1,6 @@
 flowchart TD
     %% server
     user --> server
-    server -->|API| AddServer
     
     
 
@@ -13,6 +12,7 @@ flowchart TD
 
     %% Logs
  server --> Logs
+ Logs --> |API| AgentLogs
 
 
     %% Alerts

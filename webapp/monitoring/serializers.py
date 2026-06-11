@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from monitoring.models import ServerStatus
 from system.models import Server
-
+from logs.serializers import LogSerializer
 
 
 class AgentSerializer(serializers.ModelSerializer):
@@ -41,6 +41,7 @@ class StatusSerializer(serializers.ModelSerializer):
 
 class DashboardSerializer(serializers.ModelSerializer):
     latest_status = serializers.SerializerMethodField()
+    lastes_log = serializers.SerializerMethodField()
     class Meta:
         model = Server
         fields = [
@@ -50,6 +51,7 @@ class DashboardSerializer(serializers.ModelSerializer):
             'os',
             'status',
             'latest_status',
+            'lastes_log',
         ]
 
     def get_latest_status(self, obj):
@@ -59,6 +61,14 @@ class DashboardSerializer(serializers.ModelSerializer):
         if not status:
             return None
         return StatusSerializer(status).data
+    
+    def get_lastes_log(self, obj):
+        log = obj.logs.order_by(
+            "-id"
+        ).first()
+        if not log:
+            return None
+        return LogSerializer(log).data
 
 
 class AddStatusSerializer(serializers.ModelSerializer):

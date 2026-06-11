@@ -12,7 +12,7 @@ class Logs(models.Model):
     server = models.ForeignKey(
         Server,
         on_delete=models.CASCADE,
-        related_name='مogs',
+        related_name='logs',
     )
 
     level = models.CharField(
