@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views import View
 from system.serializers import ServerSerializer
 from system.models import Server
-from core.pagination import MyPagination
+from core.pagination import PagePagination
 
 
 
@@ -14,7 +14,7 @@ class Home(View):
 
 
 class AddServerViewSet(ModelViewSet):
-    pagination_class = MyPagination
+    pagination_class = PagePagination
     authentication_classes = [
         authentication.SessionAuthentication
     ]

@@ -1,9 +1,13 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.response import Response
-from rest_framework import status
-from logs.serializers import LogSerializer
+from rest_framework import status, authentication, permissions
+from rest_framework.filters import SearchFilter, OrderingFilter
+from logs.serializers import LogSerializer, ViewLogSerializer, LogBatchSerializer
+from logs.models import Logs
 from system.models import Server
+from core.pagination import PagePagination, ApiPagination
 
 
 class AgentLog(APIView):
@@ -29,15 +33,27 @@ class AgentLog(APIView):
                 {"error":"invalid token"},
                 status=status.HTTP_401_UNAUTHORIZED
             )
-        serializer = LogSerializer(
+        # serializer = LogSerializer(
+        #     data = request.data
+        # )
+        # serializer.is_valid(
+        #     raise_exception=True
+        # )
+        # serializer.save(
+        #     server = server
+        # )
+        serializer = LogBatchSerializer(
             data = request.data
         )
         serializer.is_valid(
             raise_exception=True
         )
-        serializer.save(
-            server = server
-        )
+        for log in serializer.validated_data["logs"]:
+            Logs.objects.create(
+                server=server, 
+                message=log["message"],
+                level=log["level"],
+            )
         return Response(
             {"status": "ok"},
             status=status.HTTP_201_CREATED
@@ -46,4 +62,36 @@ class AgentLog(APIView):
 
 
 class LogsViewSet(ReadOnlyModelViewSet):
-    pass
+    pagination_class = ApiPagination
+    authentication_classes = [
+        authentication.SessionAuthentication,
+    ]
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    serializer_class = ViewLogSerializer
+
+    filter_backends = [
+        DjangoFilterBackend,
+    ]
+
+    filterset_fileds = [
+        'server',
+        'level',
+    ]
+
+    search_fields = [
+        'message',
+        'level',
+    ]
+
+    ordering_fields = [ 
+        'created_at',
+    ]
+
+    def get_queryset(self):
+        return Logs.objects.filter(
+            server__user = self.request.user
+        ).order_by(
+            "-id"
+        )[:10]

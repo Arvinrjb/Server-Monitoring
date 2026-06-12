@@ -9,8 +9,6 @@ def get_offset():
     except:
         return 0
 
-
-
 def get_new_logs():
     offset = get_offset()
 
@@ -34,29 +32,29 @@ def save_offset(offset):
         file.write(str(offset))
 
 
+def parse_logs(logs):
+    result = []
 
-# def read_logs():
+    for line in logs:
+        try:
+            _, level, message = line.split("|", maxsplit=2)
 
-#     path = Path("agent.log")
+            result.append({
+                "level": level.strip(),
+                "message": message.strip(),
+            })
 
-#     if not path.exists():
-#         return []
+        except ValueError:
+            continue
 
-#     with open(
-#         "agent.log",
-#         "r",
-#         encoding="utf-8"
-#     ) as file:
-
-#         return file.readlines()
-    
+    return result
 
 
 def send_logs(url, token):
     logs, new_offset = get_new_logs()
 
     if not logs:
-        return
+        return  0
 
     response = requests.post(
         url,
@@ -64,27 +62,10 @@ def send_logs(url, token):
             "X-Agent-Token":token
         },
         json={
-            "message": "".join(logs)
+            "logs": parse_logs(logs)
         }
     )
 
     if response.status_code == 201:
         save_offset(new_offset)
 
-
-# def send_logs(url, token):
-
-#     logs = read_logs()
-#     if not logs:
-#         return
-
-#     requests.put(
-#         url,
-#         headers={
-#             "X-Agent-Token": token
-#         },
-#         json={
-#             "logs": logs
-#         }
-#     )
-# send_logs()

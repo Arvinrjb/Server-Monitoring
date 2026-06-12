@@ -1,5 +1,9 @@
-2026-06-10 19:21:59,443 | INFO | Test log sender
-2026-06-10 19:22:04,458 | INFO | Test log sender
-2026-06-10 19:22:09,467 | INFO | Test log sender
-2026-06-10 19:22:14,480 | INFO | Test log sender
-2026-06-10 19:22:19,494 | INFO | Test log sender
+2026-06-12 15:00:19,426 | INFO | Test log sender
+2026-06-12 15:00:24,444 | INFO | Test log sender
+2026-06-12 15:00:29,460 | INFO | Test log sender
+2026-06-12 15:01:19,184 | INFO | Test log sender
+2026-06-12 15:01:19,184 | WARNING | Test warning
+2026-06-12 15:01:19,184 | ERROR | Test error
+2026-06-12 15:01:24,205 | INFO | Test log sender
+2026-06-12 15:01:24,205 | WARNING | Test warning
+2026-06-12 15:01:24,205 | ERROR | Test error

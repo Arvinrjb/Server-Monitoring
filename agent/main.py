@@ -15,6 +15,8 @@ Token_2 = 'ab8c13e8947721cf5862b1b7109cc2333f606c4b7ad3b4f5e17b15443b8b5551'
 
 while True: 
     logger.info("Test log sender")
+    logger.warning("Test warning")
+    logger.error("Test error")
     send_logs(url_logs, Token_2)
     sleep(5)
 

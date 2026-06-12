@@ -9,14 +9,14 @@ from rest_framework.exceptions import ValidationError
 from monitoring.models import ServerStatus
 from monitoring.serializers import AddStatusSerializer, DashboardSerializer, AgentSerializer, ServerSerializer
 from system.models import Server
-from core.pagination import MyPagination, StatusPagination
+from core.pagination import PagePagination, ApiPagination
 
 
 
 
 class DashboardViewSet(ModelViewSet):
     serializer_class = DashboardSerializer
-    pagination_class = MyPagination
+    pagination_class = PagePagination
     authentication_classes = [
         authentication.SessionAuthentication,
     ]
@@ -69,7 +69,7 @@ class AddStatus(APIView):
 
 
 class AddStatusViewSet(ModelViewSet):
-    pagination_class = StatusPagination
+    pagination_class = ApiPagination
     serializer_class = AddStatusSerializer
     authentication_classes = [
         authentication.TokenAuthentication,
@@ -119,7 +119,7 @@ class AddStatusViewSet(ModelViewSet):
 
 
 class AddServerViewSet(ModelViewSet):
-    pagination_class = MyPagination
+    pagination_class = PagePagination
     authentication_classes = [
         authentication.SessionAuthentication
     ]
