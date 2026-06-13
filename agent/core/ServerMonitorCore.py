@@ -43,7 +43,7 @@ class disk:
 
 class network:
     def get_net_io_counters(self):
-        return psutil.net_io_counters(pernic=True)
+        return psutil.net_io_counters(pernic=False)
     
 
     
@@ -60,7 +60,6 @@ def UpTime_Windows():
 
 
 if __name__ == "__main__":
-    net = UpTime_Windows()
-    print(net)
+    pass
 
 

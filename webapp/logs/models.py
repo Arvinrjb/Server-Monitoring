@@ -27,7 +27,7 @@ class Logs(models.Model):
         blank=True,
     )
 
-    created_at = models.DateField(
+    created_at = models.DateTimeField(
         auto_now_add=True,
         blank=True,
         null=True

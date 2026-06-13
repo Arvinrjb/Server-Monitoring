@@ -26,13 +26,15 @@ class ServerStatus(models.Model):
         blank=True, 
         null=True
     )
-    network_in = models.CharField(
-        max_length=20, 
+    network_in = models.FloatField(
+        verbose_name="network_in",
+        default=0,
         blank=True, 
         null=True
     )
-    network_out = models.CharField(
-        max_length=20, 
+    network_out = models.FloatField(
+        verbose_name="network_out",
+        default=0,
         blank=True, 
         null=True
     )

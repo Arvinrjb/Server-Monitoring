@@ -8,7 +8,7 @@ class LogSerializer(serializers.ModelSerializer):
         model = Logs
         fields = [
             "message",
-            "level"
+            "level",
         ]
 
 class LogBatchSerializer(serializers.Serializer):
@@ -21,5 +21,6 @@ class ViewLogSerializer(serializers.ModelSerializer):
         fields = [
             'server',
             'message',
-            'level'
+            'level',
+            'created_at'
         ]

@@ -50,10 +50,12 @@ function updateUI(item) {
     document.querySelector(".cpu-progress").style.width = server.cpu_usage + "%";
     document.querySelector(".ram-progress").style.width = server.ram_usage + "%";
     document.querySelector(".disk-progress").style.width = server.disk_usage + "%";
+    document.querySelector(".network-progress").style.width = server.network_in + "%";
 
     document.querySelector(".cards .card:nth-child(1) p").innerText = server.cpu_usage + "%";
     document.querySelector(".cards .card:nth-child(2) p").innerText = server.ram_usage + "%";
     document.querySelector(".cards .card:nth-child(3) p").innerText = server.disk_usage + "%";
+    document.querySelector(".cards .card:nth-child(4) p").innerText = server.network_in + "%";
 
     document.querySelector(".server-header h2").innerText = item.hostname;
 

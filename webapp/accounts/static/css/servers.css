@@ -1,5 +1,4 @@
 /* ===== GLOBAL ===== */
-
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -9,7 +8,6 @@ body {
 }
 
 /* ===== SIDEBAR ===== */
-
 .sidebar {
     width: 11%;
     background: #1e293b;
@@ -19,13 +17,11 @@ body {
     left: 0;
     top: 0;
 }
-
 .logo {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 30px;
 }
-
 .menu a {
     display: block;
     color: #cbd5e1;
@@ -34,7 +30,6 @@ body {
     padding: 8px;
     border-radius: 6px;
 }
-
 .menu a:hover,
 .menu a.active {
     background: #334155;
@@ -42,7 +37,6 @@ body {
 }
 
 /* ===== MAIN CONTENT ===== */
-
 .main-content {
     margin-left: 240px;
     padding: 20px;
@@ -50,25 +44,21 @@ body {
 }
 
 /* ===== PAGE HEADER ===== */
-
 .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
 }
-
 .page-header h1 {
     margin: 0;
 }
-
 .page-header p {
     color: #94a3b8;
     margin-top: 5px;
 }
 
 /* ===== ADD BUTTON ===== */
-
 #addServerBtn {
     background: #38bdf8;
     color: white;
@@ -79,19 +69,16 @@ body {
     font-weight: bold;
     transition: 0.2s;
 }
-
 #addServerBtn:hover {
     background: #0ea5e9;
 }
 
 /* ===== SERVER TABLE ===== */
-
 .server-list {
     background: #1e293b;
     border-radius: 12px;
     overflow: hidden;
 }
-
 .server-row {
     display: grid;
     grid-template-columns: 2fr 2fr 1fr 1fr;
@@ -99,85 +86,131 @@ body {
     padding: 18px;
     border-bottom: 1px solid #334155;
 }
-
 .server-row:last-child {
     border-bottom: none;
 }
-
 .server-row.header {
     background: #334155;
     font-weight: bold;
 }
-
 .online {
     color: #22c55e;
     font-weight: bold;
 }
-
-.offline{
+.offline {
     color: #e82a2a;
     font-weight: bold;
 }
-/* ===== ACTION BUTTONS ===== */
 
+/* ===== ACTION BUTTONS ===== */
 .actions {
     display: flex;
     gap: 10px;
 }
-
+.view-btn, .delete-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
 .view-btn {
     background: #38bdf8;
     color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
 }
-
 .view-btn:hover {
     background: #0ea5e9;
 }
-
 .delete-btn {
     background: #ef4444;
     color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
 }
-
 .delete-btn:hover {
     background: #dc2626;
 }
 
-/* ===== MODAL ===== */
-
+/* ===== MODALS ===== */
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.8);
+    background: rgba(15, 23, 42, 0.85);
     display: none;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
-
-/* ===== MODAL CONTENT ===== */
-
 .modal-content {
     width: 420px;
     background: #1e293b;
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 0 25px rgba(0,0,0,.3);
+    box-shadow: 0 0 25px rgba(0,0,0,.4);
 }
 
-.modal-content h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
+/* Modal Logs */
+.logs-modal {
+    width: 720px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #334155;
+}
+.close-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 28px;
+    cursor: pointer;
+}
+.close-btn:hover {
+    color: #f87171;
 }
 
-/* ===== FORM ===== */
+.logs-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #0f172a;
+    border-radius: 8px;
+}
+.log-item {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    background: #1e293b;
+    border-radius: 8px;
+    border-left: 4px solid #64748b;
+}
+.log-item.error   { border-left-color: #ef4444; }
+.log-item.warning { border-left-color: #f59e0b; }
+.log-item.info    { border-left-color: #22c55e; }
+
+.log-time {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+.log-message {
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Scrollbar */
+.logs-container::-webkit-scrollbar {
+    width: 6px;
+}
+.logs-container::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 3px;
+}
+
+
 
 .modal-content form {
     display: flex;

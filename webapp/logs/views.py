@@ -73,14 +73,18 @@ class LogsViewSet(ReadOnlyModelViewSet):
 
     filter_backends = [
         DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
     ]
 
-    filterset_fileds = [
+    filterset_fields = [
         'server',
         'level',
     ]
 
     search_fields = [
+        'server__hostname',
+        'server__ipaddress',
         'message',
         'level',
     ]
@@ -92,6 +96,4 @@ class LogsViewSet(ReadOnlyModelViewSet):
     def get_queryset(self):
         return Logs.objects.filter(
             server__user = self.request.user
-        ).order_by(
-            "-id"
-        )[:10]
+        ).order_by("-id")

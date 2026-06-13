@@ -27,7 +27,7 @@ class Server(models.Model):
 
 
     def __str__(self):
-        return self.ipaddress
+        return  'Server Name:  ' + self.hostname + '  and IP address: ' + self.ipaddress
     
 
 

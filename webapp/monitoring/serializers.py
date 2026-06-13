@@ -11,7 +11,8 @@ class AgentSerializer(serializers.ModelSerializer):
             'cpu_usage',
             'ram_usage',
             'disk_usage',
-            'lastupdate'
+            'network_in',
+            'lastupdate',
         ]
 
 
@@ -35,6 +36,7 @@ class StatusSerializer(serializers.ModelSerializer):
             'cpu_usage',
             'ram_usage',
             'disk_usage',
+            'network_in',
             'uptime',
         ]
 
