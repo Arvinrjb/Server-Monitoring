@@ -5,7 +5,7 @@ flowchart TD
 
  %% Status
  server --> Monitoring
- Monitoring --> Dashboard 
+ Monitoring --> |web| Dashboard 
  Monitoring -->|API| Agent_Report 
 
 
@@ -17,6 +17,8 @@ flowchart TD
 
  %% Alerts
  server --> Alerts
+ Alerts --> |API| ViewAlerts
+ Alerts --> |core| AddAlerts
 
 
  %% Accounts

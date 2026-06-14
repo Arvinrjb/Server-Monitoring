@@ -3,27 +3,27 @@ from system.models import Server
 
 
 
-class Alerts(models.Model):
-    resolved_choice = [
-        ("Yes", "Yes"),
-        ("No", "No")
-    ]
-    security_choice = [
-        ('None', "None"),
-        ('warning', 'warning'),
-        ('critical', 'critical')
-    ]
-
+class Alert(models.Model):
     server = models.ForeignKey(
         Server,
-        related_name='alerts',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="alerts",
     )
-    type = models.CharField(verbose_name="Error type", max_length=20, blank=True, null=True)
-    admin_message = models.TextField(verbose_name="admin message for the problem", blank=True, null=True)
-    security = models.CharField(max_length=8, choices=security_choice, verbose_name='Security status')
-    resolved = models.CharField(max_length=3, choices=resolved_choice)
-    # created_at = models.DateTimeField(auto_now_add=True)
 
+    title = models.CharField(
+        max_length=200
+    )
 
+    message = models.TextField()
 
+    level = models.CharField(
+        max_length=10
+    )
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )

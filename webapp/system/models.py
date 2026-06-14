@@ -18,12 +18,33 @@ class Server(models.Model):
         null=False,
         blank=False
     )
-    hostname = models.CharField(max_length=100, blank=False, null=False)
-    ipaddress = models.GenericIPAddressField(blank=False, null=False)
-    os = models.CharField(max_length=20, blank=False, null=False)
-    status = models.CharField(max_length=7, choices=stat, default='offline')
-    lastseen = models.DateTimeField(auto_now=True)
-    agent_token = models.CharField(max_length=64, unique=True, default=generate_token)
+    hostname = models.CharField(
+        max_length=100, 
+        blank=False, 
+        null=False
+    )
+    ipaddress = models.GenericIPAddressField(
+        blank=False, 
+        null=False
+    )
+    os = models.CharField(
+        max_length=20,
+        blank=False, 
+        null=False
+    )
+    status = models.CharField(
+        max_length=7, 
+        choices=stat, 
+        default='offline'
+    )
+    lastseen = models.DateTimeField(
+        auto_now=True
+    )
+    agent_token = models.CharField(
+        max_length=64, 
+        unique=True, 
+        default=generate_token
+    )
 
 
     def __str__(self):

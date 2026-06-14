@@ -10,7 +10,7 @@ from monitoring.models import ServerStatus
 from monitoring.serializers import AddStatusSerializer, DashboardSerializer, AgentSerializer, ServerSerializer
 from system.models import Server
 from core.pagination import PagePagination, ApiPagination
-
+from core.views import AlertsManager_CPU, AlertsManager_RAM, AlertsManager_DISK
 
 
 
@@ -46,6 +46,8 @@ class AddStatus(APIView):
             server = Server.objects.get(
                 agent_token = token
             )
+            server.status = "online"
+            server.save()
         except Server.DoesNotExist:
             return Response(
                 {"error": "Invalid token"},
@@ -58,9 +60,13 @@ class AddStatus(APIView):
         serializer.is_valid(
             raise_exception=True
         )
-        serializer.save(
+        Server_status = serializer.save(
             server = server
         )
+        AlertsManager_CPU(server, Server_status)
+        AlertsManager_RAM(server, Server_status)
+        AlertsManager_DISK(server, Server_status)
+
         return Response(
             {"status": "ok"},
             status=status.HTTP_201_CREATED

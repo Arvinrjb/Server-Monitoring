@@ -1,5 +1,5 @@
 from django.contrib import admin
-from alerts.models import Alerts
+from alerts.models import Alert
 
 
-admin.site.register(Alerts)
+admin.site.register(Alert)
