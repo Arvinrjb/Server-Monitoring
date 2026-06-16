@@ -24,6 +24,11 @@ class Command(BaseCommand):
             lastseen__lt=offline_limit
         )
         for server in servers:
+            if server.status != "offline":
+                server.status = "offline"
+                server.save(
+                    update_fields=["status"]
+                )
             existing = Alert.objects.filter(
                 server=server,
                 title="Server Offline",
@@ -40,16 +45,20 @@ class Command(BaseCommand):
                     level="ERROR",
                 )
                 self.stdout.write(
-                    self.style.WARNING(
+                    self.style.ERROR(
                         f"{server.hostname} offline"
                     )
                 )
     def resolve_online_servers(self, offline_limit):
         servers = Server.objects.filter(
-            last_seen__gte=offline_limit
+            lastseen__gte=offline_limit
         )
-
         for server in servers:
+            if server.status != "online":
+                server.status = "online"
+                server.save(
+                    update_fields=["status"]
+                )
             alert = Alert.objects.filter(
                 server=server,
                 title="Server Offline",

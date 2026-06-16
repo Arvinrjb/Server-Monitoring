@@ -47,7 +47,6 @@ class AddStatus(APIView):
             server = Server.objects.get(
                 agent_token = token
             )
-            server.status = "online"
             server.lastseen = timezone.now()
             server.save(
                 update_fields=["lastseen"]
