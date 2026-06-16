@@ -11,6 +11,7 @@ class ShowAlertsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alert
         fields = [
+            'is_active',
             'title',
             'message',
             'level',

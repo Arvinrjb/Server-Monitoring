@@ -2,7 +2,7 @@ import requests
 import datetime
 from time import sleep
 from core import ServerMonitorCore
-from core.logger import logging
+from core.logger import logger
 
 def status_sender(url, token):
     time = datetime.datetime.now().time()
@@ -18,13 +18,13 @@ def status_sender(url, token):
     # download_speed = ((new_speed.bytes_recv-old_speed.bytes_recv)/1024 /1024)*8)/10 
 
     if int(cpu.get_cpu_percent()) >= 90:
-        logging.warning("CPU usage is greater than 90.")
+        logger.warning("CPU usage is greater than 90.")
 
     if int((ram.get_memory().used/ram.get_memory().total)*100) >= 90:
-        logging.warning("RAM usage is greater than 90.")
+        logger.warning("RAM usage is greater than 90.")
 
     if int((disk.get_disk_usage('C://').used/disk.get_disk_usage('C://').total)*100) >= 90 :
-        logging.warning("DISK usage is greater than 90.")
+        logger.warning("DISK usage is greater than 90.")
 
     headers = {
     "X-Agent-Token":token,

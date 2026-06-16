@@ -1,10 +1,51 @@
 const serverSelect = document.getElementById("serverSelect");
-
 const serversAPI = "http://127.0.0.1:8000/api/servers/";
-
-
+const API_ALERTS = 'http://127.0.0.1:8000/api/alerts/';
 let cachedData = [];
 
+
+
+async function loadAlerts() {
+    try {
+        const response = await fetch(API_ALERTS);
+        const data = await response.json();
+        
+        const alerts = data.results || data; 
+
+        if (alerts.length > 0) {
+            showAlerts(alerts);
+        }
+    } catch (error) {
+        console.error("Error fetching alerts:", error);
+    }
+}
+
+function showAlerts(alerts) {
+    const container = document.getElementById('alertsContainer');
+    container.innerHTML = '';
+    alerts.forEach(alert => {
+        if (alert.is_active){
+            const alertEl = document.createElement('div');
+            alertEl.className = `alert-item ${alert.level}`;
+            
+            alertEl.innerHTML = `
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                    <div class="alert-title">${alert.title}</div>
+                    <div class="alert-server">server: ${alert.server_name}</div>
+                    <div class="alert-message">${alert.message}</div>
+                </div>
+                <button class="close-alert" onclick="this.parentElement.remove()">×</button>
+            `;
+            
+            container.appendChild(alertEl);
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadAlerts();
+});
 
 async function loadData() {
     try {

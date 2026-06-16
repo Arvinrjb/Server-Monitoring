@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from django.core.cache import cache
 from rest_framework import authentication, permissions, status
@@ -47,7 +48,10 @@ class AddStatus(APIView):
                 agent_token = token
             )
             server.status = "online"
-            server.save()
+            server.lastseen = timezone.now()
+            server.save(
+                update_fields=["lastseen"]
+            )
         except Server.DoesNotExist:
             return Response(
                 {"error": "Invalid token"},
