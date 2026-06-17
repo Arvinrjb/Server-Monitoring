@@ -94,6 +94,9 @@ class LogsViewSet(ReadOnlyModelViewSet):
     ]
 
     def get_queryset(self):
+        if self.request.user.is_staff:
+            Logs.objects.all()
+            
         return Logs.objects.filter(
             server__user = self.request.user
         ).order_by("-id")

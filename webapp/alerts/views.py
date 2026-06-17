@@ -12,6 +12,9 @@ class AlertViewSet(ReadOnlyModelViewSet):
     ]
     serializer_class = ShowAlertsSerializer
     def get_queryset(self):
+        if self.request.user.is_staff:
+            return Alert.objects.all()
+
         return Alert.objects.filter(
             server__user = self.request.user
         ).select_related(

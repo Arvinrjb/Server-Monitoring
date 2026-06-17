@@ -10,7 +10,10 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('', Home.as_view(), name="Home"),
     path('dashboard/', include('accounts.urls'), name="Dashboard"),
+    path('admin-dashboard', include('core.urls')),
     path('login/', login_user.as_view(), name="Login"),
     path('signup/', sign_up.as_view(), name="SignUp"),
     path('api/', include('core.api_urls'), name="API"),
 ]
+
+

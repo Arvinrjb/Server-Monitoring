@@ -25,6 +25,9 @@ class AddServerViewSet(ModelViewSet):
     serializer_class = ServerSerializer
 
     def get_queryset(self): 
+        if self.request.user.is_staff:
+            return Server.objects.all()
+        
         return Server.objects.filter(
             user=self.request.user
         )

@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Servers Management</title>
+    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+</head>
+<body>
+<div class="sidebar">
+
+        <div class="logo">
+            Monitor API
+        </div>
+
+        <div class="menu">
+            <a href="/" >
+                Home
+            </a>
+
+
+            <a href="#" class="active">
+                Dashboard
+            </a>
+
+            <a href="/dashboard/servers">
+                Servers
+            </a>
+
+            <a href="#">
+                Statistics
+            </a>
+
+            <a href="#">
+                Settings
+            </a>
+
+            <a href="/logout/">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+    
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Server Management</h1>
+        </div>
+
+        <div class="table-container">
+            <table id="serversTable">
+                <thead>
+                    <tr>
+                        <th>Hostname</th>
+                        <th>IP Address</th>
+                        <th>Owner</th>
+                        <th>Status</th>
+                        <th>CPU</th>
+                        <th>RAM</th>
+                        <th>Alerts</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content detail-modal">
+            <div class="modal-header">
+                <h2 id="modalServerName"></h2>
+                <button class="close-btn" onclick="closeDetailModal()">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="openTab(0)">Overview</button>
+                    <button class="tab-btn" onclick="openTab(1)">Logs</button>
+                    <button class="tab-btn" onclick="openTab(2)">Alerts</button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div id="tab0" class="tab-content active">
+                    <div id="overviewContent"></div>
+                </div>
+                <div id="tab1" class="tab-content">
+                    <div id="logsContent"></div>
+                </div>
+                <div id="tab2" class="tab-content">
+                    <div id="alertsContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/admin_dashboard.js' %}"></script>
+</body>
+</html>

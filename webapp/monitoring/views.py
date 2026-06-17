@@ -11,7 +11,7 @@ from monitoring.models import ServerStatus
 from monitoring.serializers import AddStatusSerializer, DashboardSerializer, AgentSerializer, ServerSerializer
 from system.models import Server
 from core.pagination import PagePagination, ApiPagination
-from core.views import AlertsManager_CPU, AlertsManager_RAM, AlertsManager_DISK
+from core.AlertManager import AlertsManager_CPU, AlertsManager_RAM, AlertsManager_DISK
 
 
 
@@ -25,6 +25,9 @@ class DashboardViewSet(ModelViewSet):
         permissions.IsAuthenticated
     ]
     def get_queryset(self):
+        if self.request.user.is_staff:
+            return Server.objects.all()
+        
         return Server.objects.filter(
             user = self.request.user
         )
@@ -77,74 +80,74 @@ class AddStatus(APIView):
 
 
 
-class AddStatusViewSet(ModelViewSet):
-    pagination_class = ApiPagination
-    serializer_class = AddStatusSerializer
-    authentication_classes = [
-        authentication.TokenAuthentication,
-        # authentication.SessionAuthentication
-    ]
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
+# class AddStatusViewSet(ModelViewSet):
+#     pagination_class = ApiPagination
+#     serializer_class = AddStatusSerializer
+#     authentication_classes = [
+#         authentication.TokenAuthentication,
+#         # authentication.SessionAuthentication
+#     ]
+#     permission_classes = [
+#         permissions.IsAuthenticated,
+#     ]
 
-    filter_backends = [
-        DjangoFilterBackend,
-        SearchFilter, 
-        OrderingFilter,
-    ]
-    filterset_fields = {
-        'server':['exact'],
-        'cpu_usage':['gte', 'lte'],
-        'ram_usage':['gte', 'lte'],
-        'disk_usage':['gte', 'lte'],
-        'uptime':['gte', 'lte'],
-    }
+#     filter_backends = [
+#         DjangoFilterBackend,
+#         SearchFilter, 
+#         OrderingFilter,
+#     ]
+#     filterset_fields = {
+#         'server':['exact'],
+#         'cpu_usage':['gte', 'lte'],
+#         'ram_usage':['gte', 'lte'],
+#         'disk_usage':['gte', 'lte'],
+#         'uptime':['gte', 'lte'],
+#     }
 
-    search_fields = [
-        'server__hostname',
-        'server__ipaddress',
-    ]
+#     search_fields = [
+#         'server__hostname',
+#         'server__ipaddress',
+#     ]
 
-    ordering_fields = [
-        'cpu_usage',
-        'ram_usage',
-        'disk_usage',
-        'uptime',
-    ]
+#     ordering_fields = [
+#         'cpu_usage',
+#         'ram_usage',
+#         'disk_usage',
+#         'uptime',
+#     ]
 
-    def get_queryset(self):
-        return ServerStatus.objects.filter(
-            server__user = self.request.user
-        )
+#     def get_queryset(self):
+#         return ServerStatus.objects.filter(
+#             server__user = self.request.user
+#         )
     
-    def perform_create(self, serializer):
-        server = serializer.validated_data['server']
-        if server.user != self.request.user:
-            raise ValidationError(
-                "You do not own this server."
-            )
-        serializer.save()
+#     def perform_create(self, serializer):
+#         server = serializer.validated_data['server']
+#         if server.user != self.request.user:
+#             raise ValidationError(
+#                 "You do not own this server."
+#             )
+#         serializer.save()
 
 
-class AddServerViewSet(ModelViewSet):
-    pagination_class = PagePagination
-    authentication_classes = [
-        authentication.SessionAuthentication
-    ]
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
+# class AddServerViewSet(ModelViewSet):
+#     pagination_class = PagePagination
+#     authentication_classes = [
+#         authentication.SessionAuthentication
+#     ]
+#     permission_classes = [
+#         permissions.IsAuthenticated
+#     ]
     
-    serializer_class = ServerSerializer
+#     serializer_class = ServerSerializer
 
-    def get_queryset(self): 
-        return Server.objects.filter(
-            user=self.request.user
-        )
+#     def get_queryset(self): 
+#         return Server.objects.filter(
+#             user=self.request.user
+#         )
 
-    def perform_create(self, serializer):
-        return serializer.save(
-            user=self.request.user
-            )
+#     def perform_create(self, serializer):
+#         return serializer.save(
+#             user=self.request.user
+#             )
     
