@@ -2,7 +2,6 @@ from rest_framework import serializers
 from monitoring.models import ServerStatus
 from system.models import Server
 from logs.serializers import LogSerializer
-from alerts.serializers import ShowAlertsSerializer
 
 class AgentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,7 +43,6 @@ class StatusSerializer(serializers.ModelSerializer):
 class DashboardSerializer(serializers.ModelSerializer):
     latest_status = serializers.SerializerMethodField()
     lastes_log = serializers.SerializerMethodField()
-    lastes_alert = serializers.SerializerMethodField()
     user = serializers.CharField(
         source='user.username',
         read_only=True
@@ -60,7 +58,6 @@ class DashboardSerializer(serializers.ModelSerializer):
             'status',
             'latest_status',
             'lastes_log',
-            'lastes_alert',
         ]
 
     def get_latest_status(self, obj):
@@ -79,13 +76,6 @@ class DashboardSerializer(serializers.ModelSerializer):
             return None
         return LogSerializer(log).data
     
-    def get_lastes_alert(self, obj):
-        alert = obj.alerts.order_by(
-            "-id"
-        ).first()
-        if not alert:
-            return None
-        return ShowAlertsSerializer(alert).data
 
 class AddStatusSerializer(serializers.ModelSerializer):
     cpu_usage = serializers.FloatField(

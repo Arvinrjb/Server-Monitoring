@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from accounts.views import  login_user, sign_up
 from system.views import Home
 
@@ -13,7 +14,9 @@ urlpatterns = [
     path('admin-dashboard', include('core.urls')),
     path('login/', login_user.as_view(), name="Login"),
     path('signup/', sign_up.as_view(), name="SignUp"),
-    path('api/', include('core.api_urls'), name="API"),
+    path('api/', include('core.api_urls'), name="MainAPI"),
+    path('api/token/', TokenObtainPairView.as_view()),
+    path('api/token/refresh', TokenRefreshView.as_view()),
 ]
 
 

@@ -12,7 +12,7 @@ from monitoring.serializers import AddStatusSerializer, DashboardSerializer, Age
 from system.models import Server
 from core.pagination import PagePagination, ApiPagination
 from core.AlertManager import AlertsManager_CPU, AlertsManager_RAM, AlertsManager_DISK
-
+from core.Permissions import IsServerOwnerOrAdmin
 
 
 class DashboardViewSet(ModelViewSet):
@@ -22,7 +22,7 @@ class DashboardViewSet(ModelViewSet):
         authentication.SessionAuthentication,
     ]
     permission_classes = [
-        permissions.IsAuthenticated
+        IsServerOwnerOrAdmin
     ]
     def get_queryset(self):
         if self.request.user.is_staff:
