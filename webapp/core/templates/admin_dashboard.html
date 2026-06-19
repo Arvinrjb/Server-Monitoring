@@ -5,70 +5,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Servers Management</title>
+    <script src="{% static 'js/chart.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
 </head>
 <body>
-<div class="sidebar">
-
+    <div class="sidebar">
+    <div class="sidebar-top">
         <div class="logo">
             Monitor API
         </div>
 
         <div class="menu">
-            <a href="/" >
-                Home
-            </a>
-
-
-            <a href="#" class="active">
-                Dashboard
-            </a>
-
-            <a href="/dashboard/servers">
-                Servers
-            </a>
-
-            <a href="#">
-                Statistics
-            </a>
-
-            <a href="#">
-                Settings
-            </a>
-
-            <a href="/logout/">
-                Logout
-            </a>
-
+            <a href="/">Home</a>
+            <a href="#" class="active" id="dashboardMenuBtn">Dashboard</a>
+            <a href="/dashboard/servers">Servers</a>
+            
+            <a href="#" id="metricsMenuBtn" onclick="showMetricsPage()">Metrics</a>
+            
+            <a href="#">Statistics</a>
+            <a href="#">Settings</a>
         </div>
-
     </div>
     
+    <div class="sidebar-footer">
+        <div class="user-profile">
+            <div class="user-avatar">A</div>
+            <div class="user-info">
+                <span class="user-name">Admin User</span>
+                <span class="user-role">System Administrator</span>
+            </div>
+        </div>
+        <div class="menu">
+            <a href="/logout/" class="logout-btn">Logout</a>
+        </div>
+    </div>
+</div>
+    
     <div class="main-content">
-        <div class="page-header">
-            <h1>Server Management</h1>
+        <div id="mainDashboardView">
+            <div class="page-header">
+                <h1>Server Management</h1>
+            </div>
+
+            <div class="table-container">
+                <table id="serversTable">
+                    <thead>
+                        <tr>
+                            <th>Hostname</th>
+                            <th>IP Address</th>
+                            <th>Owner</th>
+                            <th>Status</th>
+                            <th>CPU</th>
+                            <th>RAM</th>
+                            <th>Alerts</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
         </div>
 
-        <div class="table-container">
-            <table id="serversTable">
-                <thead>
-                    <tr>
-                        <th>Hostname</th>
-                        <th>IP Address</th>
-                        <th>Owner</th>
-                        <th>Status</th>
-                        <th>CPU</th>
-                        <th>RAM</th>
-                        <th>Alerts</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
+        <div id="metricsPage" style="display: none;">
+            <div class="page-header">
+                <h1>Server Metrics (Last 24 Hours)</h1>
+            </div>
+            
+            <div id="serverSelectorContainer" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;"></div>
+
+            <div class="table-container" style="padding: 20px; min-height: 450px;">
+                <canvas id="metricsChart"></canvas>
+            </div>
         </div>
     </div>
 
-    <!-- Detail Modal -->
     <div id="detailModal" class="modal">
         <div class="modal-content detail-modal">
             <div class="modal-header">
@@ -77,14 +87,12 @@
             </div>
             
             <div class="modal-body">
-                <!-- Tabs -->
                 <div class="tabs">
                     <button class="tab-btn active" onclick="openTab(0)">Overview</button>
                     <button class="tab-btn" onclick="openTab(1)">Logs</button>
                     <button class="tab-btn" onclick="openTab(2)">Alerts</button>
                 </div>
 
-                <!-- Tab Contents -->
                 <div id="tab0" class="tab-content active">
                     <div id="overviewContent"></div>
                 </div>

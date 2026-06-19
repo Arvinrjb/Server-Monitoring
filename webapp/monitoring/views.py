@@ -1,4 +1,6 @@
+from datetime import timedelta
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from django.core.cache import cache
 from rest_framework import authentication, permissions, status
@@ -8,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.exceptions import ValidationError
 from monitoring.models import ServerStatus
-from monitoring.serializers import AddStatusSerializer, DashboardSerializer, AgentSerializer, ServerSerializer
+from monitoring.serializers import AddStatusSerializer, DashboardSerializer, AgentSerializer, ServerSerializer, StatusSerializer
 from system.models import Server
 from core.pagination import PagePagination, ApiPagination
 from core.AlertManager import AlertsManager_CPU, AlertsManager_RAM, AlertsManager_DISK
@@ -79,6 +81,65 @@ class AddStatus(APIView):
         )
 
 
+class ServerChartAPIView(APIView):
+    authentication_classes=[
+        authentication.SessionAuthentication,
+    ]
+    permission_classes = [
+        IsServerOwnerOrAdmin,
+    ]
+
+    def get(self, request, server_id):
+        server = get_object_or_404(
+            Server,
+            id=server_id,
+            user=request.user,
+        )
+
+        last_24_hours = timezone.now() - timedelta(
+            hours=24
+        )
+
+        statuses = ServerStatus.objects.filter(
+            server=server,
+            lastupdate__gte=last_24_hours,
+        ).order_by(
+            "lastupdate"
+        )
+
+        data = []
+
+        for status in statuses:
+            data.append({
+                "time": status.lastupdate.strftime(
+                    "%Y-%m-%d %H:%M"
+                ),
+                "cpu": status.cpu_usage,
+                "ram": status.ram_usage,
+                "disk": status.disk_usage,
+            })
+
+        return Response(data)
+
+class Status(APIView):
+    authentication_classes = [
+        authentication.SessionAuthentication,
+    ]
+    permission_classes = [
+        IsServerOwnerOrAdmin
+    ]
+    def get(self, request):
+        if self.request.user.is_staff and self.request.user.is_superuser:
+            data = ServerStatus.objects.all()
+        else:
+            data = ServerStatus.objects.filter(
+            server__user = self.request.user 
+            )
+        serializer = StatusSerializer(
+            data,
+            many=True
+        )
+        return Response(serializer.data)
 
 # class AddStatusViewSet(ModelViewSet):
 #     pagination_class = ApiPagination

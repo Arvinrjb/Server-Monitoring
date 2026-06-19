@@ -29,20 +29,26 @@ class ServerSerializer(serializers.ModelSerializer):
 
 
 class StatusSerializer(serializers.ModelSerializer):
+    server = serializers.CharField(
+        source='server.hostname',
+        read_only=True
+    )
     class Meta:
         model = ServerStatus
         fields = [
+            'server',
             'cpu_usage',
             'ram_usage',
             'disk_usage',
             'network_in',
             'uptime',
+            'lastupdate',
         ]
 
 
 class DashboardSerializer(serializers.ModelSerializer):
     latest_status = serializers.SerializerMethodField()
-    lastes_log = serializers.SerializerMethodField()
+    lastest_log = serializers.SerializerMethodField()
     user = serializers.CharField(
         source='user.username',
         read_only=True
@@ -57,7 +63,7 @@ class DashboardSerializer(serializers.ModelSerializer):
             'os',
             'status',
             'latest_status',
-            'lastes_log',
+            'lastest_log',
         ]
 
     def get_latest_status(self, obj):
@@ -68,7 +74,7 @@ class DashboardSerializer(serializers.ModelSerializer):
             return None
         return StatusSerializer(status).data
     
-    def get_lastes_log(self, obj):
+    def get_lastest_log(self, obj):
         log = obj.logs.order_by(
             "-id"
         ).first()

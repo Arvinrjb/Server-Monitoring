@@ -8,7 +8,7 @@ from logs.serializers import LogSerializer, ViewLogSerializer, LogBatchSerialize
 from logs.models import Logs
 from system.models import Server
 from core.pagination import PagePagination, ApiPagination
-
+from core.Permissions import IsServerOwnerOrAdmin
 
 class AgentLog(APIView):
     permission_classes = []
@@ -67,7 +67,7 @@ class LogsViewSet(ReadOnlyModelViewSet):
         authentication.SessionAuthentication,
     ]
     permission_classes = [
-        permissions.IsAuthenticated,
+        IsServerOwnerOrAdmin
     ]
     serializer_class = ViewLogSerializer
 
@@ -94,9 +94,10 @@ class LogsViewSet(ReadOnlyModelViewSet):
     ]
 
     def get_queryset(self):
-        if self.request.user.is_staff:
-            Logs.objects.all()
-            
-        return Logs.objects.filter(
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            logs =  Logs.objects.all()
+        else:
+            logs = Logs.objects.filter(
             server__user = self.request.user
         ).order_by("-id")
+        return logs
