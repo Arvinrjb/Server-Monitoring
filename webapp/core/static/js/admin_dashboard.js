@@ -4,7 +4,6 @@ const API_ALERTS = 'http://127.0.0.1:8000/api/alerts/';
 
 let currentServerId = null;
 
-// ۱. بارگذاری سرورها و آلرت‌ها در جدول اصلی
 async function loadServers() {
     try {
         const [serversRes, alertsRes] = await Promise.all([
@@ -22,7 +21,6 @@ async function loadServers() {
         tbody.innerHTML = '';
 
         servers.forEach(server => { 
-            // بررسی وجود آلرت فعال بدون حساسیت به حروف کوچک و بزرگ
             const hasAlert = alerts.some(alert => 
                 alert.server_name && server.hostname &&
                 alert.server_name.trim().toLowerCase() === server.hostname.trim().toLowerCase() && 
@@ -62,20 +60,17 @@ async function loadServers() {
     }
 }
 
-// ۲. نمایش مودال جزئیات سرور و تب‌ها
 async function showServerDetails(id, server) {
     currentServerId = id;
     
-    // اجرای توابع مربوط به تب‌ها با آرگومان‌های صحیح
-    loadServerLogs(id);                  // ارسال ID برای لاگ‌ها
-    loadServerAlerts(server.hostname);   // ارسال نام سرور برای آلرت‌ها
+    loadServerLogs(id);                  
+    loadServerAlerts(server.hostname);   
     
     document.getElementById('modalServerName').textContent = server.hostname;
 
     const modal = document.getElementById('detailModal');
     modal.classList.add('show');
 
-    // باز کردن تب Overview به صورت پیش‌فرض
     openTab(0);
 
     document.getElementById('overviewContent').innerHTML = `
@@ -88,13 +83,11 @@ async function showServerDetails(id, server) {
     `;
 }
 
-// ۳. بستن مودال
 function closeDetailModal() {
     const modal = document.getElementById('detailModal');
     modal.classList.remove('show');
 }
 
-// ۴. مدیریت جابجایی بین تب‌ها
 function openTab(tabIndex) {
     const contents = document.querySelectorAll('.tab-content');
     contents.forEach(content => content.classList.remove('active'));
@@ -108,7 +101,6 @@ function openTab(tabIndex) {
     }
 }
 
-// ۵. بارگذاری لاگ‌ها (با قابلیت دسترسی به صفحات بک‌آند)
 async function loadServerLogs(serverId, limit = 20) {
     const logsContent = document.getElementById('logsContent');
     
@@ -175,7 +167,6 @@ async function loadServerLogs(serverId, limit = 20) {
     }
 }
 
-// ۶. بارگذاری و نمایش کامل آلرت‌های مربوط به سرور
 async function loadServerAlerts(serverName) {
     const alertsContent = document.getElementById('alertsContent');
     alertsContent.innerHTML = '<p style="color: #94a3b8;">Loading alerts...</p>';
@@ -185,7 +176,6 @@ async function loadServerAlerts(serverName) {
         const data = await res.json();
         const allAlerts = data.results || data;
 
-        // فیلتر کردن دقیق بر اساس نام بدون حساسیت به فضاهای خالی و بزرگی حروف
         const serverAlerts = allAlerts.filter(alert => 
             alert.server_name && serverName && 
             alert.server_name.trim().toLowerCase() === serverName.trim().toLowerCase()
@@ -232,7 +222,7 @@ async function loadServerAlerts(serverName) {
     }
 }
 
-// ۷. دریافت توکن CSRF (در صورت نیاز به درخواست‌های ارسالی به Django)
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -247,27 +237,21 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-// تعریف یک متغیر گلوبال برای نگهداری شیء نمودار تا در صورت تغییر سرور، نمودار قبلی ریست شود
 let performanceChart = null;
 
-// تابع جابجایی به صفحه چارت‌ها
 function showMetricsPage() {
-    // پنهان کردن جدول اصلی سرورها
+
     document.querySelector('.table-container').style.display = 'none';
     document.querySelector('.page-header').style.display = 'none';
     
-    // نمایش بخش چارت
     document.getElementById('metricsPage').style.display = 'block';
     
-    // فعال کردن کلاس active در سایدبار
     document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
     document.getElementById('metricsMenuBtn').classList.add('active');
     
-    // ساخت دکمه‌های انتخاب سرور
     generateServerSelector();
 }
 
-// تابع ساخت دکمه برای هر سرور جهت سوئیچ سریع
 async function generateServerSelector() {
     const container = document.getElementById('serverSelectorContainer');
     container.innerHTML = '<p style="color: #94a3b8;">Loading servers...</p>';
@@ -282,19 +266,16 @@ async function generateServerSelector() {
         serverList.forEach((server, index) => {
             const btn = document.createElement('button');
             btn.textContent = server.hostname;
-            btn.className = 'view-btn'; // استفاده از استایل دکمه‌های قبلی شما
+            btn.className = 'view-btn';
             btn.style.marginRight = '5px';
             btn.onclick = () => {
-                // هایلایت کردن دکمه فعال
                 document.querySelectorAll('#serverSelectorContainer .view-btn').forEach(b => b.style.background = '#38bdf8');
-                btn.style.background = '#10b981'; // رنگ سبز برای سرور انتخاب شده
+                btn.style.background = '#10b981'; 
                 
-                // لود کردن چارت برای سرور انتخاب شده
                 loadChartData(server.id);
             };
             container.appendChild(btn);
             
-            // به صورت پیش‌فرض چارت اولین سرور را لود کند
             if (index === 0) btn.click();
         });
     } catch (error) {
@@ -302,14 +283,11 @@ async function generateServerSelector() {
     }
 }
 
-// تابع دریافت داده‌ها و رسم نمودار Chart.js
 async function loadChartData(serverId) {
     try {
-        // ایجاد درخواست به آدرس داینامیک سرور انتخاب شده
         const res = await fetch(`http://127.0.0.1:8000/api/servers/${serverId}/chart/`);
         const data = await res.json();
         
-        // استخراج آرایه‌ها برای نمودار
         const labels = data.map(item => item.time);
         const cpuData = data.map(item => item.cpu);
         const ramData = data.map(item => item.ram);
@@ -317,29 +295,27 @@ async function loadChartData(serverId) {
         
         const ctx = document.getElementById('metricsChart').getContext('2d');
         
-        // اگر از قبل نموداری رسم شده، آن را حذف کن تا تداخل حافظه ایجاد نشود
         if (performanceChart) {
             performanceChart.destroy();
         }
         
-        // ساخت چارت جدید
         performanceChart = new Chart(ctx, {
-            type: 'line', // نوع نمودار خطی
+            type: 'line', 
             data: {
-                labels: labels, // محور افقی (زمان)
+                labels: labels,
                 datasets: [
                     {
                         label: 'CPU Usage (%)',
                         data: cpuData,
-                        borderColor: '#f59e0b', // رنگ زرد (هماهنگ با پروگرس‌بار شما)
+                        borderColor: '#f59e0b', 
                         backgroundColor: 'rgba(245, 158, 11, 0.1)',
                         borderWidth: 2,
-                        tension: 0.3 // نرمی خطوط نمودار
+                        tension: 0.3 
                     },
                     {
                         label: 'RAM Usage (%)',
                         data: ramData,
-                        borderColor: '#22c55e', // رنگ سبز
+                        borderColor: '#22c55e', 
                         backgroundColor: 'rgba(34, 197, 94, 0.1)',
                         borderWidth: 2,
                         tension: 0.3
@@ -347,7 +323,7 @@ async function loadChartData(serverId) {
                     {
                         label: 'Disk Usage (%)',
                         data: diskData,
-                        borderColor: '#38bdf8', // رنگ آبی مدرن
+                        borderColor: '#38bdf8',
                         backgroundColor: 'rgba(56, 189, 248, 0.1)',
                         borderWidth: 2,
                         tension: 0.3
@@ -359,17 +335,17 @@ async function loadChartData(serverId) {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        labels: { color: '#e2e8f0' } // رنگ متون راهنمای بالای چارت
+                        labels: { color: '#e2e8f0' } 
                     }
                 },
                 scales: {
                     x: {
-                        grid: { color: '#334155' }, // رنگ خطوط شبکه
+                        grid: { color: '#334155' }, 
                         ticks: { color: '#94a3b8' }
                     },
                     y: {
                         min: 0,
-                        max: 100, // سقف ۱۰۰ درصد برای ریسورس‌ها
+                        max: 100, 
                         grid: { color: '#334155' },
                         ticks: { color: '#94a3b8' }
                     }
@@ -383,7 +359,6 @@ async function loadChartData(serverId) {
 }
 
 
-// لود اولیه پروژه
 document.addEventListener('DOMContentLoaded', () => {
     loadServers();
 });

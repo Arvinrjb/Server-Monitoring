@@ -107,19 +107,52 @@ class ServerChartAPIView(APIView):
             "lastupdate"
         )
 
-        data = []
+        result = []
+        groups = {}
 
         for status in statuses:
-            data.append({
-                "time": status.lastupdate.strftime(
-                    "%Y-%m-%d %H:%M"
-                ),
-                "cpu": status.cpu_usage,
-                "ram": status.ram_usage,
-                "disk": status.disk_usage,
-            })
+            bucket = status.lastupdate.replace(
+            minute=(status.lastupdate.minute // 10) * 10,
+            second=0,
+            microsecond=0
+            )
+            if bucket not in groups:
+                groups[bucket] = {
+                "cpu": [],
+                "ram": [],
+                "disk": [],
+                }
+            groups[bucket]["cpu"].append(
+            status.cpu_usage
+            )
+            groups[bucket]["ram"].append(
+                status.ram_usage
+            )
+            groups[bucket]["disk"].append(
+                status.disk_usage
+            )
 
-        return Response(data)
+        for bucket, values in groups.items():
+            avg_cpu = sum(
+                values["cpu"]
+            ) / len(values["cpu"])
+            avg_ram = sum(
+                values["ram"]
+            ) / len(values["ram"])
+            avg_disk = sum(
+                values["disk"]
+            ) / len(values["disk"])
+
+            result.append({
+                "time": bucket.strftime(
+                    "%H:%M"
+                ),
+                "cpu": round(avg_cpu, 2),
+                "ram": round(avg_ram, 2),
+                "disk": round(avg_disk, 2),
+            })
+        
+        return Response(result)
 
 class Status(APIView):
     authentication_classes = [
@@ -141,74 +174,74 @@ class Status(APIView):
         )
         return Response(serializer.data)
 
-# class AddStatusViewSet(ModelViewSet):
-#     pagination_class = ApiPagination
-#     serializer_class = AddStatusSerializer
-#     authentication_classes = [
-#         authentication.TokenAuthentication,
-#         # authentication.SessionAuthentication
-#     ]
-#     permission_classes = [
-#         permissions.IsAuthenticated,
-#     ]
+class AddStatusViewSet(ModelViewSet):
+    pagination_class = ApiPagination
+    serializer_class = AddStatusSerializer
+    authentication_classes = [
+        authentication.TokenAuthentication,
+        # authentication.SessionAuthentication
+    ]
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
 
-#     filter_backends = [
-#         DjangoFilterBackend,
-#         SearchFilter, 
-#         OrderingFilter,
-#     ]
-#     filterset_fields = {
-#         'server':['exact'],
-#         'cpu_usage':['gte', 'lte'],
-#         'ram_usage':['gte', 'lte'],
-#         'disk_usage':['gte', 'lte'],
-#         'uptime':['gte', 'lte'],
-#     }
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter, 
+        OrderingFilter,
+    ]
+    filterset_fields = {
+        'server':['exact'],
+        'cpu_usage':['gte', 'lte'],
+        'ram_usage':['gte', 'lte'],
+        'disk_usage':['gte', 'lte'],
+        'uptime':['gte', 'lte'],
+    }
 
-#     search_fields = [
-#         'server__hostname',
-#         'server__ipaddress',
-#     ]
+    search_fields = [
+        'server__hostname',
+        'server__ipaddress',
+    ]
 
-#     ordering_fields = [
-#         'cpu_usage',
-#         'ram_usage',
-#         'disk_usage',
-#         'uptime',
-#     ]
+    ordering_fields = [
+        'cpu_usage',
+        'ram_usage',
+        'disk_usage',
+        'uptime',
+    ]
 
-#     def get_queryset(self):
-#         return ServerStatus.objects.filter(
-#             server__user = self.request.user
-#         )
+    def get_queryset(self):
+        return ServerStatus.objects.filter(
+            server__user = self.request.user
+        )
     
-#     def perform_create(self, serializer):
-#         server = serializer.validated_data['server']
-#         if server.user != self.request.user:
-#             raise ValidationError(
-#                 "You do not own this server."
-#             )
-#         serializer.save()
+    def perform_create(self, serializer):
+        server = serializer.validated_data['server']
+        if server.user != self.request.user:
+            raise ValidationError(
+                "You do not own this server."
+            )
+        serializer.save()
 
 
-# class AddServerViewSet(ModelViewSet):
-#     pagination_class = PagePagination
-#     authentication_classes = [
-#         authentication.SessionAuthentication
-#     ]
-#     permission_classes = [
-#         permissions.IsAuthenticated
-#     ]
+class AddServerViewSet(ModelViewSet):
+    pagination_class = PagePagination
+    authentication_classes = [
+        authentication.SessionAuthentication
+    ]
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
     
-#     serializer_class = ServerSerializer
+    serializer_class = ServerSerializer
 
-#     def get_queryset(self): 
-#         return Server.objects.filter(
-#             user=self.request.user
-#         )
+    def get_queryset(self): 
+        return Server.objects.filter(
+            user=self.request.user
+        )
 
-#     def perform_create(self, serializer):
-#         return serializer.save(
-#             user=self.request.user
-#             )
+    def perform_create(self, serializer):
+        return serializer.save(
+            user=self.request.user
+            )
     

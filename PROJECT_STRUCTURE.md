@@ -6,7 +6,9 @@ flowchart TD
  %% Status
  server --> Monitoring
  Monitoring --> |web| Dashboard 
+ Monitoring --> |web| AdminDashboard
  Monitoring -->|API| Agent_Report 
+ Monitoring --> |API| ServerChart
 
 
  %% Logs
