@@ -35,3 +35,15 @@ class Logs(models.Model):
 
     def __str__(self):
         return self.server.ipaddress
+    
+    class Meta:
+        permissions = [
+            (
+                "view_all_logs",
+                "Can view all logs"
+            ),
+            (
+                "manage_logs",
+                "Can manage logs"
+            )
+        ]

@@ -5,7 +5,7 @@ from django.views import View
 from system.serializers import ServerSerializer
 from system.models import Server
 from core.pagination import PagePagination
-
+from core.Permissions import IsServerOwnerOrAdmin
 
 
 class Home(View):
@@ -19,13 +19,17 @@ class AddServerViewSet(ModelViewSet):
         authentication.SessionAuthentication
     ]
     permission_classes = [
-        permissions.IsAuthenticated
+        IsServerOwnerOrAdmin
     ]
     
     serializer_class = ServerSerializer
 
     def get_queryset(self): 
-        if self.request.user.is_staff:
+        if self.request.user.has_perms(
+            [
+                "system.view_all_servers"
+            ]
+        ):
             return Server.objects.all()
         
         return Server.objects.filter(

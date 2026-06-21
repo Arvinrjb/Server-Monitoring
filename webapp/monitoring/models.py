@@ -49,4 +49,16 @@ class ServerStatus(models.Model):
 
     def __str__(self):
         return self.server.ipaddress + '\t' + self.server.hostname
+
     
+    class Meta:
+        permissions = [
+            (
+                "view_all_statuses",
+                "Can view all statuses"
+            ),
+            (
+                "manage_statuses",
+                "Can manage statuses"
+            )
+        ] 

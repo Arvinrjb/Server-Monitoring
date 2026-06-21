@@ -50,6 +50,17 @@ class Server(models.Model):
     def __str__(self):
         return  'Server Name:  ' + self.hostname + '  and IP address: ' + self.ipaddress
     
-
+    
+    class Meta:
+        permissions = [
+            (
+                "view_all_servers",
+                "Can view all servers"
+            ),
+            (
+                "manage_servers",
+                "Can manage servers"
+            )
+        ]
 
 

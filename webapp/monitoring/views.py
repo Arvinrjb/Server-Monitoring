@@ -14,7 +14,7 @@ from monitoring.serializers import AddStatusSerializer, DashboardSerializer, Age
 from system.models import Server
 from core.pagination import PagePagination, ApiPagination
 from core.AlertManager import AlertsManager_CPU, AlertsManager_RAM, AlertsManager_DISK
-from core.Permissions import IsServerOwnerOrAdmin
+from core.Permissions import IsServerOwnerOrAdmin, IsSupport, IsAdmin
 
 
 class DashboardViewSet(ModelViewSet):
@@ -27,7 +27,11 @@ class DashboardViewSet(ModelViewSet):
         IsServerOwnerOrAdmin
     ]
     def get_queryset(self):
-        if self.request.user.is_staff:
+        if self.request.user.has_perms(
+            [
+                "monitoring.view_all_statuses",
+            ]
+        ):
             return Server.objects.all()
         
         return Server.objects.filter(
@@ -90,12 +94,21 @@ class ServerChartAPIView(APIView):
     ]
 
     def get(self, request, server_id):
-        server = get_object_or_404(
-            Server,
-            id=server_id,
-            user=request.user,
-        )
-
+        if self.request.user.has_perms(
+            [
+                "monitoring.view_all_statuses",
+            ]
+        ):            
+            server = get_object_or_404(
+                Server,
+                id=server_id,
+            )
+        else:
+            server = get_object_or_404(
+                Server,
+                id=server_id,
+                user=request.user,
+            ) 
         last_24_hours = timezone.now() - timedelta(
             hours=24
         )

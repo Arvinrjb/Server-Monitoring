@@ -8,7 +8,7 @@ router = DefaultRouter()
 router.register(
     r"servers",
     DashboardViewSet,
-    basename='MonitoringViewSet'
+    basename='View Dashboard'
 )
 
 

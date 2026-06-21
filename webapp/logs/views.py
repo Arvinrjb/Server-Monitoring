@@ -94,7 +94,11 @@ class LogsViewSet(ReadOnlyModelViewSet):
     ]
 
     def get_queryset(self):
-        if self.request.user.is_staff or self.request.user.is_superuser:
+        if self.request.user.has_perms(
+            [
+                "logs.view_all_logs"
+            ]
+        ):
             logs =  Logs.objects.all()
         else:
             logs = Logs.objects.filter(

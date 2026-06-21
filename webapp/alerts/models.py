@@ -30,3 +30,15 @@ class Alert(models.Model):
 
     def __str__(self):
         return self.server.hostname + " " + self.server.ipaddress
+    
+    class Meta:
+        permissions = [
+            (
+                "view_all_alerts",
+                "Can view all alerts"
+            ),
+            (
+                "manage_alerts",
+                "Can manage alerts"
+            )
+        ]
