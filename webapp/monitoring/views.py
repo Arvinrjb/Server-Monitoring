@@ -26,6 +26,42 @@ class DashboardViewSet(ModelViewSet):
     permission_classes = [
         IsServerOwnerOrAdmin
     ]
+
+    def list(self, request, *args, **kwargs):
+        cache_key = (
+            f"dashboard_{self.request.user.id}_"
+            f"{self.request.GET.urlencode()}"
+            )
+        cache_data = cache.get(
+            cache_key
+        )
+        if cache_data:
+            return Response(
+                cache_data
+            )
+
+        queryset = self.filter_queryset(
+            self.get_queryset()
+        )
+        page = self.paginate_queryset(
+            queryset
+        )
+        serializer = self.get_serializer(
+            page,
+            many=True
+        )
+        data = self.get_paginated_response(
+            serializer.data
+        ).data
+        cache.set(
+            cache_key,
+            data,
+            timeout=10
+        )
+        return Response(
+            data
+        )
+
     def get_queryset(self):
         if self.request.user.has_perms(
             [
@@ -33,7 +69,7 @@ class DashboardViewSet(ModelViewSet):
             ]
         ):
             return Server.objects.all()
-        
+
         return Server.objects.filter(
             user = self.request.user
         )
@@ -108,7 +144,20 @@ class ServerChartAPIView(APIView):
                 Server,
                 id=server_id,
                 user=request.user,
-            ) 
+            )
+        cache_key = (
+            f"chart_{self.request.user.id}_"
+            f"{server.id}"
+        )
+        cache_data = cache.get(
+            cache_key
+        )
+
+        if cache_data:
+            return Response(
+                cache_data
+            )
+        
         last_24_hours = timezone.now() - timedelta(
             hours=24
         )
@@ -164,8 +213,16 @@ class ServerChartAPIView(APIView):
                 "ram": round(avg_ram, 2),
                 "disk": round(avg_disk, 2),
             })
-        
-        return Response(result)
+
+        cache.set(
+            cache_key,
+            result,
+            timeout=600
+        )
+        return Response(
+            result
+        )
+
 
 class Status(APIView):
     authentication_classes = [

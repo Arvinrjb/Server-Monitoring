@@ -1,7 +1,11 @@
-from rest_framework.viewsets import ModelViewSet
-from rest_framework import authentication, permissions
 from django.shortcuts import render
 from django.views import View
+from django.core.cache import cache
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+from rest_framework.filters import SearchFilter
 from system.serializers import ServerSerializer
 from system.models import Server
 from core.pagination import PagePagination
@@ -14,6 +18,7 @@ class Home(View):
 
 
 class AddServerViewSet(ModelViewSet):
+    serializer_class = ServerSerializer
     pagination_class = PagePagination
     authentication_classes = [
         authentication.SessionAuthentication
@@ -22,7 +27,64 @@ class AddServerViewSet(ModelViewSet):
         IsServerOwnerOrAdmin
     ]
     
-    serializer_class = ServerSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+    ]
+
+    filterset_fields = [
+        "user",
+        "os",
+        "status",
+    ]
+
+    search_fields = [
+        "user",
+        "hostname",
+        "ipaddress",
+        "os",
+    ]
+
+    def list(self, request, *args, **kwargs):
+        cache_key = (
+            f"servers_{self.request.user.id}"
+        )
+
+        cache_data = cache.get(
+            cache_key
+        )
+
+        if cache_data:
+            return Response(
+                cache_data
+            )
+
+        queryset = self.filter_queryset(
+            self.get_queryset()
+        )
+
+        page = self.paginate_queryset(
+            queryset
+        )
+
+        serializer = self.get_serializer(
+            page,
+            many=True
+        )
+
+        data = self.get_paginated_response(
+            serializer.data
+        ).data
+
+        cache.set(
+            cache_key,
+            data,
+            timeout=6000
+        )
+
+        return Response(
+            data
+        )
 
     def get_queryset(self): 
         if self.request.user.has_perms(
@@ -37,6 +99,9 @@ class AddServerViewSet(ModelViewSet):
         )
 
     def perform_create(self, serializer):
+        cache.delete(
+            f"servers_{self.request.user.id}"
+        )
         return serializer.save(
             user=self.request.user
             )
