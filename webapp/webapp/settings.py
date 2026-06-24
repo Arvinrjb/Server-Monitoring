@@ -157,10 +157,10 @@ SIMPLE_JWT = {
 CACHES = {
     "default": {
         "BACKEND": 
-            "django.core.cache.backends.locmem.LocMemCache",
-            # "django_redis.cache.RedisCache",
+            # "django.core.cache.backends.locmem.LocMemCache",
+            "django_redis.cache.RedisCache",
         "LOCATION": 
-            "unique-monitoring-cache",
-            # "redis://127.0.0.1:6379/1",
+            # "unique-monitoring-cache",
+            "redis://127.0.0.1:6379/1",
     }
 }

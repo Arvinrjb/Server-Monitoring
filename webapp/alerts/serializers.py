@@ -15,5 +15,6 @@ class ShowAlertsSerializer(serializers.ModelSerializer):
             'title',
             'message',
             'level',
-            'server_name'
+            'server_name',
+            'created_at',
         ]
