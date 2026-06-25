@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="fa" dir="ltr">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +9,12 @@
 </head>
 <body>
     <div class="sidebar">
-        <div class="logo">
-            Monitor API
-        </div>
+        <div class="logo">Monitor API</div>
         <div class="menu">
             <a href="/">Home</a>
             <a href="/dashboard/">Dashboard</a>
             <a href="#" class="active">Servers</a>
-            <a href="#">Statistics</a>
+            <a href="/dashboard/#metricsPage" id="metricsMenuBtn">Metrics</a>
             <a href="#">Settings</a>
             <a href="/logout/">Logout</a>
         </div>
@@ -28,9 +26,7 @@
                 <h1>Servers</h1>
                 <p>Manage your monitored servers</p>
             </div>
-            <button id="addServerBtn">
-                + Add Server
-            </button>
+            <button id="addServerBtn">+ Add Server</button>
         </div>
 
         <div class="server-list">
@@ -44,10 +40,12 @@
         </div>
     </div>
 
-    <!-- Modal Add Server -->
     <div id="serverModal" class="modal">
         <div class="modal-content">
-            <h2>Add New Server</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h2>Add New Server</h2>
+                <button class="close-btn" onclick="document.getElementById('serverModal').style.display='none'">×</button>
+            </div>
             <form id="serverForm">
                 <input type="text" id="hostname" placeholder="Hostname" required>
                 <input type="text" id="ipaddress" placeholder="IP Address" required>
@@ -57,15 +55,13 @@
         </div>
     </div>
 
-    <!-- Modal Logs -->
     <div id="logsModal" class="modal">
         <div class="modal-content logs-modal">
             <div class="modal-header">
                 <h2 id="logsServerName">Recent Logs</h2>
-                <button class="close-btn" onclick="closeLogsModal()">×</button>
+                <button class="close-btn" onclick="document.getElementById('logsModal').style.display='none'">×</button>
             </div>
-            <div id="logsContainer" class="logs-container">
-            </div>
+            <div id="logsContainer" class="logs-container"></div>
         </div>
     </div>
 

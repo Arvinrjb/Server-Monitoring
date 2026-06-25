@@ -1,6 +1,6 @@
 * {
     margin: 0;
-    padding: 0; /* تمام پدینگ‌های پیش‌فرض را صفر می‌کنیم */
+    padding: 0;
     box-sizing: border-box;
 }
 
@@ -16,7 +16,7 @@ body {
 /* ==================== MODERN SIDEBAR ==================== */
 .sidebar {
     width: 260px;
-    background: #111827; /* تاریک‌تر و عمیق‌تر */
+    background: #111827; 
     height: 100vh;
     padding: 24px 16px;
     position: fixed;
@@ -24,13 +24,12 @@ body {
     top: 0;
     overflow-y: auto;
     z-index: 100;
-    border-right: 1px solid #1f2937; /* خط مرزی بسیار ملایم */
+    border-right: 1px solid #1f2937; 
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* برای فرستادن دکمه خروج یا پروفایل به پایین */
+    justify-content: space-between; 
 }
 
-/* بخش بالایی شامل لوگو و منوها */
 .sidebar-top {
     width: 100%;
 }
@@ -47,7 +46,6 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* نقطه چشمک‌زن کنار لوگو برای حس زنده بودن مانیتورینگ */
 .logo::before {
     content: '';
     display: inline-block;
@@ -67,7 +65,7 @@ body {
 .menu a {
     display: flex;
     align-items: center;
-    color: #9ca3af; /* رنگ متن کمرنگ‌تر برای حالت عادی */
+    color: #9ca3af; 
     text-decoration: none;
     padding: 12px 16px;
     border-radius: 10px;
@@ -76,14 +74,12 @@ body {
     font-weight: 500;
 }
 
-/* حالت هوور (اشاره‌گر موس) */
 .menu a:hover {
     background: rgba(55, 65, 81, 0.5);
     color: #f3f4f6;
-    padding-left: 20px; /* افکت حرکت جزیی به سمت راست */
+    padding-left: 20px; 
 }
 
-/* حالت فعال (منوی انتخاب شده) */
 .menu a.active {
     background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%); /* گرادینت آبی مدرن */
     color: white;
@@ -91,7 +87,6 @@ body {
     box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
 }
 
-/* بخش پایینی سایدبار (پروفایل کاربر و خروج) */
 .sidebar-footer {
     border-top: 1px solid #1f2937;
     padding-top: 16px;
@@ -136,7 +131,7 @@ body {
 }
 
 .logout-btn {
-    color: #ef4444 !important; /* رنگ قرمز برای خروج */
+    color: #ef4444 !important;
 }
 
 .logout-btn:hover {
@@ -148,7 +143,7 @@ body {
 .main-content {
     margin-left: 260px;
     padding: 30px;
-    width: calc(100% - 260px); /* برای جلوگیری از بیرون زدن محتوا */
+    width: calc(100% - 260px); 
     min-height: 100vh;
 }
 
@@ -172,7 +167,7 @@ body {
 #serversTable th,
 #serversTable td {
     padding: 18px 14px;          
-    text-align: left; /* چون جهت قالب انگلیسی (ltr) است، بهتر است تراز چپ باشد */
+    text-align: left;
     border-bottom: 1px solid #334155;
     vertical-align: middle;
 }
@@ -254,7 +249,7 @@ body {
     padding: 20px;
 }
 
-/* کلاس کمکی برای زمانی که مودال باز می‌شود */
+
 .modal.show {
     display: flex !important;
 }
@@ -292,7 +287,6 @@ body {
     color: #f87171;
 }
 
-/* استایل‌های مربوط به تب‌ها داخل مودال */
 .modal-body {
     padding: 25px;
     overflow-y: auto;

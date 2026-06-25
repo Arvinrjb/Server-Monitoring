@@ -219,6 +219,7 @@ class ServerChartAPIView(APIView):
             result,
             timeout=600
         )
+
         return Response(
             result
         )

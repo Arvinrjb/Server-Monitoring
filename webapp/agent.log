@@ -1,0 +1,10 @@
+2026-06-25 12:12:15,897 | INFO | Server Monitoring Started
+2026-06-25 12:12:18,862 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-25 12:12:42,344 | INFO | Server Monitoring Started
+2026-06-25 12:12:50,108 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-25 12:13:46,254 | INFO | Server Monitoring Started
+2026-06-25 12:17:17,542 | WARNING | CPU usage is greater than 90.
+2026-06-25 12:17:31,375 | WARNING | CPU usage is greater than 90.
+2026-06-25 12:17:34,874 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-25 12:17:57,708 | WARNING | CPU usage is greater than 90.
+2026-06-25 12:23:44,926 | ERROR | Server Monitoring Error, Server connection Error

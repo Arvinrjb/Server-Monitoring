@@ -16,6 +16,7 @@ def status_sender(url, token):
     new_speed = network.get_net_io_counters()
     download_speed = ((new_speed.bytes_recv-old_speed.bytes_recv)/1024 /1024) * 8
     # download_speed = ((new_speed.bytes_recv-old_speed.bytes_recv)/1024 /1024)*8)/10 
+    upload_speed = ((new_speed.bytes_sent-old_speed.bytes_sent)/1024 /1024) * 8
 
     if int(cpu.get_cpu_percent()) >= 90:
         logger.warning("CPU usage is greater than 90.")
@@ -35,6 +36,7 @@ def status_sender(url, token):
         "ram_usage":int((ram.get_memory().used/ram.get_memory().total)*100),
         "disk_usage":int((disk.get_disk_usage('C://').used/disk.get_disk_usage('C://').total)*100),
         "network_in":int(download_speed),
+        "network_out":int(upload_speed),
         "lastupdate":f"{date}T{time}Z",
     }
     request = requests.post(url, json=payload, headers=headers)
