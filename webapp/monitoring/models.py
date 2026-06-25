@@ -48,7 +48,7 @@ class ServerStatus(models.Model):
     )
 
     def __str__(self):
-        return self.server.ipaddress + '\t' + self.server.hostname
+        return self.server.hostname
 
     
     class Meta:

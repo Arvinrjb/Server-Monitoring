@@ -29,7 +29,7 @@ class Alert(models.Model):
     )
 
     def __str__(self):
-        return self.server.hostname + " " + self.server.ipaddress
+        return self.server.hostname
     
     class Meta:
         permissions = [
