@@ -1,19 +1,42 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.views import View
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
 from accounts.forms import RegisterForm
 from accounts.serializers import RegisterSerializer
 
 
 
+
 class RegisterApiView(CreateAPIView):
     serializer_class = RegisterSerializer
-    
-    def perform_create(self, serializer):
-        pass
+    permission_classes = [
+        AllowAny
+    ]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(
+            data=request.data
+        )
+        result = serializer.is_valid(
+            raise_exception=True
+        )
+        result = serializer.save()
+
+        return Response(
+            {
+            "refresh": result["refresh"],
+            "access": result["access"],
+            "username": result["user"].username,
+            },
+            status=status.HTTP_201_CREATED
+        )
 
 
 class login_user(View):
