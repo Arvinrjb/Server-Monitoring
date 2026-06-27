@@ -3,28 +3,17 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
+from rest_framework.generics import CreateAPIView
 from accounts.forms import RegisterForm
+from accounts.serializers import RegisterSerializer
 
 
 
-class dashboard(
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    View
-):
-    permission_required = 'system.view_server'
-    def get(self, request):    
-        return render(request, 'dashboard.html', )
-
-
-class Servers(
-    LoginRequiredMixin, 
-    PermissionRequiredMixin, 
-    View
-):
-    permission_required = 'system.view_server'
-    def get(self, request):
-        return render(request, 'servers.html')
+class RegisterApiView(CreateAPIView):
+    serializer_class = RegisterSerializer
+    
+    def perform_create(self, serializer):
+        pass
 
 
 class login_user(View):

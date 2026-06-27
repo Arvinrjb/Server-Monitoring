@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.views import View
 from django.core.cache import cache
-from django_filters.rest_framework import DjangoFilterBackend
+from django.http import HttpResponseForbidden
+from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from system.serializers import ServerSerializer
 from system.models import Server
 from core.pagination import PagePagination
@@ -15,6 +17,37 @@ from core.Permissions import IsServerOwnerOrAdmin
 class Home(View):
     def get(self, request):
         return render(request, 'home.html')
+
+
+class dashboard(
+    LoginRequiredMixin,
+    View
+):  
+    def get(self, request):
+        if self.request.user.has_perms(
+            [
+                "system.view_server"
+            ]
+        ):
+            return render(request, 'dashboard.html', )
+        return HttpResponseForbidden('You do not have permission to perform this action.')
+
+
+class Servers(
+    LoginRequiredMixin, 
+    View
+):
+    def get(self, request):
+        if self.request.user.has_perms(
+            [
+                "system.view_server"
+            ]
+        ):
+            return render(request, 'servers.html')
+        return HttpResponseForbidden('You do not have permission to perform this action.')
+
+
+
 
 
 class AddServerViewSet(ModelViewSet):
