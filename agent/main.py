@@ -18,7 +18,7 @@ while True:
         request = status_sender(status_url, Token_1)
         print(f'status send code: {request.status_code}')
         send_logs(logs_url, Token_1)
-        sleep(10)
+        sleep(7)
     except:
         logger.error("Server Monitoring Error, Server connection Error")
         sleep(20)

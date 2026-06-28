@@ -12,8 +12,6 @@ from accounts.forms import RegisterForm
 from accounts.serializers import RegisterSerializer
 
 
-
-
 class RegisterApiView(CreateAPIView):
     serializer_class = RegisterSerializer
     permission_classes = [
@@ -24,7 +22,7 @@ class RegisterApiView(CreateAPIView):
         serializer = self.get_serializer(
             data=request.data
         )
-        result = serializer.is_valid(
+        serializer.is_valid(
             raise_exception=True
         )
         result = serializer.save()
@@ -33,7 +31,7 @@ class RegisterApiView(CreateAPIView):
             {
             "refresh": result["refresh"],
             "access": result["access"],
-            "username": result["user"].username,
+            "user_id": result["user"].id,
             },
             status=status.HTTP_201_CREATED
         )
