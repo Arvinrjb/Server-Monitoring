@@ -47,9 +47,6 @@ class Servers(
         return HttpResponseForbidden('You do not have permission to perform this action.')
 
 
-
-
-
 class AddServerViewSet(ModelViewSet):
     serializer_class = ServerSerializer
     pagination_class = PagePagination
@@ -118,7 +115,7 @@ class AddServerViewSet(ModelViewSet):
         return Response(
             data
         )
-
+        
     def get_queryset(self): 
         if self.request.user.has_perms(
             [
@@ -139,4 +136,10 @@ class AddServerViewSet(ModelViewSet):
             user=self.request.user
             )
     
+    def perform_destroy(self, instance):
+        instance.delete()
+        cache.delete(
+            f"servers_{self.request.user.id}"
+        )
+
 

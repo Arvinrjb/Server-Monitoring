@@ -38,8 +38,15 @@ class ServerStatus(models.Model):
         blank=True, 
         null=True
     )
-    uptime = models.DateTimeField(
-        blank=True, 
+    process_count = models.IntegerField(
+        verbose_name="process_count",
+        default=0,
+        blank=True,
+        null=True
+    )
+    uptime_seconds = models.BigIntegerField(
+        default=0,
+        blank=True,
         null=True
     )
     lastupdate = models.DateTimeField(

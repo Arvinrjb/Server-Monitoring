@@ -7,6 +7,8 @@ class AgentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServerStatus
         fields = [
+            'uptime_seconds',
+            'process_count',
             'cpu_usage',
             'ram_usage',
             'disk_usage',
@@ -38,12 +40,13 @@ class StatusSerializer(serializers.ModelSerializer):
         model = ServerStatus
         fields = [
             'server',
+            'uptime_seconds',
+            'process_count',
             'cpu_usage',
             'ram_usage',
             'disk_usage',
             'network_in',
             'network_out',
-            'uptime',
             'lastupdate',
         ]
 
@@ -104,9 +107,9 @@ class AddStatusSerializer(serializers.ModelSerializer):
         fields = [
             'server',
             'id',
+            'uptime_seconds',
             'cpu_usage',
             'ram_usage',
             'disk_usage',
-            'uptime',
             'lastupdate',
         ]

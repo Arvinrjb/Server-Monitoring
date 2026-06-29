@@ -32,6 +32,8 @@ def status_sender(url, token):
     "Content-Type": "application/json"
     }
     payload = {
+        "uptime_seconds":ServerMonitorCore.get_uptime(),
+        "process_count":cpu.get_process_count(),
         "cpu_usage":int(cpu.get_cpu_percent()),
         "ram_usage":int((ram.get_memory().used/ram.get_memory().total)*100),
         "disk_usage":int((disk.get_disk_usage('C://').used/disk.get_disk_usage('C://').total)*100),

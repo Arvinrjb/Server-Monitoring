@@ -1,6 +1,6 @@
 import psutil
-import os
-import ctypes
+import time
+
 
 class cpu:
     def get_cpu_time(self):
@@ -20,6 +20,9 @@ class cpu:
     
     def get_cpu_loadavg(self):
         return psutil.getloadavg()
+    
+    def get_process_count(self):
+        return sum(1 for _ in psutil.process_iter())
 
 
 class memory:
@@ -48,15 +51,14 @@ class network:
 
     
 
-def UpTime_Linux():
-    return os.popen('uptime -p').read()[:-1]
+def get_uptime():
+    uptime_seconds = int(time.time() - psutil.boot_time())
+    days = uptime_seconds // 86400
+    hours = (uptime_seconds % 86400) // 3600
+    minutes = (uptime_seconds % 3600) // 60
+    seconds = uptime_seconds % 60
 
-
-def UpTime_Windows():
-    lib = ctypes.windll.kernel32
-    time = lib.GetTickCount64()
-    time = int(str(time)[:-3])
-    return time
+    return uptime_seconds
 
 
 if __name__ == "__main__":
