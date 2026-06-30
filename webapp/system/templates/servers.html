@@ -64,7 +64,24 @@
             <div id="logsContainer" class="logs-container"></div>
         </div>
     </div>
-
+    <div id="editServerModal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h2>Edit Server</h2>
+                <button class="close-btn" onclick="document.getElementById('editServerModal').style.display='none'">×</button>
+            </div>
+            <form id="editServerForm">
+                <input type="hidden" id="editServerId">
+                <input type="text" id="editHostname" placeholder="Hostname" required>
+                <input type="text" id="editOs" placeholder="OS" required>
+                <select id="editStatus" style="background:#0b0f19; color:#fff; border:1px solid #1f2937; padding:14px; border-radius:12px; margin-bottom:16px;">
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                </select>
+                <button type="submit">Update Server</button>
+            </form>
+        </div>
+    </div>
     <script src="{% static 'js/servers.js' %}"></script>
 </body>
 </html>
