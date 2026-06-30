@@ -167,3 +167,37 @@
 2026-06-30 11:24:10,475 | ERROR | Server Monitoring Error, Server connection Error
 2026-06-30 11:24:35,703 | INFO | Server Monitoring Started
 2026-06-30 11:26:28,081 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 11:54:45,414 | INFO | Server Monitoring Started
+2026-06-30 11:58:39,422 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:03:13,701 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:03:36,767 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:05:00,049 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:05:23,055 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:05:46,060 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:06:39,272 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:33:49,058 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:53:36,760 | WARNING | CPU usage is greater than 90.
+2026-06-30 12:53:47,091 | WARNING | CPU usage is greater than 90.
+2026-06-30 12:53:57,232 | WARNING | CPU usage is greater than 90.
+2026-06-30 12:56:48,984 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:57:11,991 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:57:35,001 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:57:58,007 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:58:21,013 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:58:44,019 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:59:07,027 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:59:30,033 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 12:59:53,042 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:00:16,049 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:00:39,056 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:01:02,066 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:01:25,073 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:01:48,082 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:02:11,089 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:02:34,095 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:02:57,101 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:03:20,109 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:03:43,117 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:04:06,126 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:04:29,135 | ERROR | Server Monitoring Error, Server connection Error
+2026-06-30 13:04:52,140 | ERROR | Server Monitoring Error, Server connection Error

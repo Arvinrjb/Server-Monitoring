@@ -116,6 +116,11 @@ class AddServerViewSet(ModelViewSet):
             data
         )
         
+    def invalidate_cache(self):
+        cache.delete(
+            f"servers_{self.request.user.id}"
+        )
+
     def get_queryset(self): 
         if self.request.user.has_perms(
             [
@@ -129,17 +134,16 @@ class AddServerViewSet(ModelViewSet):
         )
 
     def perform_create(self, serializer):
-        cache.delete(
-            f"servers_{self.request.user.id}"
-        )
+        self.invalidate_cache()
         return serializer.save(
             user=self.request.user
             )
     
+    def perform_update(self, serializer):
+        serializer.save()
+        self.invalidate_cache()
+
     def perform_destroy(self, instance):
         instance.delete()
-        cache.delete(
-            f"servers_{self.request.user.id}"
-        )
-
-
+        self.invalidate_cache()
+    

@@ -18,3 +18,9 @@ class ServerSerializer(serializers.ModelSerializer):
             'status',
             'lastseen',
         ]
+        read_only_fields = [
+            'user',
+            'id',
+            'ipaddress',
+            
+        ]
