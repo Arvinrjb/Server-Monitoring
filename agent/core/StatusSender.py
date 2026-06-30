@@ -24,7 +24,7 @@ def status_sender(url, token):
     if int((ram.get_memory().used/ram.get_memory().total)*100) >= 90:
         logger.warning("RAM usage is greater than 90.")
 
-    if int((disk.get_disk_usage('C://').used/disk.get_disk_usage('C://').total)*100) >= 90 :
+    if int((disk.get_disk_usage('/').used/disk.get_disk_usage('/').total)*100) >= 90 :
         logger.warning("DISK usage is greater than 90.")
 
     headers = {
@@ -36,7 +36,7 @@ def status_sender(url, token):
         "process_count":cpu.get_process_count(),
         "cpu_usage":int(cpu.get_cpu_percent()),
         "ram_usage":int((ram.get_memory().used/ram.get_memory().total)*100),
-        "disk_usage":int((disk.get_disk_usage('C://').used/disk.get_disk_usage('C://').total)*100),
+        "disk_usage":int((disk.get_disk_usage('/').used/disk.get_disk_usage('/').total)*100),
         "network_in":int(download_speed),
         "network_out":int(upload_speed),
         "lastupdate":f"{date}T{time}Z",
