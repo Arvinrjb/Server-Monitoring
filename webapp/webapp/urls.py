@@ -8,11 +8,11 @@ from system.views import Home
 
 urlpatterns = [
     path('admin/', admin.site.urls, name="Admin"),
+    path('login/', login_user.as_view(), name="Login"),
     path('', include('django.contrib.auth.urls')),
     path('', Home.as_view(), name="Home"),
     path('dashboard/', include('system.urls'), name="Dashboard"),
     path('admin-dashboard', include('core.urls')),
-    path('login/', login_user.as_view(), name="Login"),
     path('signup/', sign_up.as_view(), name="SignUp"),
     path('api/', include('core.api_urls'), name="MainAPI"),
     path('api/token/', TokenObtainPairView.as_view()),

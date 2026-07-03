@@ -9,6 +9,5 @@ class UserListAdmin(admin.ModelAdmin):
     ]
 
     list_filter = [
-        "username",
         "email"
     ]

@@ -1,16 +1,12 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from accounts.managers import CustomUserManager
 
 class User(AbstractUser):
+    username = None
     email = models.EmailField(
         unique=True
     )
-    # avatar = models.ImageField(
-    #     upload_to='avatars/',
-    #     null=True,
-    #     blank=True
-    # )
     bio = models.TextField(
         max_length=100,
         blank=True
@@ -27,9 +23,9 @@ class User(AbstractUser):
     )
     
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = [
-        'username'
-    ]
+    REQUIRED_FIELDS = []
+
+    objects = CustomUserManager()
 
     def __str__(self):
-        return self.username
+        return self.email

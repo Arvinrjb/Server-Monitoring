@@ -38,16 +38,17 @@ class RegisterApiView(CreateAPIView):
 
 class login_user(View):
     def get(self, request):
+        print("Test")
         if request.user.is_authenticated:
             return redirect('/')
         return render(request, 'registration/login.html')
     def post(self, request):
-        username = request.POST.get('username','').strip()
+        email = request.POST.get('email','').strip()
         password = request.POST.get('password', '').strip()
-        if not username or not password:
-            messages.error(request, 'Please enter your username and password.')
+        if not email or not password:
+            messages.error(request, 'Please enter your email and password.')
             return render(request, 'registration/login.html')
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             messages.success(request, 'login Success')
@@ -55,11 +56,12 @@ class login_user(View):
         else:
             messages.error(request, 'Error in login try again..')
             return render(request, 'registration/login.html')
+      
 
 
 class sign_up(View):
     def get(self, request):
-        if request.user.is_authenticated:
+        if self.request.user.is_authenticated:
             return redirect('/')
         form = RegisterForm()
         return render(request, 'registration/sign_up.html', {'form':form})

@@ -33,13 +33,18 @@
             {% csrf_token %}
 
             <div class="input-group">
-                <label>Username</label>
-                {{ form.username }}
+                <label>Email</label>
+                {{ form.email }}
             </div>
 
             <div class="input-group">
-                <label>Email</label>
-                {{ form.email }}
+                <label>First Name</label>
+                {{ form.first_name }}
+            </div>
+
+            <div class="input-group">
+                <label>Last Name</label>
+                {{ form.last_name }}
             </div>
 
             <div class="input-group">

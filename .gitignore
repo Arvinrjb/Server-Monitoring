@@ -3,6 +3,7 @@
 # .venv-linux
 .env
 **/__pycache__/
+**/migrations/
 **/db.sqlite3
 **/agent.log
 **/offset.txt

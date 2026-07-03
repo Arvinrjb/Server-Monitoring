@@ -30,7 +30,7 @@ if not SECRET_KEY:
     raise Exception("DJANGO_SECRET_KEY is not set in the .env file")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = ['*']
 
