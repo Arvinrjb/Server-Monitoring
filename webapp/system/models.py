@@ -1,7 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
 from secrets import token_hex
-
+from accounts.models import User
 
 def generate_token():
     return token_hex(32)

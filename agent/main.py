@@ -9,7 +9,7 @@ status_url = 'http://127.0.0.1:8000/api/agent/status/report/'
 logs_url = 'http://127.0.0.1:8000/api/agent/logs/report/'
 
 
-Token_1 = 'a21f3f3ee4fb31e75c5c59176783f178aa5b4ac5e81b24301fc99219cb2cb875'
+Token_1 = '5b1b2be42eb3af032f7b087140e6ffef90a2009d6fed3bbd280bc006af3a21d5'
 Token_2 = 'ab8c13e8947721cf5862b1b7109cc2333f606c4b7ad3b4f5e17b15443b8b5551'
 
 

@@ -1,27 +1,67 @@
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
+const API_BASE = "http://127.0.0.1:8000";
 
-    const username = document.getElementById("input-username").value;
-    const password = document.getElementById("input-password").value;
+function setTokens(access, refresh) {
+    localStorage.setItem("access", access);
+    localStorage.setItem("refresh", refresh);
+}
 
-    const response = await fetch("http://127.0.0.1:8000/api/token/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            username: username,
-            password: password
-        })
-    });
+function clearTokens() {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+}
 
-    const data = await response.json();
+document.addEventListener("DOMContentLoaded", function () {
+    const loginForm = document.getElementById("loginForm");
 
-    if (response.ok) {
-        localStorage.setItem("access", data.access);
-        localStorage.setItem("refresh", data.refresh);
-        alert("Login successful");
-    } else {
-        alert("Login failed");
+    if (!loginForm) {
+        return;
     }
+
+    loginForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const emailInput = document.getElementById("input-email");
+        const passwordInput = document.getElementById("input-password");
+
+        if (!emailInput || !passwordInput) {
+            alert("Login form inputs not found.");
+            return;
+        }
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!email || !password) {
+            alert("Please enter username and password.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/api/token/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                setTokens(data.access, data.refresh);
+
+                window.location.href = "/";
+            } else {
+                clearTokens();
+
+                const errorMessage = data.detail || "Invalid email or password.";
+                alert(errorMessage);
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            alert("Could not connect to server.");
+        }
+    });
 });

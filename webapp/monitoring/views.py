@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from monitoring.models import ServerStatus
 from monitoring.serializers import AddStatusSerializer, DashboardSerializer, AgentSerializer, ServerSerializer, StatusSerializer
 from system.models import Server

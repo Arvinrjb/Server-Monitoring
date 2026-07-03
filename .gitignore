@@ -1,4 +1,8 @@
 .vscode
-.venv
-.venv-linux
+# .venv
+# .venv-linux
 .env
+**/__pycache__/
+**/db.sqlite3
+**/agent.log
+**/offset.txt

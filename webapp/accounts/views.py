@@ -1,7 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.views import View
 from rest_framework.response import Response
@@ -10,7 +9,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from accounts.forms import RegisterForm
 from accounts.serializers import RegisterSerializer
-
+from accounts.models import User
 
 class RegisterApiView(CreateAPIView):
     serializer_class = RegisterSerializer
@@ -56,7 +55,7 @@ class login_user(View):
         else:
             messages.error(request, 'Error in login try again..')
             return render(request, 'registration/login.html')
-      
+
 
 class sign_up(View):
     def get(self, request):

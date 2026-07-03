@@ -1,8 +1,8 @@
-from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
+from accounts.models import User
 
 class RegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
