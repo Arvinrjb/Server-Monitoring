@@ -4,11 +4,29 @@ from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from accounts.models import User
 
-class RegisterSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(
-        min_length=5,
-        max_length=20
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+        read_only=True
     )
+    id = serializers.IntegerField(
+        read_only=True
+    )
+
+    
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "email",
+            "bio",
+            "phone_number",
+            "telegram_id"
+        ]
+
+
+class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     password = serializers.CharField(
         write_only=True,
@@ -17,20 +35,11 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            "username",
             "email",
             "password"
         ]
 
     def validate(self, attrs):
-        if User.objects.filter(
-            username=attrs["username"]
-        ).exists():
-            raise serializers.ValidationError(
-                {
-                    "username":"Username already exists"
-                }
-            )
         if User.objects.filter(
             email=attrs["email"]
         ).exists():
@@ -39,7 +48,6 @@ class RegisterSerializer(serializers.ModelSerializer):
                     "email":"Email already exists"
                 }
             )
-        
         validate_password(attrs["password"])
 
         return attrs
@@ -53,7 +61,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         except IntegrityError:
             raise serializers.ValidationError(
                 {
-                    "detail":"Username or email alreay exists"
+                    "detail":"Email alreay exists"
                 }
             )
         

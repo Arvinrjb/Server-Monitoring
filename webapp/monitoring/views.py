@@ -15,7 +15,7 @@ from monitoring.serializers import AddStatusSerializer, DashboardSerializer, Age
 from system.models import Server
 from core.pagination import PagePagination, ApiPagination
 from core.AlertManager import AlertsManager_CPU, AlertsManager_RAM, AlertsManager_DISK
-from core.Permissions import IsServerOwnerOrAdmin, IsSupport, IsAdmin
+from core.Permissions import IsOwnerOrAdmin, IsSupport, IsAdmin
 
 
 class DashboardViewSet(ModelViewSet):
@@ -25,7 +25,7 @@ class DashboardViewSet(ModelViewSet):
         authentication.SessionAuthentication,
     ]
     permission_classes = [
-        IsServerOwnerOrAdmin
+        IsOwnerOrAdmin
     ]
 
     def list(self, request, *args, **kwargs):
@@ -127,7 +127,7 @@ class ServerChartAPIView(APIView):
         authentication.SessionAuthentication,
     ]
     permission_classes = [
-        IsServerOwnerOrAdmin,
+        IsOwnerOrAdmin,
     ]
 
     def get(self, request, server_id):
@@ -231,7 +231,7 @@ class Status(APIView):
         authentication.SessionAuthentication,
     ]
     permission_classes = [
-        IsServerOwnerOrAdmin
+        IsOwnerOrAdmin
     ]
     def get(self, request):
         if self.request.user.is_staff and self.request.user.is_superuser:

@@ -3,13 +3,38 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions, authentication
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
+from core.Permissions import IsOwnerOrAdmin
 from accounts.forms import RegisterForm
-from accounts.serializers import RegisterSerializer
+from accounts.serializers import RegisterSerializer, ProfileSerializer
 from accounts.models import User
+
+
+class ProfileViewSet(ModelViewSet):
+    authentication_classes = [
+        authentication.SessionAuthentication,
+    ]
+    permission_classes = [
+        IsOwnerOrAdmin,
+        permissions.IsAuthenticated
+    ]
+    serializer_class = ProfileSerializer
+    def get_queryset(self):
+        if self.request.user.has_module_perms(
+            [
+                "accounts.view_all_users",
+                "accounts.manage_users"
+            ]
+        ):
+            return User.objects.all()
+        else:
+            return User.objects.filter(
+                email = self.request.user
+            ) 
 
 class RegisterApiView(CreateAPIView):
     serializer_class = RegisterSerializer

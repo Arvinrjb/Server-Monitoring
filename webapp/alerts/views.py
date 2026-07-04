@@ -2,14 +2,14 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework import authentication, permissions
 from alerts.models import Alert
 from alerts.serializers import ShowAlertsSerializer
-from core.Permissions import IsServerOwnerOrAdmin
+from core.Permissions import IsOwnerOrAdmin
 
 class AlertViewSet(ReadOnlyModelViewSet):
     authentication_classes = [
         authentication.SessionAuthentication,
     ]
     permission_classes = [
-        IsServerOwnerOrAdmin
+        IsOwnerOrAdmin
     ]
     serializer_class = ShowAlertsSerializer
     def get_queryset(self):

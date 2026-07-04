@@ -11,7 +11,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from system.serializers import ServerSerializer
 from system.models import Server
 from core.pagination import PagePagination
-from core.Permissions import IsServerOwnerOrAdmin
+from core.Permissions import IsOwnerOrAdmin
 
 
 class Home(View):
@@ -54,7 +54,7 @@ class AddServerViewSet(ModelViewSet):
         authentication.SessionAuthentication
     ]
     permission_classes = [
-        IsServerOwnerOrAdmin
+        IsOwnerOrAdmin
     ]
     
     filter_backends = [

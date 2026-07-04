@@ -9,7 +9,7 @@ from logs.serializers import LogSerializer, ViewLogSerializer, LogBatchSerialize
 from logs.models import Logs
 from system.models import Server
 from core.pagination import PagePagination, ApiPagination
-from core.Permissions import IsServerOwnerOrAdmin
+from core.Permissions import IsOwnerOrAdmin
 
 class AgentLog(APIView):
     permission_classes = []
@@ -67,7 +67,7 @@ class LogsViewSet(ReadOnlyModelViewSet):
         authentication.SessionAuthentication,
     ]
     permission_classes = [
-        IsServerOwnerOrAdmin
+        IsOwnerOrAdmin
     ]
     serializer_class = ViewLogSerializer
 
