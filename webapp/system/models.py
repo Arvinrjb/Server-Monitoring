@@ -47,7 +47,7 @@ class Server(models.Model):
 
 
     def __str__(self):
-        return  self.hostname + self.ipaddress
+        return  self.hostname
     
     
     class Meta:

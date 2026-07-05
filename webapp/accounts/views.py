@@ -23,8 +23,9 @@ class ProfileViewSet(ModelViewSet):
         permissions.IsAuthenticated
     ]
     serializer_class = ProfileSerializer
+
     def get_queryset(self):
-        if self.request.user.has_module_perms(
+        if self.request.user.has_perms(
             [
                 "accounts.view_all_users",
                 "accounts.manage_users"

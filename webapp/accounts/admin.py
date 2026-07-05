@@ -5,6 +5,8 @@ from accounts.models import User
 class UserListAdmin(admin.ModelAdmin):
     list_display = [
         "email",
+        "first_name",
+        "last_name",
         "phone_number"
     ]
 

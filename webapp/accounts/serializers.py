@@ -13,8 +13,12 @@ class ProfileSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(
         read_only=True
     )
-
-    
+    first_name = serializers.CharField(
+        max_length=100,
+    )
+    last_name = serializers.CharField(
+        max_length=100,
+    )
     class Meta:
         model = User
         fields = [
@@ -22,7 +26,9 @@ class ProfileSerializer(serializers.ModelSerializer):
             "email",
             "bio",
             "phone_number",
-            "telegram_id"
+            "telegram_id",
+            "first_name",
+            "last_name"
         ]
 
 

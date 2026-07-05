@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="fa" dir="ltr">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,38 +9,44 @@
     <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
 </head>
 <body>
-    <div class="sidebar">
-    <div class="sidebar-top">
-        <div class="logo">
-            Monitor API
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo">Monitor API</div>
+
+            <nav class="menu">
+                <a href="/">Home</a>
+                <a href="/admin-dashboard" class="active" id="dashboardMenuBtn">Dashboard</a>
+                <a href="#" id="metricsMenuBtn">Metrics</a>
+                <a href="#" id="profilesMenuBtn">User Profiles</a>
+                <a href="#">Settings</a>
+            </nav>
         </div>
 
-        <div class="menu">
-            <a href="/">Home</a>
-            <a href="/admin-dashboard" class="active" id="dashboardMenuBtn">Dashboard</a>
-            <a href="#" id="metricsMenuBtn" onclick="showMetricsPage()">Metrics</a>
-            <a href="#">Settings</a>
-        </div>
-    </div>
-    
-    <div class="sidebar-footer">
-        <div class="user-profile">
-            <div class="user-avatar">A</div>
-            <div class="user-info">
-                <span class="user-name">{{ request.user.first_name }}</span>
-                <span class="user-role">System Administrator</span>
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    {{ request.user.first_name|default:request.user.username|first|upper }}
+                </div>
+                <div class="user-info">
+                    <span class="user-name">{{ request.user.first_name|default:request.user.username }}</span>
+                    <span class="user-role">System Administrator</span>
+                </div>
             </div>
+
+            <nav class="menu">
+                <a href="/logout/" class="logout-btn">Logout</a>
+            </nav>
         </div>
-        <div class="menu">
-            <a href="/logout/" class="logout-btn">Logout</a>
-        </div>
-    </div>
-</div>
-    
-    <div class="main-content">
-        <div id="mainDashboardView">
+    </aside>
+
+    <main class="main-content">
+        <section id="mainDashboardView">
             <div class="page-header">
-                <h1>Server Management</h1>
+                <div>
+                    <h1>Server Management</h1>
+                    <p>Monitor servers, resource usage, alerts and logs.</p>
+                </div>
+                <button type="button" class="refresh-btn" id="refreshServersBtn">Refresh</button>
             </div>
 
             <div class="table-container">
@@ -60,45 +66,119 @@
                     <tbody id="tableBody"></tbody>
                 </table>
             </div>
-        </div>
+        </section>
 
-        <div id="metricsPage" style="display: none;">
+        <section id="metricsPage" hidden>
             <div class="page-header">
-                <h1>Server Metrics (Last 24 Hours)</h1>
+                <div>
+                    <h1>Server Metrics</h1>
+                    <p>Resource usage during the last 24 hours.</p>
+                </div>
             </div>
-            
-            <div id="serverSelectorContainer" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;"></div>
 
-            <div class="table-container" style="padding: 20px; min-height: 450px;">
+            <div id="serverSelectorContainer" class="server-selector"></div>
+
+            <div class="chart-container">
                 <canvas id="metricsChart"></canvas>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <div id="detailModal" class="modal">
-        <div class="modal-content detail-modal">
+        <section id="profilesPage" hidden>
+            <div class="page-header">
+                <div>
+                    <h1>User Profiles</h1>
+                    <p>View and edit user profile information.</p>
+                </div>
+                <button type="button" class="refresh-btn" id="refreshProfilesBtn">Refresh</button>
+            </div>
+
+            <div class="table-container">
+                <table id="profilesTable">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Phone Number</th>
+                            <th>Telegram ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="profilesTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="detailModal" class="modal" hidden aria-hidden="true">
+        <div class="modal-content detail-modal" role="dialog" aria-modal="true" aria-labelledby="modalServerName">
             <div class="modal-header">
                 <h2 id="modalServerName"></h2>
-                <button class="close-btn" onclick="closeDetailModal()">×</button>
+                <button type="button" class="close-btn" id="closeDetailModalBtn" aria-label="Close">×</button>
             </div>
-            
+
             <div class="modal-body">
                 <div class="tabs">
-                    <button class="tab-btn active" onclick="openTab(0)">Overview</button>
-                    <button class="tab-btn" onclick="openTab(1)">Logs</button>
-                    <button class="tab-btn" onclick="openTab(2)">Alerts</button>
+                    <button type="button" class="tab-btn active" data-tab="0">Overview</button>
+                    <button type="button" class="tab-btn" data-tab="1">Logs</button>
+                    <button type="button" class="tab-btn" data-tab="2">Alerts</button>
                 </div>
 
                 <div id="tab0" class="tab-content active">
                     <div id="overviewContent"></div>
                 </div>
+
                 <div id="tab1" class="tab-content">
                     <div id="logsContent"></div>
                 </div>
+
                 <div id="tab2" class="tab-content">
                     <div id="alertsContent"></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal" hidden aria-hidden="true">
+        <div class="modal-content profile-modal-content" role="dialog" aria-modal="true" aria-labelledby="profileDetailEmail">
+            <div class="modal-header">
+                <div>
+                    <h2 id="profileDetailEmail">Profile</h2>
+                    <p id="profileDetailId"></p>
+                </div>
+                <button type="button" class="close-btn" id="closeProfileModalBtn" aria-label="Close">×</button>
+            </div>
+
+            <form id="profileEditForm" class="profile-form">
+                <label for="profileFirstNameInput">
+                    First Name
+                    <input type="text" id="profileFirstNameInput" name="first_name" autocomplete="given-name">
+                </label>
+
+                <label for="profileLastNameInput">
+                    Last Name
+                    <input type="text" id="profileLastNameInput" name="last_name" autocomplete="family-name">
+                </label>
+
+                <label for="profileBioInput">
+                    Bio
+                    <textarea id="profileBioInput" name="bio" rows="5"></textarea>
+                </label>
+
+                <label for="profilePhoneInput">
+                    Phone Number
+                    <input type="text" id="profilePhoneInput" name="phone_number" autocomplete="tel">
+                </label>
+
+                <label for="profileTelegramInput">
+                    Telegram ID
+                    <input type="text" id="profileTelegramInput" name="telegram_id" autocomplete="off">
+                </label>
+
+                <div class="profile-form-actions">
+                    <button type="submit" class="view-btn">Save Changes</button>
+                    <span id="profileSaveStatus"></span>
+                </div>
+            </form>
         </div>
     </div>
 

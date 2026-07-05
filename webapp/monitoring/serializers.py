@@ -55,7 +55,7 @@ class DashboardSerializer(serializers.ModelSerializer):
     latest_status = serializers.SerializerMethodField()
     lastest_log = serializers.SerializerMethodField()
     user = serializers.CharField(
-        source='user.username',
+        source="user.first_name",
         read_only=True
     )
     class Meta:
