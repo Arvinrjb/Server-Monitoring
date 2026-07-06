@@ -13,7 +13,7 @@ class IsOwnerOrAdmin(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_staff or request.user.is_superuser:
             return True
-        return obj == request.user
+        return obj.user.email == request.user.email
     
 class IsSupport(BasePermission):
     message = "You do not have permission to perform this action."
