@@ -1,8 +1,10 @@
+from time import sleep
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
+from django.core.cache import cache
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status, permissions, authentication
@@ -24,18 +26,53 @@ class ProfileViewSet(ModelViewSet):
     ]
     serializer_class = ProfileSerializer
 
+    def invalidate_cache(self):
+        cache.delete(
+            f"profile_{self.request.user.id}"
+        )
+        
     def get_queryset(self):
+        cache_key = (
+            f"profile_{self.request.user.id}"
+        )
+        cache_data = cache.get(
+            cache_key
+        )
+        if cache_data:
+            return cache_data
+        
         if self.request.user.has_perms(
             [
                 "accounts.view_all_users",
                 "accounts.manage_users"
             ]
         ):
-            return User.objects.all()
+            data = User.objects.all()
         else:
-            return User.objects.filter(
+            data = User.objects.filter(
                 email = self.request.user
-            ) 
+            )
+        cache.set(
+            cache_key,
+            data,
+            timeout=6000
+        )
+        return data
+    
+    def perform_create(self, serializer):
+        self.invalidate_cache()
+        return serializer.save(
+            user = self.request.user
+        )
+    
+    def perform_update(self, serializer):
+        serializer.save()
+        self.invalidate_cache()
+
+    def perform_destroy(self, instance):
+        instance.delete()
+        self.invalidate_cache()    
+
 
 class RegisterApiView(CreateAPIView):
     serializer_class = RegisterSerializer
