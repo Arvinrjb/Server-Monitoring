@@ -93,40 +93,40 @@ class LogsViewSet(ReadOnlyModelViewSet):
         'created_at',
     ]
 
-    # def list(self, request, *args, **kwargs):
-    #     cache_key = (
-    #         f"logs_{self.request.user.id}_"
-    #         f"{self.request.GET.urlencode()}"
-    #     )
-    #     cache_data = cache.get(
-    #         cache_key
-    #     )
-    #     if cache_data:
-    #         return Response(
-    #             cache_data
-    #         )
+    def list(self, request, *args, **kwargs):
+        cache_key = (
+            f"logs_{self.request.user.id}_"
+            f"{self.request.GET.urlencode()}"
+        )
+        cache_data = cache.get(
+            cache_key
+        )
+        if cache_data:
+            return Response(
+                cache_data
+            )
 
-    #     queryset = self.filter_queryset(
-    #         self.get_queryset()
-    #     )
-    #     page = self.paginate_queryset(
-    #         queryset
-    #     )
-    #     serializer = self.get_serializer(
-    #         page,
-    #         many=True
-    #     )
-    #     data = self.get_paginated_response(
-    #         serializer.data
-    #     ).data
-    #     cache.set(
-    #         data,
-    #         serializer.data,
-    #         timeout=60
-    #     )
-    #     return Response(
-    #         serializer.data
-    #     )
+        queryset = self.filter_queryset(
+            self.get_queryset()
+        )
+        page = self.paginate_queryset(
+            queryset
+        )
+        serializer = self.get_serializer(
+            page,
+            many=True
+        )
+        data = self.get_paginated_response(
+            serializer.data
+        ).data
+        cache.set(
+            data,
+            serializer.data,
+            timeout=60
+        )
+        return Response(
+            serializer.data
+        )
     
     def get_queryset(self):
         if self.request.user.has_perms(

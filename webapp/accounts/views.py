@@ -5,10 +5,10 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
 from django.core.cache import cache
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import status, viewsets, mixins
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework import status, permissions, authentication
-from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from core.Permissions import IsOwnerOrAdmin
 from accounts.forms import RegisterForm
@@ -16,7 +16,12 @@ from accounts.serializers import RegisterSerializer, ProfileSerializer
 from accounts.models import User
 
 
-class ProfileViewSet(ModelViewSet):
+class ProfileViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet
+):
     authentication_classes = [
         authentication.SessionAuthentication,
     ]
@@ -26,55 +31,60 @@ class ProfileViewSet(ModelViewSet):
     ]
     serializer_class = ProfileSerializer
 
+    def list(self, request, *args, **kwargs):
+        cache_key = (
+            f"profile_{self.request.user.id}_"
+            f"{self.request.GET.urlencode()}"
+            )
+        cache_data = cache.get(
+            cache_key
+        )
+        if cache_data:
+            return Response(
+                cache_data
+            )
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(
+            queryset,
+            many=True
+        )
+        cache.set(
+            cache_key,
+            serializer.data,
+            timeout=6000
+        )
+        return Response(
+            serializer.data
+        )
+    
     def invalidate_cache(self):
         cache.delete(
             f"profile_{self.request.user.id}"
         )
         
     def get_queryset(self):
-        cache_key = (
-            f"profile_{self.request.user.id}"
-        )
-        cache_data = cache.get(
-            cache_key
-        )
-        if cache_data:
-            return cache_data
-        
         if self.request.user.has_perms(
             [
                 "accounts.view_all_users",
                 "accounts.manage_users"
             ]
         ):
-            data = User.objects.all()
+            return User.objects.all()
         else:
-            data = User.objects.filter(
-                email = self.request.user
+            return User.objects.filter(
+                id = self.request.user.id
             )
-        cache.set(
-            cache_key,
-            data,
-            timeout=6000
-        )
-        return data
-    
-    def perform_create(self, serializer):
-        self.invalidate_cache()
-        return serializer.save(
-            user = self.request.user
-        )
-    
+
     def perform_update(self, serializer):
         serializer.save()
         self.invalidate_cache()
 
-    def perform_destroy(self, instance):
-        instance.delete()
-        self.invalidate_cache()    
 
 
-class RegisterApiView(CreateAPIView):
+class RegisterApiView(
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet
+):
     serializer_class = RegisterSerializer
     permission_classes = [
         AllowAny
