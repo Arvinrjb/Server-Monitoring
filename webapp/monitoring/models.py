@@ -50,6 +50,7 @@ class ServerStatus(models.Model):
         null=True
     )
     lastupdate = models.DateTimeField(
+        auto_now=True,
         blank=True, 
         null=True
     )
@@ -65,3 +66,7 @@ class ServerStatus(models.Model):
                 "Can manage statuses"
             )
         ] 
+        ordering = [
+            "lastupdate",
+            "id"
+        ]

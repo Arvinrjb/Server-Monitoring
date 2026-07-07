@@ -11,5 +11,9 @@ class ServerStatusAdmin(admin.ModelAdmin):
     ]
 
     list_filter = [
-        "server"
+        "server",
+        "lastupdate"
+    ]
+    search_fields = [
+        "lastupdate"
     ]
