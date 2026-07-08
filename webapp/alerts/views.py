@@ -1,8 +1,9 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from rest_framework import authentication, permissions
+from rest_framework import authentication
 from alerts.models import Alert
 from alerts.serializers import ShowAlertsSerializer
 from core.Permissions import IsOwnerOrAdmin
+
 
 class AlertViewSet(ReadOnlyModelViewSet):
     authentication_classes = [

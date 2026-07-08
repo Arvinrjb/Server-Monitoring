@@ -1,12 +1,6 @@
 from django.views import View
-from django.shortcuts import render, redirect
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import render
 from django.http import HttpResponseForbidden
-from rest_framework.viewsets import ModelViewSet
-from system.models import Server
-from monitoring.models import ServerStatus
-from alerts.models import Alert
-from logs.models import Logs
 
 
 class AdminDashboardView(View):

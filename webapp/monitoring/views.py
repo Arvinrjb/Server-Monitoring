@@ -1,21 +1,17 @@
 from datetime import timedelta
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
 from django.core.cache import cache
-from rest_framework import authentication, permissions, status
+from rest_framework import authentication, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.exceptions import ValidationError
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from monitoring.models import ServerStatus
-from monitoring.serializers import AddStatusSerializer, DashboardSerializer, AgentSerializer, ServerSerializer, StatusSerializer
+from monitoring.serializers import DashboardSerializer, AgentSerializer, StatusSerializer
 from system.models import Server
-from core.pagination import PagePagination, ApiPagination
+from core.pagination import PagePagination
 from core.AlertManager import AlertsManager_CPU, AlertsManager_RAM, AlertsManager_DISK
-from core.Permissions import IsOwnerOrAdmin, IsSupport, IsAdmin
+from core.Permissions import IsOwnerOrAdmin
 
 
 class DashboardViewSet(ReadOnlyModelViewSet):

@@ -1,12 +1,9 @@
-from time import sleep
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views import View
 from django.core.cache import cache
 from rest_framework import status, viewsets, mixins
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework import status, permissions, authentication
 from rest_framework.permissions import AllowAny

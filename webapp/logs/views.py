@@ -3,12 +3,12 @@ from django.core.cache import cache
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.response import Response
-from rest_framework import status, authentication, permissions
+from rest_framework import status, authentication
 from rest_framework.filters import SearchFilter, OrderingFilter
-from logs.serializers import LogSerializer, ViewLogSerializer, LogBatchSerializer
+from logs.serializers import ViewLogSerializer, LogBatchSerializer
 from logs.models import Logs
 from system.models import Server
-from core.pagination import PagePagination, ApiPagination
+from core.pagination import ApiPagination
 from core.Permissions import IsOwnerOrAdmin
 
 class AgentLog(APIView):

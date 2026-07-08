@@ -18,19 +18,6 @@ class AgentSerializer(serializers.ModelSerializer):
         ]
 
 
-class ServerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Server
-        fields = [
-            'id',
-            'ipaddress',
-            'hostname',
-            'os',
-            'status',
-            'lastseen',
-        ]
-
-
 class StatusSerializer(serializers.ModelSerializer):
     server = serializers.CharField(
         source='server.hostname',
@@ -87,29 +74,3 @@ class DashboardSerializer(serializers.ModelSerializer):
             return None
         return LogSerializer(log).data
     
-
-class AddStatusSerializer(serializers.ModelSerializer):
-    cpu_usage = serializers.FloatField(
-        min_value = 0,
-        max_value = 100
-    )
-    ram_usage = serializers.FloatField(
-        min_value = 0,
-        max_value = 100
-    )
-    disk_usage = serializers.FloatField(
-        min_value = 0,
-        max_value = 100
-    )
-
-    class Meta:
-        model = ServerStatus
-        fields = [
-            'server',
-            'id',
-            'uptime_seconds',
-            'cpu_usage',
-            'ram_usage',
-            'disk_usage',
-            'lastupdate',
-        ]
