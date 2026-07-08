@@ -93,7 +93,7 @@ class AddStatus(APIView):
             server = Server.objects.get(
                 agent_token = token
             )
-            server.lastseen = timezone.now()
+            server.lastseen = timezone.localtime(timezone.now())
             server.save(
                 update_fields=["lastseen"]
             )
@@ -174,8 +174,9 @@ class ServerChartAPIView(APIView):
         groups = {}
 
         for status in statuses:
-            bucket = status.lastupdate.replace(
-            minute=(status.lastupdate.minute // 10) * 10,
+            local_dt = timezone.localtime(status.lastupdate)
+            bucket = local_dt.replace(
+            minute=(local_dt.minute // 10) * 10,
             second=0,
             microsecond=0
             )
