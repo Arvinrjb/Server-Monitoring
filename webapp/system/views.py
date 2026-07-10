@@ -127,10 +127,13 @@ class AddServerViewSet(ModelViewSet):
                 "system.view_all_servers"
             ]
         ):
-            return Server.objects.all()
-        
-        return Server.objects.filter(
-            user=self.request.user
+            servers = Server.objects.all()
+        else:
+            servers = Server.objects.filter(
+                user=self.request.user
+            )
+        return servers.select_related(
+            "user"
         )
 
     def perform_create(self, serializer):

@@ -59,18 +59,14 @@ class DashboardSerializer(serializers.ModelSerializer):
         ]
 
     def get_latest_status(self, obj):
-        status = obj.statuses.order_by(
-            "-lastupdate"
-        ).first()
+        status = obj.prefetched_statuses
         if not status:
             return None
-        return StatusSerializer(status).data
+        return StatusSerializer(status[0]).data
     
     def get_lastest_log(self, obj):
-        log = obj.logs.order_by(
-            "-id"
-        ).first()
+        log = obj.prefetch_logs
         if not log:
             return None
-        return LogSerializer(log).data
+        return LogSerializer(log[0]).data
     

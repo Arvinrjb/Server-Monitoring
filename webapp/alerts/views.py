@@ -19,10 +19,11 @@ class AlertViewSet(ReadOnlyModelViewSet):
                 "alerts.view_all_alerts"
             ]
         ):
-            return Alert.objects.all()
-
-        return Alert.objects.filter(
-            server__user = self.request.user
-        ).select_related(
+            alerts = Alert.objects.all()
+        else:
+            alerts = Alert.objects.filter(
+                server__user = self.request.user
+            )
+        return alerts.select_related(
             "server"
         )

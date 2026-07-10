@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from monitoring.views import DashboardViewSet, AddStatus, Status, ServerChartAPIView
+from monitoring.views import DashboardViewSet, AddStatus, ServerChartAPIView
 
 
 router = DefaultRouter()

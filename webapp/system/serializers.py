@@ -4,7 +4,7 @@ from system.models import Server
 
 class ServerSerializer(serializers.ModelSerializer):
     user = serializers.CharField(
-        source="user.username",
+        source="user.first_name",
         read_only=True
     )
     class Meta:
@@ -19,7 +19,5 @@ class ServerSerializer(serializers.ModelSerializer):
             'lastseen',
         ]
         read_only_fields = [
-            'user',
-            'id',
-            
+            'id'
         ]

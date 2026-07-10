@@ -2,12 +2,14 @@ from datetime import timedelta
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
+from django.db.models import Prefetch
 from rest_framework import authentication, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from monitoring.models import ServerStatus
 from monitoring.serializers import DashboardSerializer, AgentSerializer, StatusSerializer
+from logs.models import Logs
 from system.models import Server
 from core.pagination import PagePagination
 from core.AlertManager import AlertsManager_CPU, AlertsManager_RAM, AlertsManager_DISK
@@ -60,15 +62,37 @@ class DashboardViewSet(ReadOnlyModelViewSet):
         )
 
     def get_queryset(self):
+        statuses_prefetch = Prefetch(
+            "statuses",
+            queryset=ServerStatus.objects.order_by(
+                "-lastupdate"
+            ),
+            to_attr="prefetched_statuses"
+        )
+        logs_prefetch = Prefetch(
+            "logs",
+            queryset=Logs.objects.order_by(
+                "-id"
+            ),
+            to_attr="prefetch_logs"
+        )
         if self.request.user.has_perms(
             [
                 "monitoring.view_all_statuses",
             ]
         ):
-            return Server.objects.all()
-
-        return Server.objects.filter(
-            user = self.request.user
+            qs = Server.objects.select_related(
+                "user"
+            )
+        else:
+            qs =  Server.objects.filter(
+                user = self.request.user
+            ).select_related(
+                "user"
+            )
+        return qs.prefetch_related(
+            statuses_prefetch,
+            logs_prefetch
         )
 
 
@@ -222,23 +246,3 @@ class ServerChartAPIView(APIView):
             result
         )
 
-
-class Status(APIView):
-    authentication_classes = [
-        authentication.SessionAuthentication,
-    ]
-    permission_classes = [
-        IsOwnerOrAdmin
-    ]
-    def get(self, request):
-        if self.request.user.is_staff and self.request.user.is_superuser:
-            data = ServerStatus.objects.all()
-        else:
-            data = ServerStatus.objects.filter(
-            server__user = self.request.user 
-            )
-        serializer = StatusSerializer(
-            data,
-            many=True
-        )
-        return Response(serializer.data)
