@@ -982,3 +982,75 @@ button {
         padding: 18px;
     }
 }
+
+#serverEditModal select,
+#serverEditModal input,
+#serverEditModal textarea {
+    width: 100%;
+    background: #0f172a !important;
+    color: #e2e8f0 !important;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    outline: none;
+    resize: vertical;
+    caret-color: var(--blue);
+}
+
+#serverEditModal select:focus,
+#serverEditModal input:focus,
+#serverEditModal textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.14);
+}
+
+#serverEditSaveStatus {
+    font-size: 14px;
+    color: var(--muted);
+    min-height: 20px;
+}
+
+#serverEditSaveStatus.success {
+    color: var(--green);
+}
+
+#serverEditSaveStatus.error {
+    color: var(--red-2);
+}
+#serversTable td:last-child {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.server-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.server-actions button {
+    cursor: pointer;
+}
+
+.edit-btn {
+    padding: 8px 14px;
+    border: 1px solid #f59e0b;
+    border-radius: 7px;
+    background: rgba(245, 158, 11, 0.12);
+    color: #fbbf24;
+    font-size: 13px;
+    font-weight: 600;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.edit-btn:hover {
+    border-color: #fbbf24;
+    background: #f59e0b;
+    color: #0f172a;
+}

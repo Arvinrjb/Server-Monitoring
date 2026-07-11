@@ -137,6 +137,48 @@
             </div>
         </div>
     </div>
+    <div id="serverEditModal" class="modal" hidden aria-hidden="true">
+        <div class="modal-content profile-modal-content" role="dialog" aria-modal="true" aria-labelledby="serverEditTitle">
+            <div class="modal-header">
+                <div>
+                    <h2 id="serverEditTitle">Edit Server</h2>
+                    <p id="serverEditId"></p>
+                </div>
+                <button type="button" class="close-btn" id="closeServerEditModalBtn" aria-label="Close">×</button>
+            </div>
+
+            <form id="serverEditForm" class="profile-form">
+                <label for="serverHostnameInput">
+                    Hostname
+                    <input type="text" id="serverHostnameInput" name="hostname" autocomplete="off">
+                </label>
+
+                <label for="serverIpInput">
+                    IP Address
+                    <input type="text" id="serverIpInput" name="ipaddress" autocomplete="off">
+                </label>
+
+                <label for="serverOsInput">
+                    OS
+                    <input type="text" id="serverOsInput" name="os" autocomplete="off">
+                </label>
+
+                <label for="serverStatusInput">
+                    Status
+                    <select id="serverStatusInput" name="status">
+                        <option value="online">online</option>
+                        <option value="offline">offline</option>
+                    </select>
+                </label>
+
+                <div class="profile-form-actions">
+                    <button type="submit" class="view-btn">Save Changes</button>
+                    <span id="serverEditSaveStatus"></span>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <div id="profileModal" class="modal" hidden aria-hidden="true">
         <div class="modal-content profile-modal-content" role="dialog" aria-modal="true" aria-labelledby="profileDetailEmail">

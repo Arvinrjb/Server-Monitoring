@@ -1,4 +1,5 @@
 const API_SERVERS = "/api/servers/";
+const API_ADD_SERVER = "/api/addserver/";
 const API_LOGS = "/api/logs/";
 const API_ALERTS = "/api/alerts/";
 const API_PROFILES = "/api/profile/";
@@ -6,6 +7,7 @@ const API_PROFILES = "/api/profile/";
 let selectedProfile = null;
 let currentServerId = null;
 let performanceChart = null;
+let selectedServerForEdit = null;
 
 async function fetchJSON(url) {
     const response = await fetch(url, {
@@ -23,23 +25,62 @@ async function fetchJSON(url) {
 }
 
 function getCookie(name) {
-    let cookieValue = null;
+    const cookies = document.cookie ? document.cookie.split(";") : [];
 
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
+    for (const cookieItem of cookies) {
+        const cookie = cookieItem.trim();
 
-        for (let cookie of cookies) {
-            cookie = cookie.trim();
-
-            if (cookie.startsWith(`${name}=`)) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
+        if (cookie.startsWith(`${name}=`)) {
+            return decodeURIComponent(cookie.substring(name.length + 1));
         }
     }
 
-    return cookieValue;
+    return null;
 }
+
+async function fetchJSON(url, options = {}) {
+    const csrfToken = getCookie("csrftoken");
+
+    const config = {
+        ...options,
+        credentials: "same-origin",
+        headers: {
+            Accept: "application/json",
+            ...(options.body ? { "Content-Type": "application/json" } : {}),
+            ...(csrfToken ? { "X-CSRFToken": csrfToken } : {}),
+            ...(options.headers || {})
+        }
+    };
+
+    const response = await fetch(url, config);
+
+    const contentType = response.headers.get("content-type") || "";
+    let responseData = null;
+
+    if (contentType.includes("application/json")) {
+        responseData = await response.json();
+    } else if (response.status !== 204) {
+        responseData = await response.text();
+    }
+
+    if (!response.ok) {
+        let message = `Request failed with status ${response.status}`;
+
+        if (responseData && typeof responseData === "object") {
+            message =
+                responseData.detail ||
+                responseData.message ||
+                JSON.stringify(responseData);
+        } else if (responseData) {
+            message = responseData;
+        }
+
+        throw new Error(message);
+    }
+
+    return responseData;
+}
+
 
 function getListPayload(data) {
     if (Array.isArray(data)) {
@@ -80,6 +121,14 @@ function normalizeText(value, fallback = "N/A") {
     }
 
     return String(value);
+}
+
+function getServerPayload(server) {
+    if (!server || typeof server !== "object") {
+        return {};
+    }
+
+    return server;
 }
 
 function clearElement(element) {
@@ -258,7 +307,6 @@ function hasActiveAlertForServer(alerts, server) {
         return alertServerName && hostname && alertServerName === hostname && alert.is_active === true;
     });
 }
-
 async function loadServers() {
     setTableMessage("Loading servers...");
 
@@ -285,17 +333,45 @@ async function loadServers() {
 
         servers.forEach(server => {
             const row = document.createElement("tr");
-            const cpu = server.latest_status ? server.latest_status.cpu_usage : 0;
-            const ram = server.latest_status ? server.latest_status.ram_usage : 0;
+            const cpu = server.latest_status?.cpu_usage ?? 0;
+            const ram = server.latest_status?.ram_usage ?? 0;
 
-            row.appendChild(createCell(server.hostname));
-            row.appendChild(createCell(server.ipaddress));
+            row.appendChild(createCell(server.hostname ?? ""));
+            row.appendChild(createCell(server.ipaddress ?? ""));
             row.appendChild(createCell(getOwnerName(server)));
             row.appendChild(createStatusCell(server.status));
             row.appendChild(createUsageCell(cpu, "cpu-fill"));
             row.appendChild(createUsageCell(ram, "ram-fill"));
-            row.appendChild(createAlertCell(hasActiveAlertForServer(alerts, server)));
-            row.appendChild(createActionsCell(server));
+            row.appendChild(
+                createAlertCell(hasActiveAlertForServer(alerts, server))
+            );
+
+            const actionsCell = document.createElement("td");
+            actionsCell.classList.add("server-actions");
+
+            const detailsButton = document.createElement("button");
+            detailsButton.type = "button";
+            detailsButton.className = "view-btn";
+            detailsButton.textContent = "Details";
+
+            detailsButton.addEventListener("click", event => {
+                event.stopPropagation();
+                showServerDetails(server.id, server);
+            });
+
+            const editButton = document.createElement("button");
+            editButton.type = "button";
+            editButton.className = "edit-btn";
+            editButton.textContent = "Edit";
+
+            editButton.addEventListener("click", event => {
+                event.stopPropagation();
+                showServerEditModal(server);
+            });
+
+            actionsCell.appendChild(detailsButton);
+            actionsCell.appendChild(editButton);
+            row.appendChild(actionsCell);
 
             row.addEventListener("click", () => {
                 showServerDetails(server.id, server);
@@ -308,6 +384,7 @@ async function loadServers() {
         setTableMessage("Error loading servers.", "error-state");
     }
 }
+
 
 async function loadProfiles() {
     setProfilesMessage("Loading profiles...");
@@ -931,12 +1008,55 @@ function bindEvents() {
     const dashboardMenuBtn = document.getElementById("dashboardMenuBtn");
     const refreshServersBtn = document.getElementById("refreshServersBtn");
     const refreshProfilesBtn = document.getElementById("refreshProfilesBtn");
+
     const profileEditForm = document.getElementById("profileEditForm");
-    const closeDetailModalBtn = document.getElementById("closeDetailModalBtn");
-    const closeProfileModalBtn = document.getElementById("closeProfileModalBtn");
+    const serverEditForm = document.getElementById("serverEditForm");
+
+    const closeDetailModalBtn =
+        document.getElementById("closeDetailModalBtn");
+
+    const closeProfileModalBtn =
+        document.getElementById("closeProfileModalBtn");
+
+    const closeServerEditModalBtn =
+        document.getElementById("closeServerEditModalBtn");
+
     const detailModal = document.getElementById("detailModal");
     const profileModal = document.getElementById("profileModal");
+    const serverEditModal = document.getElementById("serverEditModal");
 
+    /*
+     * Server edit form
+     */
+    if (serverEditForm) {
+        serverEditForm.addEventListener("submit", event => {
+            console.log("Server edit form submitted.");
+            updateSelectedServer(event);
+        });
+
+        console.log("Server edit form event attached.");
+    } else {
+        console.error("serverEditForm was not found in DOM.");
+    }
+
+    if (closeServerEditModalBtn) {
+        closeServerEditModalBtn.addEventListener(
+            "click",
+            closeServerEditModal
+        );
+    }
+
+    if (serverEditModal) {
+        serverEditModal.addEventListener("click", event => {
+            if (event.target === serverEditModal) {
+                closeServerEditModal();
+            }
+        });
+    }
+
+    /*
+     * Navigation
+     */
     if (metricsMenuBtn) {
         metricsMenuBtn.addEventListener("click", event => {
             event.preventDefault();
@@ -958,34 +1078,47 @@ function bindEvents() {
         });
     }
 
+    /*
+     * Refresh buttons
+     */
     if (refreshServersBtn) {
-        refreshServersBtn.addEventListener("click", () => {
-            loadServers();
-        });
+        refreshServersBtn.addEventListener("click", loadServers);
     }
 
     if (refreshProfilesBtn) {
-        refreshProfilesBtn.addEventListener("click", () => {
-            loadProfiles();
-        });
+        refreshProfilesBtn.addEventListener("click", loadProfiles);
     }
 
+    /*
+     * Profile form
+     */
     if (profileEditForm) {
-        profileEditForm.addEventListener("submit", updateSelectedProfile);
+        profileEditForm.addEventListener(
+            "submit",
+            updateSelectedProfile
+        );
     }
 
+    /*
+     * Close buttons
+     */
     if (closeDetailModalBtn) {
-        closeDetailModalBtn.addEventListener("click", () => {
-            closeDetailModal();
-        });
+        closeDetailModalBtn.addEventListener(
+            "click",
+            closeDetailModal
+        );
     }
 
     if (closeProfileModalBtn) {
-        closeProfileModalBtn.addEventListener("click", () => {
-            closeProfileModal();
-        });
+        closeProfileModalBtn.addEventListener(
+            "click",
+            closeProfileModal
+        );
     }
 
+    /*
+     * Close modals by clicking backdrop
+     */
     if (detailModal) {
         detailModal.addEventListener("click", event => {
             if (event.target === detailModal) {
@@ -1002,22 +1135,187 @@ function bindEvents() {
         });
     }
 
+    /*
+     * Detail modal tabs
+     */
     document.querySelectorAll(".tab-btn").forEach(button => {
         button.addEventListener("click", () => {
             openTab(Number(button.dataset.tab));
         });
     });
 
+    /*
+     * Escape key
+     */
     document.addEventListener("keydown", event => {
-        if (event.key === "Escape") {
-            closeDetailModal();
-            closeProfileModal();
+        if (event.key !== "Escape") {
+            return;
         }
+
+        closeDetailModal();
+        closeProfileModal();
+        closeServerEditModal();
     });
+
+    console.log("Dashboard events initialized.");
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     bindEvents();
     showDashboardPage();
     loadServers();
 });
+
+function setServerEditSaveStatus(message, type) {
+    const statusElement = document.getElementById("serverEditSaveStatus");
+
+    if (!statusElement) {
+        return;
+    }
+
+    statusElement.textContent = message || "";
+    statusElement.classList.remove("success", "error");
+
+    if (type) {
+        statusElement.classList.add(type);
+    }
+}
+
+function openServerEditModal() {
+    const modal = document.getElementById("serverEditModal");
+
+    if (!modal) {
+        return;
+    }
+
+    modal.hidden = false;
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
+}
+
+function closeServerEditModal() {
+    const modal = document.getElementById("serverEditModal");
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove("show");
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+    selectedServerForEdit = null;
+    setServerEditSaveStatus("");
+}
+
+function showServerEditModal(server) {
+    const payload = getServerPayload(server);
+    const modal = document.getElementById("serverEditModal");
+
+    if (!modal || !payload.id) {
+        return;
+    }
+
+    selectedServerForEdit = payload;
+
+    const title = modal.querySelector("#serverEditTitle");
+    const idElement = modal.querySelector("#serverEditId");
+    const hostnameInput = modal.querySelector("#serverHostnameInput");
+    const ipInput = modal.querySelector("#serverIpInput");
+    const osInput = modal.querySelector("#serverOsInput");
+    const statusInput = modal.querySelector("#serverStatusInput");
+
+    if (title) {
+        title.textContent = payload.hostname || "Edit Server";
+    }
+
+    if (idElement) {
+        idElement.textContent = `Server ID: ${payload.id}`;
+    }
+
+    if (hostnameInput) {
+        hostnameInput.value = normalizeText(payload.hostname);
+    }
+
+    if (ipInput) {
+        ipInput.value = normalizeText(payload.ipaddress);
+    }
+
+    if (osInput) {
+        osInput.value = normalizeText(payload.os);
+    }
+
+    if (statusInput) {
+        const status = normalizeText(payload.status).toLowerCase();
+        statusInput.value = status === "online" ? "online" : "offline";
+    }
+
+    setServerEditSaveStatus("");
+    openServerEditModal();
+}
+
+async function updateSelectedServer(event) {
+    event.preventDefault();
+
+    if (!selectedServerForEdit || !selectedServerForEdit.id) {
+        setServerEditSaveStatus("No server selected.", "error");
+        return;
+    }
+
+    const modal = document.getElementById("serverEditModal");
+
+    if (!modal) {
+        setServerEditSaveStatus("Edit modal not found.", "error");
+        return;
+    }
+
+    const hostnameInput = modal.querySelector("#serverHostnameInput");
+    const ipInput = modal.querySelector("#serverIpInput");
+    const osInput = modal.querySelector("#serverOsInput");
+    const statusInput = modal.querySelector("#serverStatusInput");
+
+    const hostname = hostnameInput ? hostnameInput.value.trim() : "";
+    const ipaddress = ipInput ? ipInput.value.trim() : "";
+    const os = osInput ? osInput.value.trim() : "";
+    const status = statusInput ? statusInput.value : "offline";
+
+    if (!hostname || !ipaddress || !os) {
+        setServerEditSaveStatus("Hostname, IP address and OS are required.", "error");
+        return;
+    }
+
+    if (!["online", "offline"].includes(status)) {
+        setServerEditSaveStatus("Invalid status value.", "error");
+        return;
+    }
+
+    const payload = {
+        hostname,
+        ipaddress,
+        os,
+        status
+    };
+
+    setServerEditSaveStatus("Saving...");
+
+    try {
+        const updatedServer = await fetchJSON(`${API_ADD_SERVER}${selectedServerForEdit.id}/`, {
+            method: "PATCH",
+            body: JSON.stringify(payload)
+        });
+
+        selectedServerForEdit = updatedServer || {
+            ...selectedServerForEdit,
+            ...payload
+        };
+
+        setServerEditSaveStatus("Saved successfully.", "success");
+        await loadServers();
+
+        setTimeout(function () {
+            closeServerEditModal();
+        }, 500);
+    } catch (error) {
+        setServerEditSaveStatus(error.message || "Failed to save server.", "error");
+    }
+}
