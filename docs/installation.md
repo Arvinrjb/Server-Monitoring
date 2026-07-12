@@ -5,6 +5,7 @@ The installation steps are as follows (the Docker file needs fixing; it is not w
 - django 4.2
 - PostgreSQL
 - redis 8
+<br>
 Note : All prerequisites will be installed during the installation process.
 
 ## Local Setup
