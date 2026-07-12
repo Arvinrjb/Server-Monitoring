@@ -24,3 +24,13 @@ This is a server monitoring tool designed for both personal and organizational u
 - [Installation](docs/installation.md)
 - [Roles and Permissions](docs/roles-and-permissions.md)
 
+## License
+
+This project is licensed under the [GNU Affero General Public License v3.0 (AGPL-3.0)](https://www.gnu.org/licenses/agpl-3.0.html).
+
+### What this means:
+- You are free to use, modify, and distribute this software.
+- If you modify this software and provide it as a service over a network (like a web-based monitoring tool), you are **required** to make your modified source code available to the users of your service.
+- All modifications must also be licensed under the same AGPL-3.0 terms.
+
+For more details, see the [LICENSE](LICENSE) file in this repository.
