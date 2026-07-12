@@ -1,6 +1,4 @@
 # Overview
-
-## Overview
 This monitoring system is designed to track server performance and health metrics. It follows a Push-based architecture, where client-side agents report data to a central API server for processing, storage, and alerting.
 
 ## System Components

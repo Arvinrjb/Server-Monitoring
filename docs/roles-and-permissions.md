@@ -1,7 +1,9 @@
 # Roles and Permissions
+Three different groups are used, as shown below.
 
 ## Admin
 The admin has full access.
+<br>
 is_superuser and is_staff
 - Manage and view all users and profiles
 - Manage and view all servers
@@ -11,6 +13,7 @@ is_superuser and is_staff
 
 ## Support
 A support user has more limited access than an Admin; this role is intended for use by support staff within an organization.
+<br>
 is_staff
 - Manage and view all users and profiles
 - Manage and view all servers
