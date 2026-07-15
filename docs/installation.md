@@ -1,5 +1,5 @@
 # Installation
-The installation steps are as follows (the Docker file needs fixing; it is not working yet).
+The installation steps are as follows 
 ## Prerequisites
 - python 3.12
 - django 4.2
@@ -7,7 +7,7 @@ The installation steps are as follows (the Docker file needs fixing; it is not w
 - redis 8
 <br>
 Note : All prerequisites will be installed during the installation process.
-
+Note: Make sure the PostgreSQL and Redis services are running.
 ## Local Setup
 ```
 git clone https://github.com/Arvinrjb/Server-Monitoring.git
@@ -22,14 +22,26 @@ source .venv-linux/bin/activate
 pip install -r requirements.txt
 ```
 ```
-python webapp/manage.py makemigrations
+cd webapp
 ```
 ```
-python webapp/manage.py migrate
+python manage.py makemigrations
 ```
 ```
-python webapp/manage.py create_groups
+python manage.py migrate
 ```
 ```
-python webapp/manage.py runserver
+python manage.py create_groups
+```
+<br>
+In two separate terminals:
+<br>
+```
+celery -A webapp worker --loglevel=INFO
+```
+```
+celery -A webapp beat --loglevel=INFO
+```
+```
+python manage.py runserver
 ```
