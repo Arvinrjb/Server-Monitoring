@@ -35,8 +35,12 @@ if not SECRET_KEY:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.getenv("DJANGO_DEBUG"))
-
 ALLOWED_HOSTS = ['*']
+
+# Celery
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = "redis://localhost:6379/1"
 
 # Application definition
 

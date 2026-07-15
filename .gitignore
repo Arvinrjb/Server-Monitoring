@@ -7,3 +7,4 @@
 **/db.sqlite3
 **/agent.log
 **/offset.txt
+**/celerybeat*

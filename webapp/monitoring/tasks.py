@@ -2,5 +2,10 @@
 # See the LICENSE file in the project root for the full license text.
 # Copyright (C) 2026 arvin, arvinrjb13@gmail.com
 
-from .celery import app as celery_app
-__all__ = ('celery_app',)
+from celery import shared_task
+from django.core.management import call_command
+
+
+@shared_task
+def delete_old_statuses():
+    call_command("delete_old_statuses")
