@@ -8,6 +8,8 @@ The installation steps are as follows
 <br>
 Note : All prerequisites will be installed during the installation process.
 Note: Make sure the PostgreSQL and Redis services are running.
+<br>
+
 ## Local Setup
 ```
 git clone https://github.com/Arvinrjb/Server-Monitoring.git
@@ -33,9 +35,7 @@ python manage.py migrate
 ```
 python manage.py create_groups
 ```
-<br>
 In two separate terminals:
-<br>
 ```
 celery -A webapp worker --loglevel=INFO
 ```
