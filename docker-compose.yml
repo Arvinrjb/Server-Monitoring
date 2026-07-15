@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: monitoring-postgres
+    environment:
+      POSTGRES_DB: monitoring_db
+      POSTGRES_USER: Enter_USER
+      POSTGRES_PASSWORD: Enter_PASSWORD
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: monitoring-redis
+    ports:
+      - "6379:6379"
+
+  web:
+    build: 
+      context: ./webapp
+    container_name: monitoring-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./webapp:/app
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      DB_NAME: monitoring_db
+      DB_USER: Enter_USER
+      DB_PASSWORD: Enter_PASSWORD
+      DB_HOST: postgres
+      DB_PORT: 5432
+
+volumes:
+  postgres_data:
