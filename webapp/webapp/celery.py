@@ -18,7 +18,7 @@ app.conf.timezone = "Asia/Tehran"
 app.conf.beat_schedule = {
     "check-servers-every-night": {
         "task": "system.tasks.check_offline_servers",
-        "schedule": crontab(hour=1, minute=0),
+        "schedule": 1800,
     },
     "cleanup-statuses-every-night": {
         "task": "monitoring.tasks.delete_old_statuses",

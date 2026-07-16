@@ -12,7 +12,10 @@ from alerts.models import Alert
 class Command(BaseCommand):
     def handle(self, *args, **options):
         cutoff = timezone.now() - timedelta(
-            weeks=2
+            weeks=1
+        )
+        self.delete_alerts(
+            cutoff
         )
 
     def delete_alerts(self, cutoff):

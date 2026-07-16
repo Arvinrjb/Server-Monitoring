@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         cutoff = timezone.now() - timedelta(
-            days=2
+            weeks=1
         )
         self.delete_statuses(
             cutoff
