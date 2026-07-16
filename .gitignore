@@ -1,6 +1,6 @@
 .vscode
-# .venv
-# .venv-linux
+.venv
+.venv-linux
 .env
 **/__pycache__/
 **/migrations/
