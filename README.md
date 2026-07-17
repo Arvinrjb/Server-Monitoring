@@ -1,7 +1,9 @@
 # Introduction
 This is a server monitoring tool designed for both personal and organizational use.
 
-#### Attention: This project is still under development and has quite a few bugs; I am currently working on fixing them, adding new features, and finalizing the documentation.
+### Most of the frontend was written using AI.
+
+### Attention: This project is still under development and has quite a few bugs; I am currently working on fixing them, adding new features, and finalizing the documentation.
 
 ## Features
 - Monitor one or multiple servers
