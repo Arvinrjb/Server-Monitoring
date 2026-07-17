@@ -35,10 +35,7 @@ body {
     min-height: 100vh;
 }
 
-button,
-input,
-textarea,
-select {
+button, input, textarea, select {
     font-family: inherit;
 }
 
@@ -206,8 +203,7 @@ button {
     font-size: 14px;
 }
 
-.table-container,
-.chart-container {
+.table-container, .chart-container {
     background: var(--panel);
     border-radius: 8px;
     overflow: hidden;
@@ -220,24 +216,20 @@ button {
     height: 460px;
 }
 
-/* =========================
-   Servers Table
-========================= */
-
-#serversTable {
+#serversTable, #profilesTable {
     width: 100%;
     border-collapse: collapse;
 }
 
-#serversTable th,
-#serversTable td {
+#serversTable th, #serversTable td,
+#profilesTable th, #profilesTable td {
     padding: 18px 14px;
     text-align: left;
     border-bottom: 1px solid var(--border);
     vertical-align: middle;
 }
 
-#serversTable th {
+#serversTable th, #profilesTable th {
     background: var(--panel-3);
     font-weight: 700;
     font-size: 14px;
@@ -248,55 +240,23 @@ button {
     transition: background 0.2s ease;
 }
 
-#serversTable tbody tr {
+#serversTable tbody tr, #profilesTable tbody tr {
     cursor: pointer;
 }
 
-#serversTable tbody tr:hover {
+#profilesTable tbody tr {
+    transition: background 0.2s ease;
+}
+
+#serversTable tbody tr:hover,
+#profilesTable tbody tr:hover,
+#profilesTable tbody tr.active {
     background: #28344d;
 }
 
 #serversTable td {
     font-size: 14px;
 }
-
-/* =========================
-   Profiles Table
-========================= */
-
-#profilesTable {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-#profilesTable th,
-#profilesTable td {
-    padding: 18px 14px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-}
-
-#profilesTable th {
-    background: var(--panel-3);
-    font-weight: 700;
-    font-size: 14px;
-    color: #f8fafc;
-}
-
-#profilesTable tbody tr {
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-#profilesTable tbody tr:hover,
-#profilesTable tbody tr.active {
-    background: #28344d;
-}
-
-/* =========================
-   Usage / Status
-========================= */
 
 .usage-cell {
     display: flex;
@@ -341,15 +301,12 @@ button {
     text-transform: capitalize;
 }
 
-.status-badge.online,
-.status-badge.active,
-.status-badge.ok {
+.status-badge.online, .status-badge.active, .status-badge.ok {
     background: rgba(34, 197, 94, 0.16);
     color: var(--green);
 }
 
-.status-badge.offline,
-.status-badge.inactive {
+.status-badge.offline, .status-badge.inactive {
     background: rgba(148, 163, 184, 0.16);
     color: var(--muted);
 }
@@ -359,21 +316,12 @@ button {
     color: var(--yellow);
 }
 
-.status-badge.critical,
-.status-badge.error,
-.status-badge.down {
+.status-badge.critical, .status-badge.error, .status-badge.down {
     background: rgba(239, 68, 68, 0.16);
     color: var(--red);
 }
 
-/* =========================
-   Buttons
-========================= */
-
-.view-btn,
-.details-btn,
-.refresh-btn,
-.selector-btn {
+.view-btn, .details-btn, .refresh-btn, .selector-btn {
     background: var(--blue);
     color: #fff;
     border: none;
@@ -385,10 +333,7 @@ button {
     transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.view-btn:hover,
-.details-btn:hover,
-.refresh-btn:hover,
-.selector-btn:hover {
+.view-btn:hover, .details-btn:hover, .refresh-btn:hover, .selector-btn:hover {
     background: var(--blue-2);
     transform: translateY(-1px);
 }
@@ -407,16 +352,17 @@ button {
     animation: pulse 2s infinite;
 }
 
-.empty-state {
-    color: var(--muted);
+.empty-state, .error-state {
     text-align: center !important;
     padding: 30px !important;
 }
 
+.empty-state {
+    color: var(--muted);
+}
+
 .error-state {
     color: var(--red-2);
-    text-align: center !important;
-    padding: 30px !important;
 }
 
 .server-selector {
@@ -426,13 +372,7 @@ button {
     flex-wrap: wrap;
 }
 
-/* =========================
-   Global Modal Overlay
-========================= */
-
-.modal,
-#profileModal,
-#detailModal {
+.modal, #profileModal, #detailModal {
     position: fixed;
     inset: 0;
     display: none;
@@ -446,22 +386,13 @@ button {
     overflow-y: auto;
 }
 
-.modal.show,
-#profileModal.show,
-#detailModal.show {
+.modal.show, #profileModal.show, #detailModal.show {
     display: flex;
 }
 
-/* وقتی hidden هست، حتماً مخفی بماند */
-.modal[hidden],
-#profileModal[hidden],
-#detailModal[hidden] {
+.modal[hidden], #profileModal[hidden], #detailModal[hidden] {
     display: none !important;
 }
-
-/* =========================
-   Server Detail Modal
-========================= */
 
 .detail-modal {
     width: 100%;
@@ -523,10 +454,6 @@ button {
     flex: 1;
 }
 
-/* =========================
-   Profile Modal
-========================= */
-
 #profileModal {
     background: rgba(2, 6, 23, 0.78);
     backdrop-filter: blur(6px);
@@ -557,8 +484,7 @@ button {
     max-width: 390px;
 }
 
-.profile-modal-content .modal-header p,
-#profileDetailId {
+.profile-modal-content .modal-header p, #profileDetailId {
     color: var(--muted);
     font-size: 13px;
     margin-top: 6px;
@@ -583,7 +509,10 @@ button {
 .profile-form input,
 .profile-form textarea,
 #profileModal input,
-#profileModal textarea {
+#profileModal textarea,
+#serverEditModal select,
+#serverEditModal input,
+#serverEditModal textarea {
     width: 100%;
     background: #0f172a !important;
     color: #e2e8f0 !important;
@@ -607,13 +536,15 @@ button {
 .profile-form input:focus,
 .profile-form textarea:focus,
 #profileModal input:focus,
-#profileModal textarea:focus {
+#profileModal textarea:focus,
+#serverEditModal select:focus,
+#serverEditModal input:focus,
+#serverEditModal textarea:focus {
     border-color: var(--blue);
     box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.14);
 }
 
-.profile-form textarea,
-#profileModal textarea {
+.profile-form textarea, #profileModal textarea {
     min-height: 96px;
 }
 
@@ -634,8 +565,7 @@ button {
     flex-wrap: wrap;
 }
 
-.profile-form-actions button[type="submit"],
-.profile-form-actions .save-btn {
+.profile-form-actions button[type="submit"], .profile-form-actions .save-btn {
     background: var(--green-2);
     color: #fff;
     border: none;
@@ -646,14 +576,12 @@ button {
     transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.profile-form-actions button[type="submit"]:hover,
-.profile-form-actions .save-btn:hover {
+.profile-form-actions button[type="submit"]:hover, .profile-form-actions .save-btn:hover {
     background: var(--green);
     transform: translateY(-1px);
 }
 
-.profile-form-actions button[type="button"],
-.profile-form-actions .cancel-btn {
+.profile-form-actions button[type="button"], .profile-form-actions .cancel-btn {
     background: transparent;
     color: var(--muted);
     border: 1px solid var(--border);
@@ -664,30 +592,25 @@ button {
     transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-.profile-form-actions button[type="button"]:hover,
-.profile-form-actions .cancel-btn:hover {
+.profile-form-actions button[type="button"]:hover, .profile-form-actions .cancel-btn:hover {
     background: rgba(148, 163, 184, 0.08);
     color: #f8fafc;
     border-color: #475569;
 }
 
-#profileSaveStatus {
+#profileSaveStatus, #serverEditSaveStatus {
     font-size: 14px;
     color: var(--muted);
     min-height: 20px;
 }
 
-#profileSaveStatus.success {
+#profileSaveStatus.success, #serverEditSaveStatus.success {
     color: var(--green);
 }
 
-#profileSaveStatus.error {
+#profileSaveStatus.error, #serverEditSaveStatus.error {
     color: var(--red-2);
 }
-
-/* =========================
-   Tabs
-========================= */
 
 .tabs {
     display: flex;
@@ -710,8 +633,7 @@ button {
     white-space: nowrap;
 }
 
-.tab-btn.active,
-.tab-btn:hover {
+.tab-btn.active, .tab-btn:hover {
     background: var(--panel-3);
     color: var(--blue);
 }
@@ -723,10 +645,6 @@ button {
 .tab-content.active {
     display: block;
 }
-
-/* =========================
-   Overview
-========================= */
 
 .overview-grid {
     display: grid;
@@ -753,10 +671,6 @@ button {
     font-size: 15px;
     word-break: break-word;
 }
-
-/* =========================
-   Lite Table / Logs
-========================= */
 
 .table-lite {
     width: 100%;
@@ -799,10 +713,6 @@ button {
     border-radius: 6px;
     cursor: pointer;
 }
-
-/* =========================
-   Alerts
-========================= */
 
 .alert-list {
     display: flex;
@@ -881,24 +791,14 @@ button {
     color: var(--muted);
 }
 
-/* =========================
-   Animations
-========================= */
-
 @keyframes pulse {
-    0%,
-    100% {
+    0%, 100% {
         opacity: 1;
     }
-
     50% {
         opacity: 0.35;
     }
 }
-
-/* =========================
-   Responsive
-========================= */
 
 @media (max-width: 1100px) {
     .profiles-layout {
@@ -953,9 +853,7 @@ button {
         height: 92vh;
     }
 
-    .modal,
-    #profileModal,
-    #detailModal {
+    .modal, #profileModal, #detailModal {
         align-items: flex-start;
         padding: 16px;
     }
@@ -983,47 +881,6 @@ button {
     }
 }
 
-#serverEditModal select,
-#serverEditModal input,
-#serverEditModal textarea {
-    width: 100%;
-    background: #0f172a !important;
-    color: #e2e8f0 !important;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 11px 12px;
-    font-size: 14px;
-    line-height: 1.5;
-    outline: none;
-    resize: vertical;
-    caret-color: var(--blue);
-}
-
-#serverEditModal select:focus,
-#serverEditModal input:focus,
-#serverEditModal textarea:focus {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.14);
-}
-
-#serverEditSaveStatus {
-    font-size: 14px;
-    color: var(--muted);
-    min-height: 20px;
-}
-
-#serverEditSaveStatus.success {
-    color: var(--green);
-}
-
-#serverEditSaveStatus.error {
-    color: var(--red-2);
-}
-#serversTable td:last-child {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
 .server-actions {
     display: flex;
     align-items: center;
@@ -1043,10 +900,7 @@ button {
     color: #fbbf24;
     font-size: 13px;
     font-weight: 600;
-    transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .edit-btn:hover {
