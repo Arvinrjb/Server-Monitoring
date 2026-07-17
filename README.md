@@ -1,7 +1,7 @@
 # Introduction
 This is a server monitoring tool designed for both personal and organizational use.
 
-## Attention: This project is still under development and has quite a few bugs; I am currently working on fixing them, adding new features, and finalizing the documentation.
+#### Attention: This project is still under development and has quite a few bugs; I am currently working on fixing them, adding new features, and finalizing the documentation.
 
 ## Features
 - Monitor one or multiple servers
@@ -21,8 +21,14 @@ This is a server monitoring tool designed for both personal and organizational u
 - Support
 - Client
 
+## Download 
+```
+git clone https://github.com/Arvinrjb/Server-Monitoring.git
+```
+
 ## Documentation
 - [Architecture](docs/architecture.md)
+- [Configurations](docs/configurations.md)
 - [Installation](docs/installation.md)
 - [Roles and Permissions](docs/roles-and-permissions.md)
 

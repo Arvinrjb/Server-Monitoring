@@ -5,20 +5,19 @@ The installation steps are as follows
 - django 4.2
 - PostgreSQL
 - redis 8
-<br>
-Note : All prerequisites will be installed during the installation process.
-Note: Make sure the PostgreSQL and Redis services are running.
-<br>
+#### Note : All prerequisites will be installed during the installation process.<br>
+#### Note: Make sure the PostgreSQL and Redis services are running.
 
 ## Local Setup
-```
-git clone https://github.com/Arvinrjb/Server-Monitoring.git
-```
+
 ```
 cd Server-Monitoring
 ```
 ```
-source .venv-linux/bin/activate
+python -m venv .venv
+```
+```
+source .venv/bin/activate
 ```
 ```
 pip install -r requirements.txt
@@ -45,3 +44,5 @@ celery -A webapp beat --loglevel=INFO
 ```
 python manage.py runserver
 ```
+
+### [Configurations](configurations.md)
