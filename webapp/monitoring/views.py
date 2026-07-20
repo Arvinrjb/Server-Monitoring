@@ -6,13 +6,14 @@ from datetime import timedelta
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Avg
+from django.db.models.expressions import RawSQL
 from rest_framework import authentication, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from monitoring.models import ServerStatus
-from monitoring.serializers import DashboardSerializer, AgentSerializer, StatusSerializer
+from monitoring.serializers import DashboardSerializer, AgentSerializer
 from logs.models import Logs
 from system.models import Server
 from core.pagination import PagePagination
@@ -186,59 +187,78 @@ class ServerChartAPIView(APIView):
         last_24_hours = timezone.now() - timedelta(
             hours=24
         )
-
         statuses = ServerStatus.objects.filter(
-            server=server,
-            lastupdate__gte=last_24_hours,
-        ).order_by(
-            "lastupdate"
-        )
-
+            server=server, lastupdate__gte=last_24_hours
+            ).annotate(
+                bucket=RawSQL(
+                    f"to_timestamp(floor(extract(epoch from lastupdate AT TIME ZONE '{timezone.get_current_timezone_name()}') / 600) * 600)",
+                    []
+                )
+            ).values(
+                "bucket"
+            ).annotate(
+                avg_cpu=Avg("cpu_usage"),
+                avg_ram=Avg("ram_usage"),
+                avg_disk=Avg("disk_usage"),
+            ).order_by(
+                "bucket"
+            )
+                
         result = []
-        groups = {}
-
+        
         for status in statuses:
-            local_dt = timezone.localtime(status.lastupdate)
-            bucket = local_dt.replace(
-            minute=(local_dt.minute // 10) * 10,
-            second=0,
-            microsecond=0
-            )
-            if bucket not in groups:
-                groups[bucket] = {
-                "cpu": [],
-                "ram": [],
-                "disk": [],
-                }
-            groups[bucket]["cpu"].append(
-            status.cpu_usage
-            )
-            groups[bucket]["ram"].append(
-                status.ram_usage
-            )
-            groups[bucket]["disk"].append(
-                status.disk_usage
-            )
+            item = {
+                "time": status["bucket"].strftime("%H:%M"),
+                "cpu": round(status["avg_cpu"], 1),
+                "ram": round(status["avg_ram"], 1),
+                "disk": round(status["avg_disk"], 1)
+            }
+            result.append(item)
 
-        for bucket, values in groups.items():
-            avg_cpu = sum(
-                values["cpu"]
-            ) / len(values["cpu"])
-            avg_ram = sum(
-                values["ram"]
-            ) / len(values["ram"])
-            avg_disk = sum(
-                values["disk"]
-            ) / len(values["disk"])
+        # groups = {}
 
-            result.append({
-                "time": bucket.strftime(
-                    "%H:%M"
-                ),
-                "cpu": round(avg_cpu, 2),
-                "ram": round(avg_ram, 2),
-                "disk": round(avg_disk, 2),
-            })
+        # for status in statuses:
+        #     local_dt = timezone.localtime(status.lastupdate)
+        #     bucket = local_dt.replace(
+        #     minute=(local_dt.minute // 10) * 10,
+        #     second=0,
+        #     microsecond=0
+        #     )
+        #     if bucket not in groups:
+        #         groups[bucket] = {
+        #         "cpu": [],
+        #         "ram": [],
+        #         "disk": [],
+        #         }
+        #     groups[bucket]["cpu"].append(
+        #     status.cpu_usage
+        #     )
+        #     groups[bucket]["ram"].append(
+        #         status.ram_usage
+        #     )
+        #     groups[bucket]["disk"].append(
+        #         status.disk_usage
+        #     )
+
+        # for bucket, values in groups.items():
+        #     avg_cpu = sum(
+        #         values["cpu"]
+        #     ) / len(values["cpu"])
+        #     avg_ram = sum(
+        #         values["ram"]
+        #     ) / len(values["ram"])
+        #     avg_disk = sum(
+        #         values["disk"]
+        #     ) / len(values["disk"])
+
+        #     result.append({
+        #         "time": bucket.strftime(
+        #             "%H:%M"
+        #         ),
+        #         "cpu": round(avg_cpu, 2),
+        #         "ram": round(avg_ram, 2),
+        #         "disk": round(avg_disk, 2),
+        #     })
 
         cache.set(
             cache_key,
