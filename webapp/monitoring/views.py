@@ -12,6 +12,7 @@ from rest_framework import authentication, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from monitoring.models import ServerStatus
 from monitoring.serializers import DashboardSerializer, AgentSerializer
 from logs.models import Logs
@@ -21,6 +22,14 @@ from core.AlertManager import AlertsManager_CPU, AlertsManager_RAM, AlertsManage
 from core.Permissions import IsOwnerOrAdmin
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="View Servers Statuses"
+    ),
+    retrieve=extend_schema(
+        summary="View one Server Statuses"
+    )
+)
 class DashboardViewSet(ReadOnlyModelViewSet):
     serializer_class = DashboardSerializer
     pagination_class = PagePagination
@@ -104,6 +113,9 @@ class DashboardViewSet(ReadOnlyModelViewSet):
 class AddStatus(APIView):
     authentication_classes = []
     permission_classes = []
+    @extend_schema(
+            summary="Receiving statuses from the agent"
+    )
     def post(self, request):
         try:
             token = request.headers.get(
@@ -154,7 +166,9 @@ class ServerChartAPIView(APIView):
     permission_classes = [
         IsOwnerOrAdmin,
     ]
-
+    @extend_schema(
+            summary="View Resource usage during the last 24 hours."
+    )
     def get(self, request, server_id):
         if self.request.user.has_perms(
             [

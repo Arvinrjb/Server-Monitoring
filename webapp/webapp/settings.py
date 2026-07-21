@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django_filters',
     "rest_framework",
     'rest_framework.authtoken',
+    "drf_spectacular",
     'accounts',
     'core',
     'utils',
@@ -177,7 +178,16 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Server Monitoring",
+    "DESCRIPTION": "API documentation for the server monitoring project",
+    "VERSION": "1.0.0",
+}
+
+
 if DEBUG:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
         "rest_framework.renderers.BrowsableAPIRenderer"

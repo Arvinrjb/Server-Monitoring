@@ -23,7 +23,7 @@
             {% else %}
                 <a href="/dashboard/">Dashboard</a>
             {% endif %}
-            <a href="/docs/">API Docs</a>
+            <a href="/api/swagger/">API Docs</a>
         {% if request.user.is_authenticated %}
             <a href="/logout/">Logout</a>
         {% else %}
@@ -48,11 +48,13 @@
             </p>
 
             <div class="buttons">
-                <a href="/signup/" class="btn btn-primary">
-                    Get Started
-                </a>
+                {% if not request.user.is_authenticated %}
+                    <a href="/signup/" class="btn btn-primary">
+                        Get Started
+                    </a>
+                {% endif %}
 
-                <a href="/docs/" class="btn btn-secondary">
+                <a href="/api/swagger/" class="btn btn-secondary">
                     API Documentation
                 </a>
             </div>

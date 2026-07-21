@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework import authentication
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from system.serializers import ServerSerializer
 from system.models import Server
 from core.pagination import PagePagination
@@ -50,7 +51,25 @@ class Servers(
             return render(request, 'servers.html')
         return HttpResponseForbidden('You do not have permission to perform this action.')
 
-
+@extend_schema_view(
+    list=extend_schema(
+        summary="List Servers",
+        description="To view the list of servers"
+    ),
+    create=extend_schema(
+        summary="Create Server",
+        description="Add New Server"
+    ),
+    retrieve=extend_schema(
+        description="View one Server information and Edit"
+    ),
+    update=extend_schema(
+        summary="Update Server information",
+    ),
+    destroy=extend_schema(
+        summary="Delete Server"
+    )
+)
 class AddServerViewSet(ModelViewSet):
     serializer_class = ServerSerializer
     pagination_class = PagePagination
