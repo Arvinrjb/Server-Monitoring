@@ -306,7 +306,7 @@ function showServerDetails(id, server) {
     openTab(0);
     renderOverview(server);
     loadServerLogs(id);
-    loadServerAlerts(server.hostname);
+    loadServerAlerts(norm(server.hostname, ""));
 }
 
 function closeDetailModal() {
@@ -337,8 +337,11 @@ function renderOverview(server) {
     addInfoItem(grid, "Owner", getOwnerName(server));
     addInfoItem(grid, "OS", server.os);
     addInfoItem(grid, "Status", server.status || "offline");
-    addInfoItem(grid, "CPU Usage", `${clamp(server.latest_status?.cpu_usage)}%`);
-    addInfoItem(grid, "RAM Usage", `${clamp(server.latest_status?.ram_usage)}%`);
+    addInfoItem(grid, "Agent Token", server.agent_token || "Agent Token");
+    addInfoItem(grid, "Lastest Log", server.lastest_log?.message ?? "No logs");
+    // addInfoItem(grid, "CPU Usage", `${clamp(server.latest_status?.cpu_usage)}%`);
+    // addInfoItem(grid, "RAM Usage", `${clamp(server.latest_status?.ram_usage)}%`);
+    // addInfoItem(grid, "DISK Usage", `${clamp(server.latest_status?.disk_usage)}%`);
     oc.appendChild(grid);
 }
 
@@ -382,14 +385,7 @@ async function loadServerLogs(serverId, limit = 20) {
     container.appendChild(el("p", null, "Loading logs..."));
     lc.appendChild(container);
     try {
-        let logs = [];
-        try {
-            logs = list(await fetchJSON(`${API.logs}?server=${encodeURIComponent(serverId)}&limit=${encodeURIComponent(limit)}&ordering=-created_at`));
-        } catch { logs = []; }
-        if (!logs.length) {
-            logs = list(await fetchJSON(`${API.logs}?limit=${encodeURIComponent(limit)}&ordering=-created_at`))
-                .filter(l => String(l.server) === String(serverId));
-        }
+        const logs = list(await fetchJSON(`${API.logs}?server=${encodeURIComponent(serverId)}&limit=${encodeURIComponent(limit)}&ordering=-created_at`));
         clear(container);
         if (!logs.length) { container.appendChild(el("p", "empty-state", "No logs found for this server.")); return; }
         const table = el("table", "table-lite");
