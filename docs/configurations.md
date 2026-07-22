@@ -18,7 +18,7 @@ BASE_URL = "your base url" (example: http://localhost)<br>
 STATUS_URL = f"{BASE_URL}/api/agent/status/report/"<br>
 LOGS_URL = f"{BASE_URL}/api/agent/logs/report/"<br>
 TOKEN = "your server Token"<br>
-#### To obtain the server token, you need to view it via the dashboard or the API (I haven't fixed it yet; I'll fix it by tomorrow!).
+#### To obtain the server token, you need to view it via the dashboard or the API(/api/servers/).
 
 
 ### [Architecture](architecture.md)<br>
