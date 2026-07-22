@@ -101,6 +101,8 @@ function updateUI(item) {
     }
 
     document.querySelector(".server-header h2").innerText = item.hostname;
+    console.log(item)
+    document.querySelector(".server-header h3").innerText = "Agent Token: " + item.agent_token;
     document.querySelector(".info-box:nth-child(1) p").innerText = item.ipaddress;
     document.querySelector(".info-box:nth-child(2) p").innerText = item.os;
 }

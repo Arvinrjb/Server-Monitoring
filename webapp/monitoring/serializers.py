@@ -60,6 +60,10 @@ class DashboardSerializer(serializers.ModelSerializer):
             'status',
             'latest_status',
             'lastest_log',
+            'agent_token'
+        ]
+        read_only_fields=[
+            "agent_token"
         ]
 
     def get_latest_status(self, obj):
