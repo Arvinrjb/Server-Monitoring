@@ -12,7 +12,7 @@ from accounts.models import User
 @receiver(post_save, sender=User)
 def create_group(sender, instance, created, **kwargs):
     if created :
-        group = Group.objects.get(name='client')
+        group = Group.objects.get(name='Client')
         instance.groups.add(group)
 
 

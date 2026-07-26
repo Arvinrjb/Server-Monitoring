@@ -21,6 +21,7 @@ class ProfileViewSet(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     viewsets.GenericViewSet
 ):
     authentication_classes = [
@@ -60,7 +61,8 @@ class ProfileViewSet(
     
     def invalidate_cache(self):
         cache.delete(
-            f"profile_{self.request.user.id}"
+            f"profile_{self.request.user.id}_"
+            f"{self.request.GET.urlencode()}"
         )
         
     def get_queryset(self):
@@ -78,6 +80,10 @@ class ProfileViewSet(
 
     def perform_update(self, serializer):
         serializer.save()
+        self.invalidate_cache()
+
+    def perform_destroy(self, instance):
+        instance.delete()
         self.invalidate_cache()
 
 

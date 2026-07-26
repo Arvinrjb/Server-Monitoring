@@ -215,11 +215,23 @@
                     Telegram ID
                     <input type="text" id="profileTelegramInput" name="telegram_id" autocomplete="off">
                 </label>
+            <div class="profile-form-actions">
+                <div class="profile-action-buttons">
+                    <button type="submit" class="view-btn">
+                        Save Changes
+                    </button>
 
-                <div class="profile-form-actions">
-                    <button type="submit" class="view-btn">Save Changes</button>
-                    <span id="profileSaveStatus"></span>
+                    <button
+                        type="button"
+                        id="deleteProfileBtn"
+                        class="delete-profile-btn"
+                    >
+                        Delete Profile
+                    </button>
                 </div>
+
+                <span id="profileSaveStatus"></span>
+            </div>
             </form>
         </div>
     </div>

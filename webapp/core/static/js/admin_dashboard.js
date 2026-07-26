@@ -268,6 +268,91 @@ async function updateSelectedProfile(event) {
     }
 }
 
+async function deleteSelectedProfile() {
+    if (!selectedProfile?.id) {
+        setStatus(
+            "profileSaveStatus",
+            "No profile selected.",
+            "error"
+        );
+        return;
+    }
+
+    const profileId = selectedProfile.id;
+    const profileName =
+        selectedProfile.email ||
+        `${selectedProfile.first_name || ""} ${selectedProfile.last_name || ""}`.trim() ||
+        `Profile #${profileId}`;
+
+    const confirmed = window.confirm(
+        `Are you sure you want to delete "${profileName}"?\n\n` +
+        "This action cannot be undone."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const deleteButton = $("deleteProfileBtn");
+    const saveButton = document.querySelector(
+        '#profileEditForm button[type="submit"]'
+    );
+
+    try {
+        if (deleteButton) {
+            deleteButton.disabled = true;
+            deleteButton.textContent = "Deleting...";
+        }
+
+        if (saveButton) {
+            saveButton.disabled = true;
+        }
+
+        setStatus(
+            "profileSaveStatus",
+            "Deleting profile..."
+        );
+
+        await fetchJSON(
+            `${API.profiles}${encodeURIComponent(profileId)}/`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        selectedProfile = null;
+
+        setStatus(
+            "profileSaveStatus",
+            "Profile deleted successfully.",
+            "success"
+        );
+
+        await loadProfiles();
+
+        setTimeout(() => {
+            closeProfileModal();
+        }, 500);
+    } catch (err) {
+        console.error("Failed to delete profile:", err);
+
+        setStatus(
+            "profileSaveStatus",
+            err.message || "Failed to delete profile.",
+            "error"
+        );
+    } finally {
+        if (deleteButton) {
+            deleteButton.disabled = false;
+            deleteButton.textContent = "Delete Profile";
+        }
+
+        if (saveButton) {
+            saveButton.disabled = false;
+        }
+    }
+}
+
 function showPage(active) {
     ["mainDashboardView", "metricsPage", "profilesPage"].forEach(id => {
         const el = $(id);
@@ -575,6 +660,7 @@ function bindEvents() {
     on("refreshServersBtn", "click", loadServers);
     on("refreshProfilesBtn", "click", loadProfiles);
     on("profileEditForm", "submit", updateSelectedProfile);
+    on("deleteProfileBtn", "click", deleteSelectedProfile);
     on("serverEditForm", "submit", updateSelectedServer);
     on("closeDetailModalBtn", "click", closeDetailModal);
     on("closeProfileModalBtn", "click", closeProfileModal);
