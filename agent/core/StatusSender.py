@@ -18,9 +18,9 @@ def status_sender(url, token):
     old_speed = network.get_net_io_counters()
     sleep(1)
     new_speed = network.get_net_io_counters()
-    download_speed = ((new_speed.bytes_recv-old_speed.bytes_recv)/1024 /1024) * 8
-    # download_speed = ((new_speed.bytes_recv-old_speed.bytes_recv)/1024 /1024)*8)/10 
-    upload_speed = ((new_speed.bytes_sent-old_speed.bytes_sent)/1024 /1024) * 8
+    # download_speed = ((new_speed.bytes_recv-old_speed.bytes_recv)/1024 /1024) * 8
+    download_speed = ((new_speed.bytes_recv-old_speed.bytes_recv)/1024 /1024)*8/10 
+    upload_speed = ((new_speed.bytes_sent-old_speed.bytes_sent)/1024 /1024)*8/10
 
     if int(cpu.get_cpu_percent()) >= 90:
         logger.warning("CPU usage is greater than 90.")
