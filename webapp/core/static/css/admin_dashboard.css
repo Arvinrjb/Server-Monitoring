@@ -295,6 +295,38 @@ button {
     background: var(--green);
 }
 
+.network-speed {
+    min-width: 112px;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.network-speed-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 16px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.network-speed.download .network-speed-icon {
+    background: rgba(56, 189, 248, 0.16);
+    color: var(--blue);
+}
+
+.network-speed.upload .network-speed-icon {
+    background: rgba(34, 197, 94, 0.16);
+    color: var(--green);
+}
+
 .status-badge {
     min-width: 74px;
     padding: 5px 10px;
@@ -985,7 +1017,7 @@ button {
     }
 
     #serversTable {
-        min-width: 850px;
+        min-width: 1100px;
     }
 
     #profilesTable {

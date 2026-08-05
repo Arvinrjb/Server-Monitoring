@@ -66,7 +66,7 @@ function setTableMsg(msg, cls = "empty-state") {
     if (!tb) return;
     clear(tb);
     const td = el("td", cls, msg);
-    td.colSpan = 8;
+    td.colSpan = 10;
     const tr = document.createElement("tr");
     tr.appendChild(td);
     tb.appendChild(tr);
@@ -133,6 +133,26 @@ function createUsageCell(value, fillCls) {
     return td;
 }
 
+function formatNetworkSpeed(value) {
+    if (value == null || value === "") return "N/A";
+    const speed = Number(value);
+    if (!Number.isFinite(speed)) return "N/A";
+    return `${speed.toLocaleString(undefined, { maximumFractionDigits: 2 })} Mbps`;
+}
+
+function createNetworkSpeedCell(value, direction) {
+    const td = document.createElement("td");
+    const speed = value == null || value === "" ? NaN : Number(value);
+    const metric = el("span", `network-speed ${direction}`);
+    const icon = el("span", "network-speed-icon", direction === "download" ? "↓" : "↑");
+    icon.setAttribute("aria-hidden", "true");
+    metric.appendChild(icon);
+    metric.appendChild(el("span", "network-speed-value", formatNetworkSpeed(speed)));
+    if (Number.isFinite(speed)) metric.title = `${direction === "download" ? "Download" : "Upload"} speed`;
+    td.appendChild(metric);
+    return td;
+}
+
 function createStatusCell(status) {
     const td = document.createElement("td");
     const s = norm(status, "offline").toLowerCase();
@@ -173,12 +193,16 @@ async function loadServers() {
             const row = document.createElement("tr");
             const cpu = server.latest_status?.cpu_usage ?? 0;
             const ram = server.latest_status?.ram_usage ?? 0;
+            const downloadSpeed = server.latest_status?.network_in;
+            const uploadSpeed = server.latest_status?.network_out;
             row.appendChild(createCell(server.hostname ?? ""));
             row.appendChild(createCell(server.ipaddress ?? ""));
             row.appendChild(createCell(getOwnerName(server)));
             row.appendChild(createStatusCell(server.status));
             row.appendChild(createUsageCell(cpu, "cpu-fill"));
             row.appendChild(createUsageCell(ram, "ram-fill"));
+            row.appendChild(createNetworkSpeedCell(downloadSpeed, "download"));
+            row.appendChild(createNetworkSpeedCell(uploadSpeed, "upload"));
             row.appendChild(createAlertCell(hasActiveAlert(alerts, server)));
             const td = document.createElement("td");
             td.classList.add("server-actions");
