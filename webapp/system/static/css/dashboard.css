@@ -213,7 +213,7 @@ body {
 
 .cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 20px;
     margin-bottom: 32px;
 }
@@ -264,7 +264,8 @@ body {
 .cpu-progress { background: #f59e0b; }
 .ram-progress { background: #10b981; }
 .disk-progress { background: #0ea5e9; }
-.network-progress { background: #6366f1; }
+.download-progress { background: #6366f1; }
+.upload-progress { background: #22c55e; }
 
 .server-card {
     background: #111827;

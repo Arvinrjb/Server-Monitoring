@@ -1,9 +1,16 @@
 const serverSelect = document.getElementById("serverSelect");
-const serversAPI = "http://127.0.0.1:8000/api/servers/";
+const serversAPI = "/api/servers/";
 const API_ALERTS = 'http://127.0.0.1:8000/api/alerts/';
 
 let cachedData = [];
 let performanceChart = null;
+
+function formatSpeed(value) {
+    const speed = Number(value);
+    return Number.isFinite(speed)
+        ? `${speed.toLocaleString(undefined, { maximumFractionDigits: 2 })} Mbps`
+        : "0 Mbps";
+}
 
 async function loadAlerts() {
     try {
@@ -80,22 +87,26 @@ function updateUI(item) {
         document.querySelector(".cpu-progress").style.width = server.cpu_usage + "%" || "0" + "%";
         document.querySelector(".ram-progress").style.width = server.ram_usage + "%" || "0" + "%";
         document.querySelector(".disk-progress").style.width = server.disk_usage + "%" || "0" + "%";
-        document.querySelector(".network-progress").style.width = (server.network_in ? Math.min(server.network_in, 100) : 0) + "%" || "0" + "%";
+        document.querySelector(".download-progress").style.width = `${Math.min(Math.max(Number(server.network_in) || 0, 0), 100)}%`;
+        document.querySelector(".upload-progress").style.width = `${Math.min(Math.max(Number(server.network_out) || 0, 0), 100)}%`;
         document.querySelector(".cards .card:nth-child(1) p").innerText = server.cpu_usage + "%" || "-";
         document.querySelector(".cards .card:nth-child(2) p").innerText = server.ram_usage + "%" || "-";
         document.querySelector(".cards .card:nth-child(3) p").innerText = server.disk_usage + "%" || "-";
-        document.querySelector(".cards .card:nth-child(4) p").innerText = server.network_in + " Mbps" || "-";
+        document.querySelector(".cards .card:nth-child(4) p").innerText = formatSpeed(server.network_in);
+        document.querySelector(".cards .card:nth-child(5) p").innerText = formatSpeed(server.network_out);
         document.querySelector(".info-box:nth-child(3) p").innerText = `${Math.floor(server.uptime_seconds/86400)}d ${Math.floor(server.uptime_seconds%86400/3600)}h ${Math.floor(server.uptime_seconds%3600/60)}m ${server.uptime_seconds%60}s` || "-";
         document.querySelector(".info-box:nth-child(4) p").innerText = server.process_count || "0";
     }else{
         document.querySelector(".cpu-progress").style.width = 0;
         document.querySelector(".ram-progress").style.width = 0;
         document.querySelector(".disk-progress").style.width = 0;
-        document.querySelector(".network-progress").style.width = 0 + "%";
+        document.querySelector(".download-progress").style.width = "0%";
+        document.querySelector(".upload-progress").style.width = "0%";
         document.querySelector(".cards .card:nth-child(1) p").innerText = 0 + "%";
         document.querySelector(".cards .card:nth-child(2) p").innerText = 0 + "%";
         document.querySelector(".cards .card:nth-child(3) p").innerText = 0 + "%";
         document.querySelector(".cards .card:nth-child(4) p").innerText = 0 + " Mbps";
+        document.querySelector(".cards .card:nth-child(5) p").innerText = 0 + " Mbps";
         document.querySelector(".info-box:nth-child(3) p").innerText = "0d 0h 0m 0s";
         document.querySelector(".info-box:nth-child(4) p").innerText = 0;
     }
