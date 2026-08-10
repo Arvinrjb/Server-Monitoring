@@ -1,0 +1,14 @@
+.git
+.gitignore
+.env
+.venv
+.venv-linux
+.vscode
+__pycache__
+**/__pycache__
+*.py[cod]
+*.log
+agent.log
+offset.txt
+db.sqlite3
+celerybeat*
