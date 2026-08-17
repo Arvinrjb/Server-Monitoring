@@ -10,6 +10,10 @@ DB_PASSWORD = "your database password"<br>
 DB_USER = "your database username"<br>
 DB_HOST = database host - for local 127.0.0.1 <br>
 DB_PORT = database port - for postgresSQL 5432 
+REDIS_URL = Redis for cache, default = "redis://127.0.0.1:6379/1" 
+CELERY_BROKER_URL = for celery broker, default = "redis://127.0.0.1:6379/1"
+CELERY_RESULT_BACKEND = for celery result, default = "redis://127.0.0.1:6379/1"
+
 
 ### agent/main.py:
 #### This script runs on servers, and this entire directory must be copied to the target server.
