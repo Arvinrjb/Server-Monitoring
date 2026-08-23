@@ -4,12 +4,14 @@ const API_ALERTS = 'http://127.0.0.1:8000/api/alerts/';
 
 let cachedData = [];
 let performanceChart = null;
+const SPEED_UNIT_STORAGE_KEY = "networkSpeedUnit";
+let speedUnit = localStorage.getItem(SPEED_UNIT_STORAGE_KEY) || "MB";
 
 function formatSpeed(value) {
-    const speed = Number(value);
-    return Number.isFinite(speed)
-        ? `${speed.toLocaleString(undefined, { maximumFractionDigits: 2 })} Mbps`
-        : "0 Mbps";
+    const bytesPerSecond = Number(value);
+    if (!Number.isFinite(bytesPerSecond)) return `0 ${speedUnit}/s`;
+    const divisor = speedUnit === "GB" ? 1024 ** 3 : 1024 ** 2;
+    return `${(bytesPerSecond / divisor).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${speedUnit}/s`;
 }
 
 async function loadAlerts() {
@@ -87,8 +89,6 @@ function updateUI(item) {
         document.querySelector(".cpu-progress").style.width = server.cpu_usage + "%" || "0" + "%";
         document.querySelector(".ram-progress").style.width = server.ram_usage + "%" || "0" + "%";
         document.querySelector(".disk-progress").style.width = server.disk_usage + "%" || "0" + "%";
-        document.querySelector(".download-progress").style.width = `${Math.min(Math.max(Number(server.network_in) || 0, 0), 100)}%`;
-        document.querySelector(".upload-progress").style.width = `${Math.min(Math.max(Number(server.network_out) || 0, 0), 100)}%`;
         document.querySelector(".cards .card:nth-child(1) p").innerText = server.cpu_usage + "%" || "-";
         document.querySelector(".cards .card:nth-child(2) p").innerText = server.ram_usage + "%" || "-";
         document.querySelector(".cards .card:nth-child(3) p").innerText = server.disk_usage + "%" || "-";
@@ -100,13 +100,11 @@ function updateUI(item) {
         document.querySelector(".cpu-progress").style.width = 0;
         document.querySelector(".ram-progress").style.width = 0;
         document.querySelector(".disk-progress").style.width = 0;
-        document.querySelector(".download-progress").style.width = "0%";
-        document.querySelector(".upload-progress").style.width = "0%";
         document.querySelector(".cards .card:nth-child(1) p").innerText = 0 + "%";
         document.querySelector(".cards .card:nth-child(2) p").innerText = 0 + "%";
         document.querySelector(".cards .card:nth-child(3) p").innerText = 0 + "%";
-        document.querySelector(".cards .card:nth-child(4) p").innerText = 0 + " Mbps";
-        document.querySelector(".cards .card:nth-child(5) p").innerText = 0 + " Mbps";
+        document.querySelector(".cards .card:nth-child(4) p").innerText = formatSpeed(0);
+        document.querySelector(".cards .card:nth-child(5) p").innerText = formatSpeed(0);
         document.querySelector(".info-box:nth-child(3) p").innerText = "0d 0h 0m 0s";
         document.querySelector(".info-box:nth-child(4) p").innerText = 0;
     }
@@ -120,6 +118,7 @@ function updateUI(item) {
 
 function showDashboardPage() {
     document.getElementById('metricsPage').style.display = 'none';
+    document.getElementById('settingsPage').style.display = 'none';
     document.getElementById('dashboardView').style.display = 'block';
     document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
     document.getElementById('dashboardMenuBtn').classList.add('active');
@@ -128,9 +127,19 @@ function showDashboardPage() {
 function showMetricsPage() {
     document.getElementById('dashboardView').style.display = 'none';
     document.getElementById('metricsPage').style.display = 'block';
+    document.getElementById('settingsPage').style.display = 'none';
     document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
     document.getElementById('metricsMenuBtn').classList.add('active');
     generateServerSelector();
+}
+
+function showSettingsPage() {
+    document.getElementById('dashboardView').style.display = 'none';
+    document.getElementById('metricsPage').style.display = 'none';
+    document.getElementById('settingsPage').style.display = 'block';
+    document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
+    document.getElementById('settingsMenuBtn').classList.add('active');
+    document.getElementById('speedUnitSelect').value = speedUnit;
 }
 
 async function generateServerSelector() {
@@ -240,6 +249,14 @@ serverSelect.addEventListener("change", (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    const unitSelect = document.getElementById('speedUnitSelect');
+    unitSelect.value = speedUnit;
+    unitSelect.addEventListener('change', () => {
+        speedUnit = unitSelect.value;
+        localStorage.setItem(SPEED_UNIT_STORAGE_KEY, speedUnit);
+        const serverList = cachedData.results || cachedData;
+        if (serverList.length) updateUI(serverList[serverSelect.value || 0]);
+    });
     loadAlerts();
     loadData();
     if (window.location.hash === '#metricsPage') {

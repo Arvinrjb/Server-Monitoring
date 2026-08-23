@@ -17,7 +17,7 @@
             <a href="#" class="active" id="dashboardMenuBtn" onclick="showDashboardPage()">Dashboard</a>
             <a href="/dashboard/servers">Servers</a>
             <a href="#" id="metricsMenuBtn" onclick="showMetricsPage()">Metrics</a>
-            <a href="#">Settings</a>
+            <a href="#" id="settingsMenuBtn" onclick="showSettingsPage()">Settings</a>
             <a href="/logout/">Logout</a>
         </div>
     </div>
@@ -63,17 +63,11 @@
                 </div>
                 <div class="card">
                     <h3>Download Speed</h3>
-                    <div class="progress-bar">
-                        <div class="progress download-progress"></div>
-                    </div>
-                    <p>0 Mbps</p>
+                    <p>0 MB/s</p>
                 </div>
                 <div class="card">
                     <h3>Upload Speed</h3>
-                    <div class="progress-bar">
-                        <div class="progress upload-progress"></div>
-                    </div>
-                    <p>0 Mbps</p>
+                    <p>0 MB/s</p>
                 </div>
             </div>
 
@@ -116,6 +110,21 @@
             <div id="serverSelectorContainer" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;"></div>
             <div class="chart-container-box">
                 <canvas id="metricsChart"></canvas>
+            </div>
+        </div>
+
+        <div id="settingsPage" style="display: none;">
+            <div class="page-header">
+                <h1>Settings</h1>
+                <p>Choose how network speeds are displayed.</p>
+            </div>
+            <div class="settings-card">
+                <label for="speedUnitSelect">Network speed unit</label>
+                <select id="speedUnitSelect">
+                    <option value="MB">Megabytes per second (MB/s)</option>
+                    <option value="GB">Gigabytes per second (GB/s)</option>
+                </select>
+                <p class="settings-help">The agent reports bytes per second. This setting only changes dashboard display.</p>
             </div>
         </div>
     </div>

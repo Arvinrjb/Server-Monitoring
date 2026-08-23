@@ -10,6 +10,8 @@ let selectedProfile = null;
 let currentServerId = null;
 let performanceChart = null;
 let selectedServerForEdit = null;
+const SPEED_UNIT_STORAGE_KEY = "networkSpeedUnit";
+let speedUnit = localStorage.getItem(SPEED_UNIT_STORAGE_KEY) || "MB";
 
 function getCookie(name) {
     for (const c of (document.cookie || "").split(";")) {
@@ -137,7 +139,8 @@ function formatNetworkSpeed(value) {
     if (value == null || value === "") return "N/A";
     const speed = Number(value);
     if (!Number.isFinite(speed)) return "N/A";
-    return `${speed.toLocaleString(undefined, { maximumFractionDigits: 2 })} Mbps`;
+    const divisor = speedUnit === "GB" ? 1024 ** 3 : 1024 ** 2;
+    return `${(speed / divisor).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${speedUnit}/s`;
 }
 
 function createNetworkSpeedCell(value, direction) {
@@ -378,7 +381,7 @@ async function deleteSelectedProfile() {
 }
 
 function showPage(active) {
-    ["mainDashboardView", "metricsPage", "profilesPage"].forEach(id => {
+    ["mainDashboardView", "metricsPage", "profilesPage", "settingsPage"].forEach(id => {
         const el = $(id);
         if (el) el.hidden = id !== active;
     });
@@ -400,6 +403,12 @@ function showProfilesPage() {
     showPage("profilesPage");
     $("profilesMenuBtn")?.classList.add("active");
     loadProfiles();
+}
+
+function showSettingsPage() {
+    showPage("settingsPage");
+    $("settingsMenuBtn")?.classList.add("active");
+    $("speedUnitSelect").value = speedUnit;
 }
 
 function showServerDetails(id, server) {
@@ -446,6 +455,8 @@ function renderOverview(server) {
     addInfoItem(grid, "Owner", getOwnerName(server));
     addInfoItem(grid, "OS", server.os);
     addInfoItem(grid, "Status", server.status || "offline");
+    addInfoItem(grid, "Download Speed", formatNetworkSpeed(server.latest_status?.network_in));
+    addInfoItem(grid, "Upload Speed", formatNetworkSpeed(server.latest_status?.network_out));
     addInfoItem(grid, "Agent Token", server.agent_token || "Agent Token");
     addInfoItem(grid, "Lastest Log", server.lastest_log?.message ?? "No logs");
     // addInfoItem(grid, "CPU Usage", `${clamp(server.latest_status?.cpu_usage)}%`);
@@ -680,6 +691,7 @@ function bindEvents() {
     const on = (id, ev, fn) => $(id)?.addEventListener(ev, fn);
     on("metricsMenuBtn", "click", e => { e.preventDefault(); showMetricsPage(); });
     on("profilesMenuBtn", "click", e => { e.preventDefault(); showProfilesPage(); });
+    on("settingsMenuBtn", "click", e => { e.preventDefault(); showSettingsPage(); });
     on("dashboardMenuBtn", "click", e => { e.preventDefault(); showDashboardPage(); });
     on("refreshServersBtn", "click", loadServers);
     on("refreshProfilesBtn", "click", loadProfiles);
@@ -702,6 +714,15 @@ function bindEvents() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    const unitSelect = $("speedUnitSelect");
+    if (unitSelect) {
+        unitSelect.value = speedUnit;
+        unitSelect.addEventListener("change", () => {
+            speedUnit = unitSelect.value;
+            localStorage.setItem(SPEED_UNIT_STORAGE_KEY, speedUnit);
+            loadServers();
+        });
+    }
     bindEvents();
     showDashboardPage();
     loadServers();

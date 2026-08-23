@@ -18,7 +18,7 @@
                 <a href="/admin-dashboard" class="active" id="dashboardMenuBtn">Dashboard</a>
                 <a href="#" id="metricsMenuBtn">Metrics</a>
                 <a href="#" id="profilesMenuBtn">User Profiles</a>
-                <a href="#">Settings</a>
+                <a href="#" id="settingsMenuBtn">Settings</a>
             </nav>
         </div>
 
@@ -107,6 +107,23 @@
                     </thead>
                     <tbody id="profilesTableBody"></tbody>
                 </table>
+            </div>
+        </section>
+
+        <section id="settingsPage" hidden>
+            <div class="page-header">
+                <div>
+                    <h1>Settings</h1>
+                    <p>Choose how network speeds are displayed.</p>
+                </div>
+            </div>
+            <div class="settings-card">
+                <label for="speedUnitSelect">Network speed unit</label>
+                <select id="speedUnitSelect">
+                    <option value="MB">Megabytes per second (MB/s)</option>
+                    <option value="GB">Gigabytes per second (GB/s)</option>
+                </select>
+                <p class="settings-help">The agent reports bytes per second. This setting only changes dashboard display.</p>
             </div>
         </section>
     </main>
