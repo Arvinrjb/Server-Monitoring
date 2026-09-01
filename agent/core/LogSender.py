@@ -2,7 +2,6 @@
 # See the LICENSE file in the project root for the full license text.
 # Copyright (C) 2026 arvin, arvinrjb13@gmail.com
 
-from pathlib import Path
 import requests
 
 
