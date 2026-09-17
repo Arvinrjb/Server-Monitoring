@@ -15,5 +15,6 @@ urlpatterns = [
     path('', include('accounts.api_urls')),
     path('', include('alerts.api_urls')),
     path('', include('logs.api_urls')),
+    path('', include('orbittask.api_urls'))
 
 ]

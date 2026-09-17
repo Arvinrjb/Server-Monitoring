@@ -125,6 +125,38 @@
                 </select>
                 <p class="settings-help">The agent reports bytes per second. This setting only changes dashboard display.</p>
             </div>
+            <div class="settings-card cleanup-settings">
+                <div>
+                    <h2>Data cleanup</h2>
+                    <p class="settings-help">Each action queues a cleanup task for records older than seven days.</p>
+                </div>
+                <div class="cleanup-actions">
+                    <div class="cleanup-action">
+                        <div>
+                            <h3>Server statuses</h3>
+                            <p>Delete old server status records.</p>
+                        </div>
+                        <button type="button" class="cleanup-btn" data-cleanup-task="statuses">Delete statuses</button>
+                        <span id="cleanupStatusesStatus" class="cleanup-status" aria-live="polite"></span>
+                    </div>
+                    <div class="cleanup-action">
+                        <div>
+                            <h3>Logs</h3>
+                            <p>Delete old log records.</p>
+                        </div>
+                        <button type="button" class="cleanup-btn" data-cleanup-task="logs">Delete logs</button>
+                        <span id="cleanupLogsStatus" class="cleanup-status" aria-live="polite"></span>
+                    </div>
+                    <div class="cleanup-action">
+                        <div>
+                            <h3>Alerts</h3>
+                            <p>Delete old alert records.</p>
+                        </div>
+                        <button type="button" class="cleanup-btn" data-cleanup-task="alerts">Delete alerts</button>
+                        <span id="cleanupAlertsStatus" class="cleanup-status" aria-live="polite"></span>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 

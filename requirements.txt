@@ -1,3 +1,4 @@
+setuptools==84.0.0
 amqp==5.3.1
 anyio==4.14.1
 asgiref==3.11.1
@@ -27,6 +28,7 @@ inflection==0.5.1
 jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
 kombu==5.6.2
+orbittask @ git+https://github.com/Arvinrjb/orbittask.git@6bfbabc6ddcf579e0d8c43ea14fa78c5c2f20e57
 packaging==26.2
 pillow==12.3.0
 prompt_toolkit==3.0.52

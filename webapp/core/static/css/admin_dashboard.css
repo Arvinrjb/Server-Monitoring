@@ -258,6 +258,90 @@ button {
     line-height: 1.5;
 }
 
+.cleanup-settings {
+    margin-top: 20px;
+}
+
+.cleanup-settings h2,
+.cleanup-action h3 {
+    margin: 0;
+    color: var(--text);
+}
+
+.cleanup-settings h2 {
+    font-size: 18px;
+}
+
+.cleanup-action h3 {
+    font-size: 15px;
+}
+
+.cleanup-actions {
+    margin-top: 18px;
+    border-top: 1px solid var(--border);
+}
+
+.cleanup-action {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 18px;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.cleanup-action p {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.cleanup-btn {
+    padding: 9px 14px;
+    color: #fff;
+    background: var(--red);
+    border: 1px solid var(--red);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.cleanup-btn:hover:not(:disabled) {
+    background: #dc2626;
+    border-color: #dc2626;
+}
+
+.cleanup-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.cleanup-status {
+    grid-column: 1 / -1;
+    min-height: 18px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.cleanup-status.success {
+    color: var(--green-2);
+}
+
+.cleanup-status.error {
+    color: var(--red);
+}
+
+@media (max-width: 560px) {
+    .cleanup-action {
+        grid-template-columns: 1fr;
+    }
+
+    .cleanup-btn {
+        width: 100%;
+    }
+}
+
 #serversTable,
 #profilesTable {
     width: 100%;

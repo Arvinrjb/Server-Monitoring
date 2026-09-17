@@ -3,7 +3,9 @@ const API = {
     add: "/api/addserver/",
     logs: "/api/logs/",
     alerts: "/api/alerts/",
-    profiles: "/api/profile/"
+    profiles: "/api/profile/",
+    addTask: "/api/addtask/",
+    viewTask: "/api/viewtask/"
 };
 
 let selectedProfile = null;
@@ -141,6 +143,86 @@ function formatNetworkSpeed(value) {
     if (!Number.isFinite(speed)) return "N/A";
     const divisor = speedUnit === "GB" ? 1024 ** 3 : 1024 ** 2;
     return `${(speed / divisor).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${speedUnit}/s`;
+}
+
+const cleanupTasks = {
+    statuses: {
+        label: "statuses",
+        registry: "delete_statuses",
+        statusId: "cleanupStatusesStatus"
+    },
+    logs: {
+        label: "logs",
+        registry: "delete_logs",
+        statusId: "cleanupLogsStatus"
+    },
+    alerts: {
+        label: "alerts",
+        registry: "delete_alerts",
+        statusId: "cleanupAlertsStatus"
+    }
+};
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+function setCleanupStatus(id, message, type) {
+    const status = $(id);
+    if (!status) return;
+    status.textContent = message || "";
+    status.classList.remove("success", "error");
+    if (type) status.classList.add(type);
+}
+
+async function findCreatedTask(name) {
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+        const tasks = list(await fetchJSON(API.viewTask));
+        const task = tasks.find(item => item.name === name);
+        if (task?.id) return task;
+        await delay(300);
+    }
+    throw new Error("The queued task could not be found.");
+}
+
+async function waitForTask(taskId) {
+    for (let attempt = 0; attempt < 60; attempt += 1) {
+        const task = await fetchJSON(`${API.viewTask}${taskId}/`);
+        if (task.status === "SUCCESS") return task;
+        if (task.status === "FAILED") throw new Error(task.error || "Task failed.");
+        await delay(1000);
+    }
+    throw new Error("Task is still running. Check it later in /api/viewtask/.");
+}
+
+async function queueCleanupTask(taskType, button) {
+    const task = cleanupTasks[taskType];
+    if (!task) return;
+
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = "Queuing...";
+    setCleanupStatus(task.statusId, "Creating cleanup task...");
+
+    const name = `admin_cleanup_${taskType}_${Date.now()}`;
+    try {
+        const created = await fetchJSON(API.addTask, {
+            method: "POST",
+            body: JSON.stringify({
+                name,
+                registry: task.registry,
+                args: [],
+                kwargs: {}
+            })
+        });
+        const queuedTask = created?.id ? created : await findCreatedTask(name);
+        setCleanupStatus(task.statusId, "Task queued. Waiting for result...");
+        const completedTask = await waitForTask(queuedTask.id);
+        setCleanupStatus(task.statusId, completedTask.result || "Cleanup completed.", "success");
+    } catch (err) {
+        setCleanupStatus(task.statusId, err.message || "Failed to run cleanup.", "error");
+    } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+    }
 }
 
 function createNetworkSpeedCell(value, direction) {
@@ -695,6 +777,9 @@ function bindEvents() {
     on("dashboardMenuBtn", "click", e => { e.preventDefault(); showDashboardPage(); });
     on("refreshServersBtn", "click", loadServers);
     on("refreshProfilesBtn", "click", loadProfiles);
+    document.querySelectorAll(".cleanup-btn").forEach(button => {
+        button.addEventListener("click", () => queueCleanupTask(button.dataset.cleanupTask, button));
+    });
     on("profileEditForm", "submit", updateSelectedProfile);
     on("deleteProfileBtn", "click", deleteSelectedProfile);
     on("serverEditForm", "submit", updateSelectedServer);

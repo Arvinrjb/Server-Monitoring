@@ -57,8 +57,9 @@ INSTALLED_APPS = [
     "rest_framework",
     'rest_framework.authtoken',
     "drf_spectacular",
+    "orbittask",
     'accounts',
-    'core',
+    'core.apps.CoreConfig',
     'utils',
     'system',
     'monitoring',
@@ -213,3 +214,10 @@ CACHES = {
             os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0"),
     }
 }
+
+ORBITTASK_ADD_PERMISSION_CLASSES = [
+    "rest_framework.permissions.IsAdminUser",
+    ]
+ORBITTASK_VIEW_PERMISSION_CLASSES = [
+    "rest_framework.permissions.IsAdminUser"
+]
