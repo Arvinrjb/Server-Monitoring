@@ -1,0 +1,1 @@
+/media/driveD/Server-Monitoring/app/agent_rust/target/debug/agent_rust: /media/driveD/Server-Monitoring/app/agent_rust/src/main.rs /media/driveD/Server-Monitoring/app/agent_rust/src/monitoring_core.rs
