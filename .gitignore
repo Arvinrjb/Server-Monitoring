@@ -10,3 +10,4 @@
 **/celerybeat*
 =40.8.0
 staticfiles/
+agent_rust/target/
