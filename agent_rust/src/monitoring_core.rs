@@ -1,6 +1,11 @@
+// Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
+// See the LICENSE file in the project root for the full license text.
+// Copyright (C) 2026 arvin, arvinrjb13@gmail.com
+
 use sysinfo::{
-    System, Disks
+    System, Disks, Networks
 };
+
 
 pub struct Cpu {
     cpu_percent: f32,
@@ -17,6 +22,21 @@ pub struct Disk{
     disk_name:String,
     disk_availbale_space:u64
 }
+
+pub struct Network{
+    network_in: u64,
+    network_out: u64
+} 
+
+pub fn get_uptime() -> u64{
+    let up_time = match System::uptime(){
+        Ok(uptime) => uptime,
+        Err(err) => panic!("Failed to get `uptime`: {err}")
+    };
+    up_time
+}
+
+
 
 impl Cpu {
     pub fn new() -> Self{
@@ -55,8 +75,8 @@ impl Ram {
         };
         system.refresh_all();
         Self{
-            memory_used:system.used_memory()/1073741824,
-            swap_used:system.used_swap()/1073741824
+            memory_used:system.used_memory(),
+            swap_used:system.used_swap()
         }
     }
 
@@ -79,7 +99,7 @@ impl Disk {
         
         Self{
             disk_name:disk[0].name().to_string_lossy().into_owned(),
-            disk_availbale_space:disk[0].available_space()/1073741824
+            disk_availbale_space:disk[0].available_space()
         }
         
     }
@@ -92,4 +112,32 @@ impl Disk {
         self.disk_name.clone()
     }
 
+}
+
+
+impl Network {
+    pub fn new() -> Self {
+        let network = match Networks::new_with_refreshed_list() {
+            Ok(netwok) => netwok,
+            Err(err) => panic!("{err}")
+        };
+        let interface_name = String::from("eno1");
+        for (interface, network) in &network{
+            if interface.to_string_lossy() == interface_name{    
+                return Self {
+                    network_in: network.total_received(),
+                    network_out: network.total_transmitted()
+                };
+            };
+        };
+        return Self { network_in: 0, network_out: 0 };
+    }
+
+    pub fn get_network_in(&self) -> u64 {
+        self.network_in
+    }
+
+    pub fn get_network_out(&self) -> u64 {
+        self.network_out
+    }
 }
