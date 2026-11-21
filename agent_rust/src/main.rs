@@ -15,7 +15,14 @@ fn main() {
     let network = Network::new();
 
     println!("uptime: {}h", get_uptime()/3600);
-    println!("network_in: {}MB, network_out: {}MB", network.get_network_in()/1048576, network.get_network_out()/1048576);
+    
+    println!("network_in: {}MB, network_out: {}MB download speed: {:.1}MB upload speed: {:.1}MB",
+    network.get_network_in()/1048576,
+    network.get_network_out()/1048576,
+    network.get_downlaod_speed()/1048576,
+    network.get_upload_speed()/1048576
+    );
+    
     println!("used memory: {}GB swap used: {}GB", ram.get_memory()/1073741824, ram.get_swap_memory()/1073741824);
     println!("{} : {}GB", disk.get_disk_name(), disk.get_disk_usage()/1073741824); 
     println!("cpu :{:0.2}, processes: {}", cpu.get_cpu_percent(), cpu.get_processes())    

@@ -2,6 +2,7 @@
 // See the LICENSE file in the project root for the full license text.
 // Copyright (C) 2026 arvin, arvinrjb13@gmail.com
 
+use std::time::Duration;
 use sysinfo::{
     System, Disks, Networks
 };
@@ -25,7 +26,9 @@ pub struct Disk{
 
 pub struct Network{
     network_in: u64,
-    network_out: u64
+    network_out: u64,
+    download_speed: u64,
+    upload_speed: u64
 } 
 
 pub fn get_uptime() -> u64{
@@ -117,20 +120,32 @@ impl Disk {
 
 impl Network {
     pub fn new() -> Self {
-        let network = match Networks::new_with_refreshed_list() {
-            Ok(netwok) => netwok,
-            Err(err) => panic!("{err}")
+        let mut network = match Networks::new_with_refreshed_list() {
+            Ok(network) => network,
+            Err(err) => panic!("{err}"),
         };
-        let interface_name = String::from("eno1");
-        for (interface, network) in &network{
-            if interface.to_string_lossy() == interface_name{    
+
+        let interface_name = "eno1";
+        std::thread::sleep(Duration::from_secs(1));
+        network.refresh(true);
+
+        for (interface, data) in &network {
+            if interface.to_string_lossy() == interface_name {
                 return Self {
-                    network_in: network.total_received(),
-                    network_out: network.total_transmitted()
+                    network_in: data.total_received(),
+                    network_out: data.total_transmitted(),
+                    download_speed: data.received(),
+                    upload_speed: data.transmitted()
                 };
-            };
-        };
-        return Self { network_in: 0, network_out: 0 };
+            }
+        }
+
+        Self {
+            network_in: 0,
+            network_out: 0,
+            download_speed: 0,
+            upload_speed: 0,
+        }
     }
 
     pub fn get_network_in(&self) -> u64 {
@@ -139,5 +154,13 @@ impl Network {
 
     pub fn get_network_out(&self) -> u64 {
         self.network_out
+    }
+
+    pub fn get_downlaod_speed(&self) -> u64 {
+        self.download_speed
+    }
+
+    pub fn get_upload_speed(&self) -> u64 {
+        self.upload_speed
     }
 }
