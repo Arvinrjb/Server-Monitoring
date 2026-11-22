@@ -2,6 +2,7 @@
 // See the LICENSE file in the project root for the full license text.
 // Copyright (C) 2026 arvin, arvinrjb13@gmail.com
 
+use chrono::Utc;
 use std::time::Duration;
 use sysinfo::{
     System, Disks, Networks
@@ -39,7 +40,13 @@ pub fn get_uptime() -> u64{
     up_time
 }
 
-
+pub fn get_lastupdate() -> String{
+    let lastupdate = Utc::now()
+    .format("%Y-%m-%dT%H:%M:%SZ")
+    .to_string();
+    lastupdate
+    
+}
 
 impl Cpu {
     pub fn new() -> Self{

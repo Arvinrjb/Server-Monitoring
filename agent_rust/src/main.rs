@@ -4,26 +4,42 @@
 
 mod monitoring_core;
 use monitoring_core::{
-    Cpu, Disk, Ram, Network, get_uptime
+    Cpu, Disk, Ram, Network, get_uptime, get_lastupdate
 };
 
 
 fn main() {
+    let token = String::from("105958cf9e5d3f498eb18cf3c4ab9f5bda23c6b0ea096ea4fd5c6232e2d69761");
+    let status_url = String::from("http://127.0.0.1:8000/api/agent/status/report/");
+    status_sender(&status_url, &token);
+}
+
+
+fn status_sender(url:&str, token:&str){
+    let client = reqwest::blocking::Client::new();
     let disk = Disk::new();
     let cpu = Cpu::new();
     let ram = Ram::new();
     let network = Network::new();
 
-    println!("uptime: {}h", get_uptime()/3600);
+    let payload = serde_json::json!({
+        "uptime_seconds": get_uptime(),
+        "process_count": cpu.get_processes(),
+        "cpu_usage": cpu.get_cpu_percent(),
+        "ram_usage": ram.get_memory(),
+        "disk_usage": disk.get_disk_usage(),
+        "network_in": network.get_downlaod_speed(),
+        "network_out": network.get_upload_speed(),
+        "lastupdate": get_lastupdate()
+    });
+
+    let response = client
+        .post(url)
+        .header("X-Agent-Token", token)
+        .json(&payload)
+        .send().expect("error")
+        .error_for_status();
+
+    println!("API status: {}", 201);
     
-    println!("network_in: {}MB, network_out: {}MB download speed: {:.1}MB upload speed: {:.1}MB",
-    network.get_network_in()/1048576,
-    network.get_network_out()/1048576,
-    network.get_downlaod_speed()/1048576,
-    network.get_upload_speed()/1048576
-    );
-    
-    println!("used memory: {}GB swap used: {}GB", ram.get_memory()/1073741824, ram.get_swap_memory()/1073741824);
-    println!("{} : {}GB", disk.get_disk_name(), disk.get_disk_usage()/1073741824); 
-    println!("cpu :{:0.2}, processes: {}", cpu.get_cpu_percent(), cpu.get_processes())    
 }
