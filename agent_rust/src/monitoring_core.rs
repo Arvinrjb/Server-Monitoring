@@ -2,6 +2,8 @@
 // See the LICENSE file in the project root for the full license text.
 // Copyright (C) 2026 arvin, arvinrjb13@gmail.com
 
+#![allow(unused)]
+
 use chrono::Utc;
 use std::time::Duration;
 use sysinfo::{
@@ -17,12 +19,14 @@ pub struct Cpu {
 
 pub struct Ram {
     memory_used:u64,
+    total_memory:u64,
     swap_used:u64
 }
 
 pub struct Disk{
     disk_name:String,
-    disk_availbale_space:u64
+    disk_availbale_space:u64,
+    disk_total_space: u64
 }
 
 pub struct Network{
@@ -64,8 +68,8 @@ impl Cpu {
         }
     }
 
-    pub fn get_cpu_percent(&self) ->f32 {
-        self.cpu_percent
+    pub fn get_cpu_percent(&self) ->i32 {
+        self.cpu_percent as i32
     }
 
     pub fn get_processes(&self) -> usize{
@@ -86,16 +90,17 @@ impl Ram {
         system.refresh_all();
         Self{
             memory_used:system.used_memory(),
+            total_memory:system.total_memory(),
             swap_used:system.used_swap()
         }
     }
 
     pub fn get_memory(&self) -> u64 {
-        self.memory_used
+        self.memory_used * 100 / self.total_memory
     }
 
     pub fn get_swap_memory(&self) -> u64{
-        self.swap_used
+        self.swap_used/1073741824
     }
 }
 
@@ -109,13 +114,14 @@ impl Disk {
         
         Self{
             disk_name:disk[0].name().to_string_lossy().into_owned(),
-            disk_availbale_space:disk[0].available_space()
+            disk_availbale_space:disk[0].available_space(),
+            disk_total_space:disk[0].total_space()
         }
         
     }
 
     pub fn get_disk_usage(&self) -> u64{
-        self.disk_availbale_space
+        100 - (self.disk_availbale_space * 100 / self.disk_total_space) 
     }
 
     pub fn get_disk_name (&self) -> String{
