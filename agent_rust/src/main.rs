@@ -6,23 +6,61 @@
 
 mod monitoring_core;
 use std::time::Duration;
-
+use std::thread::sleep;
+use flexi_logger::{
+    DeferredNow, FileSpec, Logger, WriteMode,
+};
+use log::{error, info, warn, Record};
 use monitoring_core::{
     Cpu, Disk, Ram, Network, get_uptime, get_lastupdate
 };
 
 
-fn main() {
+fn main(){
+    let _logger = Logger::try_with_str("info").unwrap()
+        .log_to_file(FileSpec::default().basename("agent").suppress_timestamp())
+        .format(agent_log_format)
+        .append()
+        .write_mode(WriteMode::BufferAndFlush)
+        .start().unwrap();
+
+    info!("Server Monitoring Started");
+
     let token = String::from("105958cf9e5d3f498eb18cf3c4ab9f5bda23c6b0ea096ea4fd5c6232e2d69761");
     let status_url = String::from("http://127.0.0.1:8000/api/agent/status/report/");    
     
     while true {
         match status_sender(&status_url, &token){
-            Ok(response) => println!("API status: {response}"),
-            Err(error) => eprintln!("{error}")
+            Ok(status) => {
+                if status.is_success(){
+                    println!("API status: {status}");
+                    sleep(Duration::from_secs(5));
+                }else {
+                    warn!("Status API returned HTTP {status}");
+                    sleep(Duration::from_secs(10));
+                }
+            },
+            Err(error) =>  {
+                sleep(Duration::from_secs(10));
+                eprintln!("{error}");
+                error!("Failed to send status: {error}");
+            }
         }
-        std::thread::sleep(Duration::from_secs(5));
     }
+}
+
+fn agent_log_format(
+    w: &mut dyn std::io::Write,
+    now: &mut DeferredNow,
+    record: &Record,
+) -> std::io::Result<()> {
+    write!(
+        w,
+        "{} | {} | {}",
+        now.format("%Y-%m-%d %H:%M:%S"),
+        record.level(),
+        record.args()
+    )
 }
 
 
@@ -42,6 +80,16 @@ fn status_sender(url:&str, token:&str) -> Result<reqwest::StatusCode, reqwest::E
         "network_out": network.get_upload_speed(),
         "lastupdate": get_lastupdate()
     });
+
+    if *&payload["cpu_usage"].as_i64().unwrap() >= 90{
+        warn!("CPU usage is greater than 90.");
+    }
+    if *&payload["ram_usage"].as_i64().unwrap() >= 90{
+        warn!("RAM usage is greater than 90.");
+    }
+    if *&payload["disk_usage"].as_i64().unwrap() >= 90{
+        warn!("DISK usage is greater than 90.")
+    }
 
     let response = client
         .post(url)
